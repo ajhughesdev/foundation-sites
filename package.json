@@ -32,7 +32,7 @@
   },
   "peerDependencies": {
     "jquery": ">=3.6.0",
-    "motion-ui": "latest",
+    "motion-ui": ">=2.0.8",
     "what-input": ">=5.2.10"
   },
   "license": "MIT",
