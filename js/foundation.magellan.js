@@ -38,7 +38,7 @@ class Magellan extends Plugin {
    * @private
    */
   _init() {
-    var id = this.$element[0].id || GetYoDigits(6, 'magellan');
+    const id = this.$element[0].id || GetYoDigits(6, 'magellan');
     this.$targets = $('[data-magellan-target]');
     this.$links = this.$element.find('a');
     this.$element.attr({
@@ -58,17 +58,14 @@ class Magellan extends Plugin {
    * @function
    */
   calcPoints() {
-    var _this = this,
-        body = document.body,
-        html = document.documentElement;
+    const _this = this, body = document.body, html = document.documentElement;
 
     this.points = [];
     this.winHeight = Math.round(Math.max(window.innerHeight, html.clientHeight));
     this.docHeight = Math.round(Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight));
 
     this.$targets.each(function(){
-      var $tar = $(this),
-          pt = Math.round($tar.offset().top - _this.options.threshold);
+      const $tar = $(this), pt = Math.round($tar.offset().top - _this.options.threshold);
       $tar.targetPoint = pt;
       _this.points.push(pt);
     });
@@ -79,9 +76,9 @@ class Magellan extends Plugin {
    * @private
    */
   _events() {
-    var _this = this;
+    const _this = this;
 
-    $(window).one('load', function(){
+    $(window).one('load', () => {
       if(_this.options.deepLinking){
         if(location.hash){
           _this.scrollToLoc(location.hash);
@@ -91,7 +88,7 @@ class Magellan extends Plugin {
       _this._updateActive();
     });
 
-    _this.onLoadListener = onLoad($(window), function () {
+    _this.onLoadListener = onLoad($(window), () => {
       _this.$element
         .on({
           'resizeme.zf.trigger': _this.reflow.bind(_this),
@@ -99,12 +96,12 @@ class Magellan extends Plugin {
         })
         .on('click.zf.magellan', 'a[href^="#"]', function (e) {
           e.preventDefault();
-          var arrival = this.getAttribute('href');
+          const arrival = this.getAttribute('href');
           _this.scrollToLoc(arrival);
         });
     });
 
-    this._deepLinkScroll = function() {
+    this._deepLinkScroll = () => {
       if(_this.options.deepLinking) {
         _this.scrollToLoc(window.location.hash);
       }
@@ -120,16 +117,16 @@ class Magellan extends Plugin {
    */
   scrollToLoc(loc) {
     this._inTransition = true;
-    var _this = this;
+    const _this = this;
 
-    var options = {
+    const options = {
       animationEasing: this.options.animationEasing,
       animationDuration: this.options.animationDuration,
       threshold: this.options.threshold,
       offset: this.options.offset
     };
 
-    SmoothScroll.scrollToLoc(loc, options, function() {
+    SmoothScroll.scrollToLoc(loc, options, () => {
       _this._inTransition = false;
     })
   }
@@ -220,7 +217,7 @@ class Magellan extends Plugin {
         .find(`.${this.options.activeClass}`).removeClass(this.options.activeClass);
 
     if(this.options.deepLinking){
-      var hash = this.$active[0].getAttribute('href');
+      const hash = this.$active[0].getAttribute('href');
       window.location.hash.replace(hash, '');
     }
 

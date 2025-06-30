@@ -40,10 +40,9 @@ class Toggler extends Plugin {
    */
   _init() {
     // Collect triggers to set ARIA attributes to
-    var id = this.$element[0].id,
-      $triggers = $(`[data-open~="${id}"], [data-close~="${id}"], [data-toggle~="${id}"]`);
+    const id = this.$element[0].id, $triggers = $(`[data-open~="${id}"], [data-close~="${id}"], [data-toggle~="${id}"]`);
 
-    var input;
+    let input;
     // Parse animation classes if they were set
     if (this.options.animate) {
       input = this.options.animate.split(' ');
@@ -99,7 +98,7 @@ class Toggler extends Plugin {
   _toggleClass() {
     this.$element.toggleClass(this.className);
 
-    var isOn = this.$element.hasClass(this.className);
+    const isOn = this.$element.hasClass(this.className);
     if (isOn) {
       /**
        * Fires if the target element has the class after a toggle.
@@ -120,7 +119,7 @@ class Toggler extends Plugin {
   }
 
   _toggleAnimate() {
-    var _this = this;
+    const _this = this;
 
     if (this.$element.is(':hidden')) {
       Motion.animateIn(this.$element, this.animationIn, function() {
@@ -139,7 +138,7 @@ class Toggler extends Plugin {
   }
 
   _updateARIA(isOn) {
-    var id = this.$element[0].id;
+    const id = this.$element[0].id;
     $(`[data-open="${id}"], [data-close="${id}"], [data-toggle="${id}"]`)
       .attr({
         'aria-expanded': isOn ? true : false

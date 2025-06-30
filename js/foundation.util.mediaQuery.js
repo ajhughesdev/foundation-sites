@@ -17,17 +17,17 @@ import $ from 'jquery';
 // matchMedia() polyfill - Test a CSS media type/query in JS.
 // Authors & copyright © 2012: Scott Jehl, Paul Irish, Nicholas Zakas, David Knight. MIT license
 /* eslint-disable */
-window.matchMedia || (window.matchMedia = (function () {
+window.matchMedia || (window.matchMedia = (() => {
   "use strict";
 
   // For browsers that support matchMedium api such as IE 9 and webkit
-  var styleMedia = (window.styleMedia || window.media);
+  let styleMedia = (window.styleMedia || window.media);
 
   // For those that don't support matchMedium
   if (!styleMedia) {
-    var style   = document.createElement('style'),
-    script      = document.getElementsByTagName('script')[0],
-    info        = null;
+    const style   = document.createElement('style');
+    const script      = document.getElementsByTagName('script')[0];
+    let info        = null;
 
     style.type  = 'text/css';
     style.id    = 'matchmediajs-test';
@@ -43,7 +43,7 @@ window.matchMedia || (window.matchMedia = (function () {
 
     styleMedia = {
       matchMedium: function (media) {
-        var text = '@media ' + media + '{ #matchmediajs-test { width: 1px; } }';
+        const text = '@media ' + media + '{ #matchmediajs-test { width: 1px; } }';
 
         // 'style.styleSheet' is used by IE <= 8 and 'style.textContent' for all other browsers
         if (style.styleSheet) {
@@ -58,7 +58,7 @@ window.matchMedia || (window.matchMedia = (function () {
     };
   }
 
-  return function(media) {
+  return media => {
     return {
       matches: styleMedia.matchMedium(media || 'all'),
       media: media || 'all'
@@ -67,7 +67,7 @@ window.matchMedia || (window.matchMedia = (function () {
 })());
 /* eslint-enable */
 
-var MediaQuery = {
+const MediaQuery = {
   queries: [],
 
   current: '',
@@ -86,20 +86,20 @@ var MediaQuery = {
       this.isInitialized = true;
     }
 
-    var self = this;
-    var $meta = $('meta.foundation-mq');
+    const self = this;
+    const $meta = $('meta.foundation-mq');
     if(!$meta.length){
       $('<meta class="foundation-mq" name="foundation-mq" content>').appendTo(document.head);
     }
 
-    var extractedStyles = $('.foundation-mq').css('font-family');
-    var namedQueries;
+    const extractedStyles = $('.foundation-mq').css('font-family');
+    let namedQueries;
 
     namedQueries = parseStyleToObject(extractedStyles);
 
     self.queries = []; // reset
 
-    for (var key in namedQueries) {
+    for (const key in namedQueries) {
       if(namedQueries.hasOwnProperty(key)) {
         self.queries.push({
           name: key,
@@ -131,7 +131,7 @@ var MediaQuery = {
    * @returns {Boolean} `true` if the breakpoint matches, `false` if it's smaller.
    */
   atLeast(size) {
-    var query = this.get(size);
+    const query = this.get(size);
 
     if (query) {
       return window.matchMedia(query).matches;
@@ -207,9 +207,9 @@ var MediaQuery = {
    * @returns {String|null} - The media query of the breakpoint, or `null` if the breakpoint doesn't exist.
    */
   get(size) {
-    for (var i in this.queries) {
+    for (const i in this.queries) {
       if(this.queries.hasOwnProperty(i)) {
-        var query = this.queries[i];
+        const query = this.queries[i];
         if (size === query.name) return query.value;
       }
     }
@@ -261,10 +261,10 @@ var MediaQuery = {
    * @returns {String} Name of the current breakpoint.
    */
   _getCurrentSize() {
-    var matched;
+    let matched;
 
-    for (var i = 0; i < this.queries.length; i++) {
-      var query = this.queries[i];
+    for (let i = 0; i < this.queries.length; i++) {
+      const query = this.queries[i];
 
       if (window.matchMedia(query.value).matches) {
         matched = query;
@@ -281,7 +281,7 @@ var MediaQuery = {
    */
   _watcher() {
     $(window).on('resize.zf.trigger', () => {
-      var newSize = this._getCurrentSize(), currentSize = this.current;
+      const newSize = this._getCurrentSize(), currentSize = this.current;
 
       if (newSize !== currentSize) {
         // Change the current media query
@@ -298,7 +298,7 @@ var MediaQuery = {
 
 // Thank you: https://github.com/sindresorhus/query-string
 function parseStyleToObject(str) {
-  var styleObject = {};
+  let styleObject = {};
 
   if (typeof str !== 'string') {
     return styleObject;
@@ -310,10 +310,10 @@ function parseStyleToObject(str) {
     return styleObject;
   }
 
-  styleObject = str.split('&').reduce(function(ret, param) {
-    var parts = param.replace(/\+/g, ' ').split('=');
-    var key = parts[0];
-    var val = parts[1];
+  styleObject = str.split('&').reduce((ret, param) => {
+    const parts = param.replace(/\+/g, ' ').split('=');
+    let key = parts[0];
+    let val = parts[1];
     key = decodeURIComponent(key);
 
     // missing `=` should be `null`:

@@ -41,7 +41,7 @@ class Interchange extends Plugin {
   _init() {
     MediaQuery._init();
 
-    var id = this.$element[0].id || GetYoDigits(6, 'interchange');
+    const id = this.$element[0].id || GetYoDigits(6, 'interchange');
     this.$element.attr({
       'data-resize': id,
       'id': id
@@ -68,12 +68,12 @@ class Interchange extends Plugin {
    * @private
    */
   _reflow() {
-    var match;
+    let match;
 
     // Iterate through each rule, but only save the last match
-    for (var i in this.rules) {
+    for (const i in this.rules) {
       if(this.rules.hasOwnProperty(i)) {
-        var rule = this.rules[i];
+        const rule = this.rules[i];
         if (window.matchMedia(rule.query).matches) {
           match = rule;
         }
@@ -92,7 +92,7 @@ class Interchange extends Plugin {
    * @private
    */
   _parseOptions() {
-    var types = ['auto', 'src', 'background', 'html'];
+    const types = ['auto', 'src', 'background', 'html'];
     if (typeof this.options.type === 'undefined')
       this.options.type = 'auto';
     else if (types.indexOf(this.options.type) === -1) {
@@ -107,9 +107,9 @@ class Interchange extends Plugin {
    * @private
    */
   _addBreakpoints() {
-    for (var i in MediaQuery.queries) {
+    for (const i in MediaQuery.queries) {
       if (MediaQuery.queries.hasOwnProperty(i)) {
-        var query = MediaQuery.queries[i];
+        const query = MediaQuery.queries[i];
         Interchange.SPECIAL_QUERIES[query.name] = query.value;
       }
     }
@@ -122,8 +122,8 @@ class Interchange extends Plugin {
    * @returns {Array} scenarios - Array of objects that have 'mq' and 'path' keys with corresponding keys
    */
   _generateRules() {
-    var rulesList = [];
-    var rules;
+    const rulesList = [];
+    let rules;
 
     if (this.options.rules) {
       rules = this.options.rules;
@@ -134,11 +134,11 @@ class Interchange extends Plugin {
 
     rules =  typeof rules === 'string' ? rules.match(/\[.*?, .*?\]/g) : rules;
 
-    for (var i in rules) {
+    for (const i in rules) {
       if(rules.hasOwnProperty(i)) {
-        var rule = rules[i].slice(1, -1).split(', ');
-        var path = rule.slice(0, -1).join('');
-        var query = rule[rule.length - 1];
+        const rule = rules[i].slice(1, -1).split(', ');
+        const path = rule.slice(0, -1).join('');
+        let query = rule[rule.length - 1];
 
         if (Interchange.SPECIAL_QUERIES[query]) {
           query = Interchange.SPECIAL_QUERIES[query];
@@ -163,9 +163,9 @@ class Interchange extends Plugin {
   replace(path) {
     if (this.currentPath === path) return;
 
-    var trigger = 'replaced.zf.interchange';
+    const trigger = 'replaced.zf.interchange';
 
-    var type = this.options.type;
+    let type = this.options.type;
     if (type === 'auto') {
       if (this.$element[0].nodeName === 'IMG')
         type = 'src';

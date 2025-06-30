@@ -5,15 +5,10 @@ const Nest = {
     menu.attr('role', 'menubar');
     menu.find('a').attr({'role': 'menuitem'});
 
-    var items = menu.find('li').attr({'role': 'none'}),
-        subMenuClass = `is-${type}-submenu`,
-        subItemClass = `${subMenuClass}-item`,
-        hasSubClass = `is-${type}-submenu-parent`,
-        applyAria = (type !== 'accordion'); // Accordions handle their own ARIA attriutes.
+    const items = menu.find('li').attr({'role': 'none'}), subMenuClass = `is-${type}-submenu`, subItemClass = `${subMenuClass}-item`, hasSubClass = `is-${type}-submenu-parent`, applyAria = (type !== 'accordion'); // Accordions handle their own ARIA attriutes.
 
     items.each(function() {
-      var $item = $(this),
-          $sub = $item.children('ul');
+      const $item = $(this), $sub = $item.children('ul');
 
       if ($sub.length) {
         $item.addClass(hasSubClass);
@@ -50,10 +45,10 @@ const Nest = {
   },
 
   Burn(menu, type) {
-    var //items = menu.find('li'),
-        subMenuClass = `is-${type}-submenu`,
-        subItemClass = `${subMenuClass}-item`,
-        hasSubClass = `is-${type}-submenu-parent`;
+    const //items = menu.find('li'),
+          subMenuClass = `is-${type}-submenu`,
+          subItemClass = `${subMenuClass}-item`,
+          hasSubClass = `is-${type}-submenu-parent`;
 
     menu
       .find('>li, > li > ul, .menu, .menu > li, [data-submenu] > li')

@@ -79,7 +79,7 @@ class SmoothScroll extends Plugin {
         // Do nothing if target does not exist to prevent errors
         if (!$loc.length) return false;
 
-        var scrollPos = Math.round($loc.offset().top - options.threshold / 2 - options.offset);
+        const scrollPos = Math.round($loc.offset().top - options.threshold / 2 - options.offset);
 
         $('html, body').stop(true).animate(
             { scrollTop: scrollPos },

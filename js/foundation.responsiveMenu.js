@@ -95,9 +95,9 @@ class ResponsiveMenu extends Plugin {
    * @private
    */
   _events() {
-    var _this = this;
+    const _this = this;
 
-    $(window).on('changed.zf.mediaquery', function() {
+    $(window).on('changed.zf.mediaquery', () => {
       _this._checkMediaQueries();
     });
     // $(window).on('resize.zf.ResponsiveMenu', function() {
@@ -111,9 +111,10 @@ class ResponsiveMenu extends Plugin {
    * @private
    */
   _checkMediaQueries() {
-    var matchedMq, _this = this;
+    let matchedMq;
+    const _this = this;
     // Iterate through each rule and find the last matching rule
-    $.each(this.rules, function(key) {
+    $.each(this.rules, key => {
       if (MediaQuery.atLeast(key)) {
         matchedMq = key;
       }
@@ -126,7 +127,7 @@ class ResponsiveMenu extends Plugin {
     if (this.currentPlugin instanceof this.rules[matchedMq].plugin) return;
 
     // Remove existing plugin-specific CSS classes
-    $.each(MenuPlugins, function(key, value) {
+    $.each(MenuPlugins, (key, value) => {
       _this.$element.removeClass(value.cssClass);
     });
 

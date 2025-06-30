@@ -7,7 +7,7 @@ import { Accordion } from './foundation.accordion';
 import { Tabs } from './foundation.tabs';
 
 // The plugin matches the plugin classes with these plugin instances.
-var MenuPlugins = {
+const MenuPlugins = {
   tabs: {
     cssClass: 'tabs',
     plugin:   Tabs,
@@ -103,17 +103,17 @@ class ResponsiveAccordionTabs extends Plugin{
 
   _getAllOptions() {
     //get all defaults and options
-    var _this = this;
+    const _this = this;
     _this.allOptions = {};
-    for (var key in MenuPlugins) {
+    for (const key in MenuPlugins) {
       if (MenuPlugins.hasOwnProperty(key)) {
-        var obj = MenuPlugins[key];
+        const obj = MenuPlugins[key];
         try {
-          var dummyPlugin = $('<ul></ul>');
-          var tmpPlugin = new obj.plugin(dummyPlugin,_this.options);
-          for (var keyKey in tmpPlugin.options) {
+          const dummyPlugin = $('<ul></ul>');
+          const tmpPlugin = new obj.plugin(dummyPlugin,_this.options);
+          for (const keyKey in tmpPlugin.options) {
             if (tmpPlugin.options.hasOwnProperty(keyKey) && keyKey !== 'zfPlugin') {
-              var objObj = tmpPlugin.options[keyKey];
+              const objObj = tmpPlugin.options[keyKey];
               _this.allOptions[keyKey] = objObj;
             }
           }
@@ -142,9 +142,10 @@ class ResponsiveAccordionTabs extends Plugin{
    * @private
    */
   _checkMediaQueries() {
-    var matchedMq, _this = this;
+    let matchedMq;
+    const _this = this;
     // Iterate through each rule and find the last matching rule
-    $.each(this.rules, function(key) {
+    $.each(this.rules, key => {
       if (MediaQuery.atLeast(key)) {
         matchedMq = key;
       }
@@ -157,7 +158,7 @@ class ResponsiveAccordionTabs extends Plugin{
     if (this.currentPlugin instanceof this.rules[matchedMq].plugin) return;
 
     // Remove existing plugin-specific CSS classes
-    $.each(MenuPlugins, function(key, value) {
+    $.each(MenuPlugins, (key, value) => {
       _this.$element.removeClass(value.cssClass);
     });
 
@@ -174,23 +175,23 @@ class ResponsiveAccordionTabs extends Plugin{
     this.currentRule = this.rules[matchedMq];
     this.currentPlugin = new this.currentRule.plugin(this.$element, this.options);
     this.storezfData = this.currentPlugin.$element.data('zfPlugin');
-
   }
 
   _handleMarkup(toSet){
-    var _this = this, fromString = 'accordion';
-    var $panels = $('[data-tabs-content='+this.$element.attr('id')+']');
+    const _this = this;
+    let fromString = 'accordion';
+    let $panels = $('[data-tabs-content='+this.$element.attr('id')+']');
     if ($panels.length) fromString = 'tabs';
     if (fromString === toSet) {
       return;
     }
 
-    var tabsTitle = _this.allOptions.linkClass?_this.allOptions.linkClass:'tabs-title';
-    var tabsPanel = _this.allOptions.panelClass?_this.allOptions.panelClass:'tabs-panel';
+    const tabsTitle = _this.allOptions.linkClass?_this.allOptions.linkClass:'tabs-title';
+    const tabsPanel = _this.allOptions.panelClass?_this.allOptions.panelClass:'tabs-panel';
 
     this.$element.removeAttr('role');
-    var $liHeads = this.$element.children('.'+tabsTitle+',[data-accordion-item]').removeClass(tabsTitle).removeClass('accordion-item').removeAttr('data-accordion-item');
-    var $liHeadsA = $liHeads.children('a').removeClass('accordion-title');
+    const $liHeads = this.$element.children('.'+tabsTitle+',[data-accordion-item]').removeClass(tabsTitle).removeClass('accordion-item').removeAttr('data-accordion-item');
+    const $liHeadsA = $liHeads.children('a').removeClass('accordion-title');
 
     if (fromString === 'tabs') {
       $panels = $panels.children('.'+tabsPanel).removeClass(tabsPanel).removeAttr('role').removeAttr('aria-hidden').removeAttr('aria-labelledby');
@@ -202,25 +203,25 @@ class ResponsiveAccordionTabs extends Plugin{
     $panels.css({display:'',visibility:''});
     $liHeads.css({display:'',visibility:''});
     if (toSet === 'accordion') {
-      $panels.each(function(key,value){
+      $panels.each((key, value) => {
         $(value).appendTo($liHeads.get(key)).addClass('accordion-content').attr('data-tab-content','').removeClass('is-active').css({height:''});
         $('[data-tabs-content='+_this.$element.attr('id')+']').after('<div id="tabs-placeholder-'+_this.$element.attr('id')+'"></div>').detach();
         $liHeads.addClass('accordion-item').attr('data-accordion-item','');
         $liHeadsA.addClass('accordion-title');
       });
     } else if (toSet === 'tabs') {
-      var $tabsContent = $('[data-tabs-content='+_this.$element.attr('id')+']');
-      var $placeholder = $('#tabs-placeholder-'+_this.$element.attr('id'));
+      let $tabsContent = $('[data-tabs-content='+_this.$element.attr('id')+']');
+      const $placeholder = $('#tabs-placeholder-'+_this.$element.attr('id'));
       if ($placeholder.length) {
         $tabsContent = $('<div class="tabs-content"></div>').insertAfter($placeholder).attr('data-tabs-content',_this.$element.attr('id'));
         $placeholder.remove();
       } else {
         $tabsContent = $('<div class="tabs-content"></div>').insertAfter(_this.$element).attr('data-tabs-content',_this.$element.attr('id'));
       }
-      $panels.each(function(key,value){
-        var tempValue = $(value).appendTo($tabsContent).addClass(tabsPanel);
-        var hash = $liHeadsA.get(key).hash.slice(1);
-        var id = $(value).attr('id') || GetYoDigits(6, 'accordion');
+      $panels.each((key, value) => {
+        const tempValue = $(value).appendTo($tabsContent).addClass(tabsPanel);
+        let hash = $liHeadsA.get(key).hash.slice(1);
+        const id = $(value).attr('id') || GetYoDigits(6, 'accordion');
         if (hash !== id) {
           if (hash !== '') {
             $(value).attr('id',hash);
@@ -230,13 +231,13 @@ class ResponsiveAccordionTabs extends Plugin{
             $($liHeadsA.get(key)).attr('href',$($liHeadsA.get(key)).attr('href').replace('#','')+'#'+hash);
           }
         }
-        var isActive = $($liHeads.get(key)).hasClass('is-active');
+        const isActive = $($liHeads.get(key)).hasClass('is-active');
         if (isActive) {
           tempValue.addClass('is-active');
         }
       });
       $liHeads.addClass(tabsTitle);
-    };
+    }
   }
 
   /**

@@ -140,7 +140,7 @@ class Abide extends Plugin {
   requiredCheck($el) {
     if (!$el.attr('required')) return true;
 
-    var isGood = true;
+    let isGood = true;
 
     switch ($el[0].type) {
       case 'checkbox':
@@ -150,7 +150,7 @@ class Abide extends Plugin {
       case 'select':
       case 'select-one':
       case 'select-multiple':
-        var opt = $el.find('option:selected');
+        const opt = $el.find('option:selected');
         if (!opt.length || !opt.val()) isGood = false;
         break;
 
@@ -175,8 +175,8 @@ class Abide extends Plugin {
    * @returns {Object} jQuery object with the selector.
    */
   findFormError($el, failedValidators) {
-    var id = $el.length ? $el[0].id : '';
-    var $error = $el.siblings(this.options.formErrorSelector);
+    const id = $el.length ? $el[0].id : '';
+    let $error = $el.siblings(this.options.formErrorSelector);
 
     if (!$error.length) {
       $error = $el.parent().find(this.options.formErrorSelector);
@@ -207,8 +207,8 @@ class Abide extends Plugin {
    * @returns {Boolean} Boolean value depends on whether or not attribute is checked or empty
    */
   findLabel($el) {
-    var id = $el[0].id;
-    var $label = this.$element.find(`label[for="${id}"]`);
+    const id = $el[0].id;
+    const $label = this.$element.find(`label[for="${id}"]`);
 
     if (!$label.length) {
       return $el.closest('label');
@@ -226,9 +226,9 @@ class Abide extends Plugin {
    * @returns {Boolean} Boolean value depends on whether or not attribute is checked or empty
    */
   findRadioLabels($els) {
-    var labels = $els.map((i, el) => {
-      var id = el.id;
-      var $label = this.$element.find(`label[for="${id}"]`);
+    const labels = $els.map((i, el) => {
+      const id = el.id;
+      let $label = this.$element.find(`label[for="${id}"]`);
 
       if (!$label.length) {
         $label = $(el).closest('label');
@@ -248,9 +248,9 @@ class Abide extends Plugin {
    * @returns {Boolean} Boolean value depends on whether or not attribute is checked or empty
    */
   findCheckboxLabels($els) {
-    var labels = $els.map((i, el) => {
-      var id = el.id;
-      var $label = this.$element.find(`label[for="${id}"]`);
+    const labels = $els.map((i, el) => {
+      const id = el.id;
+      let $label = this.$element.find(`label[for="${id}"]`);
 
       if (!$label.length) {
         $label = $(el).closest('label');
@@ -267,8 +267,8 @@ class Abide extends Plugin {
    * @param {String[]} [failedValidators] - List of failed validators.
    */
   addErrorClasses($el, failedValidators) {
-    var $label = this.findLabel($el);
-    var $formError = this.findFormError($el, failedValidators);
+    const $label = this.findLabel($el);
+    const $formError = this.findFormError($el, failedValidators);
 
     if ($label.length) {
       $label.addClass(this.options.labelErrorClass);
@@ -357,9 +357,9 @@ class Abide extends Plugin {
    *
    */
   removeRadioErrorClasses(groupName) {
-    var $els = this.$element.find(`:radio[name="${groupName}"]`);
-    var $labels = this.findRadioLabels($els);
-    var $formErrors = this.findFormError($els);
+    const $els = this.$element.find(`:radio[name="${groupName}"]`);
+    const $labels = this.findRadioLabels($els);
+    const $formErrors = this.findFormError($els);
 
     if ($labels.length) {
       $labels.removeClass(this.options.labelErrorClass);
@@ -382,9 +382,9 @@ class Abide extends Plugin {
    *
    */
   removeCheckboxErrorClasses(groupName) {
-    var $els = this.$element.find(`:checkbox[name="${groupName}"]`);
-    var $labels = this.findCheckboxLabels($els);
-    var $formErrors = this.findFormError($els);
+    const $els = this.$element.find(`:checkbox[name="${groupName}"]`);
+    const $labels = this.findCheckboxLabels($els);
+    const $formErrors = this.findFormError($els);
 
     if ($labels.length) {
       $labels.removeClass(this.options.labelErrorClass);
@@ -415,8 +415,8 @@ class Abide extends Plugin {
       return this.removeCheckboxErrorClasses($el.attr('name'));
     }
 
-    var $label = this.findLabel($el);
-    var $formError = this.findFormError($el);
+    const $label = this.findLabel($el);
+    const $formError = this.findFormError($el);
 
     if ($label.length) {
       $label.removeClass(this.options.labelErrorClass);
@@ -445,10 +445,10 @@ class Abide extends Plugin {
    * @returns {Boolean} goodToGo - If the input is valid or not.
    */
   validateInput($el) {
-    var clearRequire = this.requiredCheck($el),
-        validator = $el.attr('data-validator'),
-        failedValidators = [],
-        manageErrorClasses = true;
+    const clearRequire = this.requiredCheck($el);
+    const validator = $el.attr('data-validator');
+    const failedValidators = [];
+    let manageErrorClasses = true;
 
     // skip validation if disabled
     if (this._validationIsDisabled()) {
@@ -494,8 +494,8 @@ class Abide extends Plugin {
       this.options.validators.equalTo($el) || failedValidators.push('equalTo');
     }
 
-    var goodToGo = failedValidators.length === 0;
-    var message = (goodToGo ? 'valid' : 'invalid') + '.zf.abide';
+    const goodToGo = failedValidators.length === 0;
+    const message = (goodToGo ? 'valid' : 'invalid') + '.zf.abide';
 
     if (goodToGo) {
       // Re-validate inputs that depend on this one with equalto
@@ -535,9 +535,9 @@ class Abide extends Plugin {
    * @fires Abide#forminvalid
    */
   validateForm() {
-    var acc = [];
-    var _this = this;
-    var checkboxGroupName;
+    const acc = [];
+    const _this = this;
+    let checkboxGroupName;
 
     // Remember first form submission to prevent specific checkbox validation (more than one required) until form got initially submitted
     if (!this.initialized) {
@@ -561,7 +561,7 @@ class Abide extends Plugin {
       acc.push(_this.validateInput($(this)));
     });
 
-    var noError = acc.indexOf(false) === -1;
+    const noError = acc.indexOf(false) === -1;
 
     this.$element.find('[data-abide-error]').each((i, elem) => {
       const $elem = $(elem);
@@ -591,8 +591,8 @@ class Abide extends Plugin {
   validateText($el, pattern) {
     // A pattern can be passed to this function, or it will be infered from the input's "pattern" attribute, or it's "type" attribute
     pattern = (pattern || $el.attr('data-pattern') || $el.attr('pattern') || $el.attr('type'));
-    var inputText = $el.val();
-    var valid = true;
+    const inputText = $el.val();
+    let valid = true;
 
     if (inputText.length) {
       // If the pattern attribute on the element is in Abide's list of patterns, then test that regexp
@@ -616,8 +616,8 @@ class Abide extends Plugin {
   validateRadio(groupName) {
     // If at least one radio in the group has the `required` attribute, the group is considered required
     // Per W3C spec, all radio buttons in a group should have `required`, but we're being nice
-    var $group = this.$element.find(`:radio[name="${groupName}"]`);
-    var valid = false, required = false;
+    const $group = this.$element.find(`:radio[name="${groupName}"]`);
+    let valid = false, required = false;
 
     // For the group to be required, at least one radio needs to be required
     $group.each((i, e) => {
@@ -647,8 +647,8 @@ class Abide extends Plugin {
   validateCheckbox(groupName) {
     // If at least one checkbox in the group has the `required` attribute, the group is considered required
     // Per W3C spec, all checkboxes in a group should have `required`, but we're being nice
-    var $group = this.$element.find(`:checkbox[name="${groupName}"]`);
-    var valid = false, required = false, minRequired = 1, checked = 0;
+    const $group = this.$element.find(`:checkbox[name="${groupName}"]`);
+    let valid = false, required = false, minRequired = 1, checked = 0;
 
     // For the group to be required, at least one checkbox needs to be required
     $group.each((i, e) => {
@@ -703,7 +703,7 @@ class Abide extends Plugin {
   matchValidation($el, validators, required) {
     required = required ? true : false;
 
-    var clear = validators.split(' ').map((v) => {
+    const clear = validators.split(' ').map((v) => {
       return this.options.validators[v]($el, required, $el.parent());
     });
     return clear.indexOf(false) === -1;
@@ -714,8 +714,7 @@ class Abide extends Plugin {
    * @fires Abide#formreset
    */
   resetForm() {
-    var $form = this.$element,
-        opts = this.options;
+    const $form = this.$element, opts = this.options;
 
     $(`.${opts.labelErrorClass}`, $form).not('small').removeClass(opts.labelErrorClass);
     $(`.${opts.inputErrorClass}`, $form).not('small').removeClass(opts.inputErrorClass);
@@ -745,7 +744,7 @@ class Abide extends Plugin {
    * Removes error styles and classes from elements, without resetting their values.
    */
   _destroy() {
-    var _this = this;
+    const _this = this;
     this.$element
       .off('.abide')
       .find('[data-abide-error]')

@@ -41,7 +41,7 @@ class Tooltip extends Positionable {
    */
   _init() {
     MediaQuery._init();
-    var elemId = this.$element.attr('aria-describedby') || GetYoDigits(6, 'tooltip');
+    const elemId = this.$element.attr('aria-describedby') || GetYoDigits(6, 'tooltip');
 
     this.options.tipText = this.options.tipText || this.$element.attr('title');
     this.template = this.options.template ? $(this.options.template) : this._buildTemplate(elemId);
@@ -70,11 +70,11 @@ class Tooltip extends Positionable {
 
   _getDefaultPosition() {
     // handle legacy classnames
-    var elementClassName = this.$element[0].className;
+    let elementClassName = this.$element[0].className;
     if (this.$element[0] instanceof SVGElement) {
         elementClassName = elementClassName.baseVal;
     }
-    var position = elementClassName.match(/\b(top|left|right|bottom)\b/g);
+    const position = elementClassName.match(/\b(top|left|right|bottom)\b/g);
     return position ? position[0] : 'top';
   }
 
@@ -103,8 +103,8 @@ class Tooltip extends Positionable {
    * @private
    */
   _buildTemplate(id) {
-    var templateClasses = (`${this.options.tooltipClass} ${this.options.templateClasses}`).trim();
-    var $template =  $('<div></div>').addClass(templateClasses).attr({
+    const templateClasses = (`${this.options.tooltipClass} ${this.options.templateClasses}`).trim();
+    const $template =  $('<div></div>').addClass(templateClasses).attr({
       'role': 'tooltip',
       'aria-hidden': true,
       'data-is-active': false,
@@ -135,7 +135,7 @@ class Tooltip extends Positionable {
       return false;
     }
 
-    var _this = this;
+    const _this = this;
     this.template.css('visibility', 'hidden').show();
     this._setPosition();
     this.template.removeClass('top bottom left right').addClass(this.position)
@@ -153,7 +153,7 @@ class Tooltip extends Positionable {
       'aria-hidden': false
     });
     _this.isActive = true;
-    this.template.stop().hide().css('visibility', '').fadeIn(this.options.fadeInDuration, function() {
+    this.template.stop().hide().css('visibility', '').fadeIn(this.options.fadeInDuration, () => {
       //maybe do stuff?
     });
     /**
@@ -169,11 +169,11 @@ class Tooltip extends Positionable {
    * @function
    */
   hide() {
-    var _this = this;
+    const _this = this;
     this.template.stop().attr({
       'aria-hidden': true,
       'data-is-active': false
-    }).fadeOut(this.options.fadeOutDuration, function() {
+    }).fadeOut(this.options.fadeOutDuration, () => {
       _this.isActive = false;
       _this.isClick = false;
     });
@@ -192,21 +192,21 @@ class Tooltip extends Positionable {
   _events() {
     const _this = this;
     const hasTouch = 'ontouchstart' in window || (typeof window.ontouchstart !== 'undefined');
-    var isFocus = false;
+    let isFocus = false;
 
     // `disableForTouch: Fully disable the tooltip on touch devices
     if (hasTouch && this.options.disableForTouch) return;
 
     if (!this.options.disableHover) {
       this.$element
-      .on('mouseenter.zf.tooltip', function() {
+      .on('mouseenter.zf.tooltip', () => {
         if (!_this.isActive) {
-          _this.timeout = setTimeout(function() {
+          _this.timeout = setTimeout(() => {
             _this.show();
           }, _this.options.hoverDelay);
         }
       })
-      .on('mouseleave.zf.tooltip', ignoreMousedisappear(function() {
+      .on('mouseleave.zf.tooltip', ignoreMousedisappear(() => {
         clearTimeout(_this.timeout);
         if (!isFocus || (_this.isClick && !_this.options.clickOpen)) {
           _this.hide();
@@ -216,13 +216,13 @@ class Tooltip extends Positionable {
 
     if (hasTouch) {
       this.$element
-      .on('tap.zf.tooltip touchend.zf.tooltip', function () {
+      .on('tap.zf.tooltip touchend.zf.tooltip', () => {
         _this.isActive ? _this.hide() : _this.show();
       });
     }
 
     if (this.options.clickOpen) {
-      this.$element.on('mousedown.zf.tooltip', function() {
+      this.$element.on('mousedown.zf.tooltip', () => {
         if (_this.isClick) {
           //_this.hide();
           // _this.isClick = false;
@@ -234,7 +234,7 @@ class Tooltip extends Positionable {
         }
       });
     } else {
-      this.$element.on('mousedown.zf.tooltip', function() {
+      this.$element.on('mousedown.zf.tooltip', () => {
         _this.isClick = true;
       });
     }
@@ -246,7 +246,7 @@ class Tooltip extends Positionable {
     });
 
     this.$element
-      .on('focus.zf.tooltip', function() {
+      .on('focus.zf.tooltip', () => {
         isFocus = true;
         if (_this.isClick) {
           // If we're not showing open on clicks, we need to pretend a click-launched focus isn't
@@ -258,13 +258,13 @@ class Tooltip extends Positionable {
         }
       })
 
-      .on('focusout.zf.tooltip', function() {
+      .on('focusout.zf.tooltip', () => {
         isFocus = false;
         _this.isClick = false;
         _this.hide();
       })
 
-      .on('resizeme.zf.trigger', function() {
+      .on('resizeme.zf.trigger', () => {
         if (_this.isActive) {
           _this._setPosition();
         }

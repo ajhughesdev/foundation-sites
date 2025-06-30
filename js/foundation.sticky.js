@@ -38,9 +38,7 @@ class Sticky extends Plugin {
   _init() {
     MediaQuery._init();
 
-    var $parent = this.$element.parent('[data-sticky-container]'),
-        id = this.$element[0].id || GetYoDigits(6, 'sticky'),
-        _this = this;
+    const $parent = this.$element.parent('[data-sticky-container]'), id = this.$element[0].id || GetYoDigits(6, 'sticky'), _this = this;
 
     if($parent.length){
       this.$container = $parent;
@@ -58,7 +56,7 @@ class Sticky extends Plugin {
 
     this.scrollCount = this.options.checkEvery;
     this.isStuck = false;
-    this.onLoadListener = onLoad($(window), function () {
+    this.onLoadListener = onLoad($(window), () => {
       //We calculate the container height to have correct values for anchor points offset calculation.
       _this.containerHeight = _this.$element.css("display") === "none" ? 0 : _this.$element[0].getBoundingClientRect().height;
       _this.$container.css('height', _this.containerHeight);
@@ -69,8 +67,8 @@ class Sticky extends Plugin {
         _this._parsePoints();
       }
 
-      _this._setSizes(function () {
-        var scroll = window.pageYOffset;
+      _this._setSizes(() => {
+        const scroll = window.pageYOffset;
         _this._calc(false, scroll);
         //Unstick the element will ensure that proper classes are set.
         if (!_this.isStuck) {
@@ -87,17 +85,13 @@ class Sticky extends Plugin {
    * @private
    */
   _parsePoints() {
-    var top = this.options.topAnchor === "" ? 1 : this.options.topAnchor,
-        btm = this.options.btmAnchor === "" ? document.documentElement.scrollHeight : this.options.btmAnchor,
-        pts = [top, btm],
-        breaks = {};
-    for (var i = 0, len = pts.length; i < len && pts[i]; i++) {
-      var pt;
+    const top = this.options.topAnchor === "" ? 1 : this.options.topAnchor, btm = this.options.btmAnchor === "" ? document.documentElement.scrollHeight : this.options.btmAnchor, pts = [top, btm], breaks = {};
+    for (let i = 0, len = pts.length; i < len && pts[i]; i++) {
+      let pt;
       if (typeof pts[i] === 'number') {
         pt = pts[i];
       } else {
-        var place = pts[i].split(':'),
-            anchor = $(`#${place[0]}`);
+        const place = pts[i].split(':'), anchor = $(`#${place[0]}`);
 
         pt = anchor.offset().top;
         if (place[1] && place[1].toLowerCase() === 'bottom') {
@@ -118,16 +112,15 @@ class Sticky extends Plugin {
    * @param {String} id - pseudo-random id for unique scroll event listener.
    */
   _events(id) {
-    var _this = this,
-        scrollListener = this.scrollListener = `scroll.zf.${id}`;
+    const _this = this, scrollListener = this.scrollListener = `scroll.zf.${id}`;
     if (this.isOn) { return; }
     if (this.canStick) {
       this.isOn = true;
       $(window).off(scrollListener)
-               .on(scrollListener, function() {
+               .on(scrollListener, () => {
                  if (_this.scrollCount === 0) {
                    _this.scrollCount = _this.options.checkEvery;
-                   _this._setSizes(function() {
+                   _this._setSizes(() => {
                      _this._calc(false, window.pageYOffset);
                    });
                  } else {
@@ -138,16 +131,16 @@ class Sticky extends Plugin {
     }
 
     this.$element.off('resizeme.zf.trigger')
-                 .on('resizeme.zf.trigger', function() {
+                 .on('resizeme.zf.trigger', () => {
                     _this._eventsHandler(id);
     });
 
-    this.$element.on('mutateme.zf.trigger', function () {
+    this.$element.on('mutateme.zf.trigger', () => {
         _this._eventsHandler(id);
     });
 
     if(this.$anchor) {
-      this.$anchor.on('mutateme.zf.trigger', function () {
+      this.$anchor.on('mutateme.zf.trigger', () => {
           _this._eventsHandler(id);
       });
     }
@@ -159,10 +152,9 @@ class Sticky extends Plugin {
    * @param {String} id - pseudo-random id for unique scroll event listener.
    */
   _eventsHandler(id) {
-       var _this = this,
-        scrollListener = this.scrollListener = `scroll.zf.${id}`;
+       const _this = this, scrollListener = this.scrollListener = `scroll.zf.${id}`;
 
-       _this._setSizes(function() {
+       _this._setSizes(() => {
        _this._calc(false);
        if (_this.canStick) {
          if (!_this.isOn) {
@@ -234,11 +226,7 @@ class Sticky extends Plugin {
    * @private
    */
   _setSticky() {
-    var _this = this,
-        stickTo = this.options.stickTo,
-        mrgn = stickTo === 'top' ? 'marginTop' : 'marginBottom',
-        notStuckTo = stickTo === 'top' ? 'bottom' : 'top',
-        css = {};
+    const _this = this, stickTo = this.options.stickTo, mrgn = stickTo === 'top' ? 'marginTop' : 'marginBottom', notStuckTo = stickTo === 'top' ? 'bottom' : 'top', css = {};
 
     css[mrgn] = `${this.options[mrgn]}em`;
     css[stickTo] = 0;
@@ -253,7 +241,7 @@ class Sticky extends Plugin {
                   * @event Sticky#stuckto
                   */
                  .trigger(`sticky.zf.stuckto:${stickTo}`);
-    this.$element.on("transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd", function() {
+    this.$element.on("transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd", () => {
       _this._setSizes();
     });
   }
@@ -267,12 +255,7 @@ class Sticky extends Plugin {
    * @private
    */
   _removeSticky(isTop) {
-    var stickTo = this.options.stickTo,
-        stickToTop = stickTo === 'top',
-        css = {},
-        anchorPt = (this.points ? this.points[1] - this.points[0] : this.anchorHeight) - this.elemHeight,
-        mrgn = stickToTop ? 'marginTop' : 'marginBottom',
-        topOrBottom = isTop ? 'top' : 'bottom';
+    const stickTo = this.options.stickTo, stickToTop = stickTo === 'top', css = {}, anchorPt = (this.points ? this.points[1] - this.points[0] : this.anchorHeight) - this.elemHeight, mrgn = stickToTop ? 'marginTop' : 'marginBottom', topOrBottom = isTop ? 'top' : 'bottom';
 
     css[mrgn] = 0;
 
@@ -307,10 +290,7 @@ class Sticky extends Plugin {
       if (cb && typeof cb === 'function') { cb(); }
     }
 
-    var newElemWidth = this.$container[0].getBoundingClientRect().width,
-      comp = window.getComputedStyle(this.$container[0]),
-      pdngl = parseInt(comp['padding-left'], 10),
-      pdngr = parseInt(comp['padding-right'], 10);
+    const newElemWidth = this.$container[0].getBoundingClientRect().width, comp = window.getComputedStyle(this.$container[0]), pdngl = parseInt(comp['padding-left'], 10), pdngr = parseInt(comp['padding-right'], 10);
 
     if (this.$anchor && this.$anchor.length) {
       this.anchorHeight = this.$anchor[0].getBoundingClientRect().height;
@@ -325,7 +305,7 @@ class Sticky extends Plugin {
     // Recalculate the height only if it is "dynamic"
     if (this.options.dynamicHeight || !this.containerHeight) {
       // Get the sticked element height and apply it to the container to "hold the place"
-      var newContainerHeight = this.$element[0].getBoundingClientRect().height || this.containerHeight;
+      let newContainerHeight = this.$element[0].getBoundingClientRect().height || this.containerHeight;
       newContainerHeight = this.$element.css("display") === "none" ? 0 : newContainerHeight;
       this.$container.css('height', newContainerHeight);
       this.containerHeight = newContainerHeight;
@@ -334,12 +314,12 @@ class Sticky extends Plugin {
 
     if (!this.isStuck) {
       if (this.$element.hasClass('is-at-bottom')) {
-        var anchorPt = (this.points ? this.points[1] - this.$container.offset().top : this.anchorHeight) - this.elemHeight;
+        const anchorPt = (this.points ? this.points[1] - this.$container.offset().top : this.anchorHeight) - this.elemHeight;
         this.$element.css('top', anchorPt);
       }
     }
 
-    this._setBreakPoints(this.containerHeight, function() {
+    this._setBreakPoints(this.containerHeight, () => {
       if (cb && typeof cb === 'function') { cb(); }
     });
   }
@@ -355,13 +335,14 @@ class Sticky extends Plugin {
       if (cb && typeof cb === 'function') { cb(); }
       else { return false; }
     }
-    var mTop = emCalc(this.options.marginTop),
-        mBtm = emCalc(this.options.marginBottom),
-        topPoint = this.points ? this.points[0] : this.$anchor.offset().top,
-        bottomPoint = this.points ? this.points[1] : topPoint + this.anchorHeight,
-        // topPoint = this.$anchor.offset().top || this.points[0],
-        // bottomPoint = topPoint + this.anchorHeight || this.points[1],
-        winHeight = window.innerHeight;
+    const mTop = emCalc(this.options.marginTop);
+    const mBtm = emCalc(this.options.marginBottom);
+    let topPoint = this.points ? this.points[0] : this.$anchor.offset().top;
+    let bottomPoint = this.points ? this.points[1] : topPoint + this.anchorHeight;
+
+    const // topPoint = this.$anchor.offset().top || this.points[0],
+    // bottomPoint = topPoint + this.anchorHeight || this.points[1],
+    winHeight = window.innerHeight;
 
     if (this.options.stickTo === 'top') {
       topPoint -= mTop;

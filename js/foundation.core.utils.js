@@ -40,14 +40,14 @@ function RegExpEscape(str){
 }
 
 function transitionend($elem){
-  var transitions = {
+  const transitions = {
     'transition': 'transitionend',
     'WebkitTransition': 'webkitTransitionEnd',
     'MozTransition': 'transitionend',
     'OTransition': 'otransitionend'
   };
-  var elem = document.createElement('div'),
-      end;
+  const elem = document.createElement('div');
+  let end;
 
   for (let transition in transitions){
     if (typeof elem.style[transition] !== 'undefined'){
@@ -57,7 +57,7 @@ function transitionend($elem){
   if (end) {
     return end;
   } else {
-    setTimeout(function(){
+    setTimeout(() => {
       $elem.triggerHandler('transitionend', [$elem]);
     }, 1);
     return 'transitionend';

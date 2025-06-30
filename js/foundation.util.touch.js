@@ -5,14 +5,9 @@
 
 import $ from 'jquery';
 
-var Touch = {};
+const Touch = {};
 
-var startPosX,
-    startTime,
-    elapsedTime,
-    startEvent,
-    isMoving = false,
-    didMoved = false;
+let startPosX, startTime, elapsedTime, startEvent, isMoving = false, didMoved = false;
 
 function onTouchEnd(e) {
   this.removeEventListener('touchmove', onTouchMove);
@@ -20,7 +15,7 @@ function onTouchEnd(e) {
 
   // If the touch did not move, consider it as a "tap"
   if (!didMoved) {
-    var tapEvent = $.Event('tap', startEvent || e);
+    const tapEvent = $.Event('tap', startEvent || e);
     $(this).trigger(tapEvent);
   }
 
@@ -33,11 +28,11 @@ function onTouchMove(e) {
   if (true === $.spotSwipe.preventDefault) { e.preventDefault(); }
 
   if(isMoving) {
-    var x = e.touches[0].pageX;
+    const x = e.touches[0].pageX;
     // var y = e.touches[0].pageY;
-    var dx = startPosX - x;
+    const dx = startPosX - x;
     // var dy = startPosY - y;
-    var dir;
+    let dir;
     didMoved = true;
     elapsedTime = new Date().getTime() - startTime;
     if(Math.abs(dx) >= $.spotSwipe.moveThreshold && elapsedTime <= $.spotSwipe.timeThreshold) {
@@ -107,34 +102,35 @@ class SpotSwipe {
  * values, and do not add event handlers directly.  *
  ****************************************************/
 
-Touch.setupSpotSwipe = function() {
+Touch.setupSpotSwipe = () => {
   $.spotSwipe = new SpotSwipe($);
 };
 
 /****************************************************
  * Method for adding pseudo drag events to elements *
  ***************************************************/
-Touch.setupTouchHandler = function() {
+Touch.setupTouchHandler = () => {
   $.fn.addTouch = function(){
-    this.each(function(i, el){
-      $(el).bind('touchstart touchmove touchend touchcancel', function(event)  {
+    this.each((i, el) => {
+      $(el).bind('touchstart touchmove touchend touchcancel', event => {
         //we pass the original event object because the jQuery event
         //object is normalized to w3c specs and does not provide the TouchList
         handleTouch(event);
       });
     });
 
-    var handleTouch = function(event) {
-      var touches = event.changedTouches,
-          first = touches[0],
-          eventTypes = {
-            touchstart: 'mousedown',
-            touchmove: 'mousemove',
-            touchend: 'mouseup'
-          },
-          type = eventTypes[event.type],
-          simulatedEvent
-        ;
+    const handleTouch = event => {
+      const touches = event.changedTouches;
+      const first = touches[0];
+
+      const eventTypes = {
+        touchstart: 'mousedown',
+        touchmove: 'mousemove',
+        touchend: 'mouseup'
+      };
+
+      const type = eventTypes[event.type];
+      let simulatedEvent;
 
       if('MouseEvent' in window && typeof window.MouseEvent === 'function') {
         simulatedEvent = new window.MouseEvent(type, {
@@ -154,7 +150,7 @@ Touch.setupTouchHandler = function() {
   };
 };
 
-Touch.init = function () {
+Touch.init = () => {
   if(typeof($.spotSwipe) === 'undefined') {
     Touch.setupSpotSwipe($);
     Touch.setupTouchHandler($);

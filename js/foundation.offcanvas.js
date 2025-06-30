@@ -64,7 +64,7 @@ class OffCanvas extends Plugin {
    * @private
    */
   _init() {
-    var id = this.$element.attr('id');
+    const id = this.$element.attr('id');
 
     this.$element.attr('aria-hidden', 'true');
 
@@ -107,8 +107,8 @@ class OffCanvas extends Plugin {
 
     // Add an overlay over the content if necessary
     if (this.options.contentOverlay === true) {
-      var overlay = document.createElement('div');
-      var overlayPosition = $(this.$element).css("position") === 'fixed' ? 'is-overlay-fixed' : 'is-overlay-absolute';
+      const overlay = document.createElement('div');
+      const overlayPosition = $(this.$element).css("position") === 'fixed' ? 'is-overlay-fixed' : 'is-overlay-absolute';
       overlay.setAttribute('class', 'js-off-canvas-overlay ' + overlayPosition);
       this.$overlay = $(overlay);
       if(overlayPosition === 'is-overlay-fixed') {
@@ -119,8 +119,8 @@ class OffCanvas extends Plugin {
     }
 
     // Get the revealOn option from the class.
-    var revealOnRegExp = new RegExp(RegExpEscape(this.options.revealClass) + '([^\\s]+)', 'g');
-    var revealOnClass = revealOnRegExp.exec(this.$element[0].className);
+    const revealOnRegExp = new RegExp(RegExpEscape(this.options.revealClass) + '([^\\s]+)', 'g');
+    const revealOnClass = revealOnRegExp.exec(this.$element[0].className);
     if (revealOnClass) {
       this.options.isRevealed = true;
       this.options.revealOn = this.options.revealOn || revealOnClass[1];
@@ -175,7 +175,7 @@ class OffCanvas extends Plugin {
     });
 
     if (this.options.closeOnClick === true) {
-      var $target = this.options.contentOverlay ? this.$overlay : this.$content;
+      const $target = this.options.contentOverlay ? this.$overlay : this.$content;
       $target.on({'click.zf.offCanvas': this.close.bind(this)});
     }
 
@@ -192,15 +192,15 @@ class OffCanvas extends Plugin {
    * @private
    */
   _setMQChecker() {
-    var _this = this;
+    const _this = this;
 
-    this.onLoadListener = onLoad($(window), function () {
+    this.onLoadListener = onLoad($(window), () => {
       if (MediaQuery.atLeast(_this.options.revealOn)) {
         _this.reveal(true);
       }
     });
 
-    $(window).on('changed.zf.mediaquery', function () {
+    $(window).on('changed.zf.mediaquery', () => {
       if (MediaQuery.atLeast(_this.options.revealOn)) {
         _this.reveal(true);
       } else {
@@ -398,7 +398,7 @@ class OffCanvas extends Plugin {
    */
   open(event, trigger) {
     if (this.$element.hasClass('is-open') || this.isRevealed || this.isInCanvas) { return; }
-    var _this = this;
+    const _this = this;
 
     if (trigger) {
       this.$lastTrigger = trigger;
@@ -441,11 +441,11 @@ class OffCanvas extends Plugin {
     }
 
     if (this.options.autoFocus === true) {
-      this.$element.one(transitionend(this.$element), function() {
+      this.$element.one(transitionend(this.$element), () => {
         if (!_this.$element.hasClass('is-open')) {
           return; // exit if prematurely closed
         }
-        var canvasFocus = _this.$element.find('[data-autofocus]');
+        const canvasFocus = _this.$element.find('[data-autofocus]');
         if (canvasFocus.length) {
             canvasFocus.eq(0).focus();
         } else {

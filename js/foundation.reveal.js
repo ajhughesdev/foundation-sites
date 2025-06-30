@@ -89,7 +89,7 @@ class Reveal extends Plugin {
    * @private
    */
   _makeOverlay() {
-    var additionalOverlayClasses = '';
+    let additionalOverlayClasses = '';
 
     if (this.options.additionalOverlayClasses) {
       additionalOverlayClasses = ' ' + this.options.additionalOverlayClasses;
@@ -106,11 +106,11 @@ class Reveal extends Plugin {
    * @private
    */
   _updatePosition() {
-    var width = this.$element.outerWidth();
-    var outerWidth = $(window).width();
-    var height = this.$element.outerHeight();
-    var outerHeight = $(window).height();
-    var left, top = null;
+    const width = this.$element.outerWidth();
+    const outerWidth = $(window).width();
+    const height = this.$element.outerHeight();
+    const outerHeight = $(window).height();
+    let left, top = null;
     if (this.options.hOffset === 'auto') {
       left = parseInt((outerWidth - width) / 2, 10);
     } else {
@@ -144,7 +144,7 @@ class Reveal extends Plugin {
    * @private
    */
   _events() {
-    var _this = this;
+    const _this = this;
 
     this.$element.on({
       'open.zf.trigger': this.open.bind(this),
@@ -161,7 +161,7 @@ class Reveal extends Plugin {
     });
 
     if (this.options.closeOnClick && this.options.overlay) {
-      this.$overlay.off('.zf.reveal').on('click.zf.dropdown tap.zf.dropdown', function(e) {
+      this.$overlay.off('.zf.reveal').on('click.zf.dropdown tap.zf.dropdown', e => {
         if (e.target === _this.$element[0] ||
           $.contains(_this.$element[0], e.target) ||
             !$.contains(document, e.target)) {
@@ -275,7 +275,7 @@ class Reveal extends Plugin {
       this._disableScroll();
     }
 
-    var _this = this;
+    const _this = this;
 
     // Motion UI method of reveal
     if (this.options.animationIn) {
@@ -363,12 +363,12 @@ class Reveal extends Plugin {
    * @private
    */
   _addGlobalListeners() {
-    var _this = this;
+    const _this = this;
     if(!this.$element) { return; } // If we're in the middle of cleanup, don't freak out
     this.focusableElements = Keyboard.findFocusable(this.$element);
 
     if (!this.options.overlay && this.options.closeOnClick && !this.options.fullScreen) {
-      $('body').on('click.zf.dropdown tap.zf.dropdown', function(e) {
+      $('body').on('click.zf.dropdown tap.zf.dropdown', e => {
         if (e.target === _this.$element[0] ||
           $.contains(_this.$element[0], e.target) ||
             !$.contains(document, e.target)) { return; }
@@ -377,7 +377,7 @@ class Reveal extends Plugin {
     }
 
     if (this.options.closeOnEsc) {
-      $(window).on('keydown.zf.reveal', function(e) {
+      $(window).on('keydown.zf.reveal', e => {
         Keyboard.handleKey(e, 'Reveal', {
           close: function() {
             if (_this.options.closeOnEsc) {
@@ -398,7 +398,7 @@ class Reveal extends Plugin {
     if (!this.isActive || !this.$element.is(':visible')) {
       return false;
     }
-    var _this = this;
+    const _this = this;
 
     // Motion UI method of hiding
     if (this.options.animationOut) {
@@ -436,7 +436,7 @@ class Reveal extends Plugin {
       // Get the current top before the modal is closed and restore the scroll after.
       // TODO: use component properties instead of HTML properties
       // See https://github.com/foundation/foundation-sites/pull/10786
-      var scrollTop = parseInt($("html").css("top"), 10);
+      const scrollTop = parseInt($("html").css("top"), 10);
 
       if ($('.reveal:visible').length  === 0) {
         _this._removeGlobalClasses(); // also remove .is-reveal-open from the html element when there is no opened reveal

@@ -22,7 +22,7 @@ const keyCodes = {
   40: 'ARROW_DOWN'
 }
 
-var commands = {}
+const commands = {};
 
 // Functions pulled out to be referenceable from internals
 function findFocusable($element) {
@@ -31,7 +31,7 @@ function findFocusable($element) {
     if (!$(this).is(':visible') || $(this).attr('tabindex') < 0) { return false; } //only have visible elements and those that have a tabindex greater or equal 0
     return true;
   })
-  .sort( function( a, b ) {
+  .sort( (a, b) => {
     if ($(a).attr('tabindex') === $(b).attr('tabindex')) {
       return 0;
     }
@@ -60,7 +60,7 @@ function findFocusable($element) {
 }
 
 function parseKey(event) {
-  var key = keyCodes[event.which || event.keyCode] || String.fromCharCode(event.which).toUpperCase();
+  let key = keyCodes[event.which || event.keyCode] || String.fromCharCode(event.which).toUpperCase();
 
   // Remove un-printable characters, e.g. for `fromCharCode` calls for CTRL only events
   key = key.replace(/\W+/, '');
@@ -75,7 +75,7 @@ function parseKey(event) {
   return key;
 }
 
-var Keyboard = {
+const Keyboard = {
   keys: getKeyCodes(keyCodes),
 
   /**
@@ -93,11 +93,11 @@ var Keyboard = {
    * @param {Objects} functions - collection of functions that are to be executed
    */
   handleKey(event, component, functions) {
-    var commandList = commands[component],
-      keyCode = this.parseKey(event),
-      cmds,
-      command,
-      fn;
+    const commandList = commands[component];
+    const keyCode = this.parseKey(event);
+    let cmds;
+    let command;
+    let fn;
 
     if (!commandList) return console.warn('Component not defined!');
 
@@ -115,9 +115,9 @@ var Keyboard = {
     command = cmds[keyCode];
 
     fn = functions[command];
-     // Execute the handler if found
+    // Execute the handler if found
     if (fn && typeof fn === 'function') {
-      var returnValue = fn.apply();
+      const returnValue = fn.apply();
 
       // Mark the event as "handled" to prevent future handlings
       event.zfIsKeyHandled = true;
@@ -160,11 +160,9 @@ var Keyboard = {
    * @param  {jQuery} $element  jQuery object to trap the foucs into.
    */
   trapFocus($element) {
-    var $focusable = findFocusable($element),
-        $firstFocusable = $focusable.eq(0),
-        $lastFocusable = $focusable.eq(-1);
+    const $focusable = findFocusable($element), $firstFocusable = $focusable.eq(0), $lastFocusable = $focusable.eq(-1);
 
-    $element.on('keydown.zf.trapfocus', function(event) {
+    $element.on('keydown.zf.trapfocus', event => {
       if (event.target === $lastFocusable[0] && parseKey(event) === 'TAB') {
         event.preventDefault();
         $firstFocusable.focus();
@@ -182,15 +180,15 @@ var Keyboard = {
   releaseFocus($element) {
     $element.off('keydown.zf.trapfocus');
   }
-}
+};
 
 /*
  * Constants for easier comparing.
  * Can be used like Foundation.parseKey(event) === Foundation.keys.SPACE
  */
 function getKeyCodes(kcs) {
-  var k = {};
-  for (var kc in kcs) {
+  const k = {};
+  for (const kc in kcs) {
     if (kcs.hasOwnProperty(kc)) k[kcs[kc]] = kcs[kc];
   }
   return k;

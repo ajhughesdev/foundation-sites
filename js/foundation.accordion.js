@@ -45,11 +45,8 @@ class Accordion extends Plugin {
     this.$tabs = this.$element.children('[data-accordion-item]');
 
 
-    this.$tabs.each(function(idx, el) {
-      var $el = $(el),
-          $content = $el.children('[data-tab-content]'),
-          id = $content[0].id || GetYoDigits(6, 'accordion'),
-          linkId = (el.id) ? `${el.id}-label` : `${id}-label`;
+    this.$tabs.each((idx, el) => {
+      const $el = $(el), $content = $el.children('[data-tab-content]'), id = $content[0].id || GetYoDigits(6, 'accordion'), linkId = (el.id) ? `${el.id}-label` : `${id}-label`;
 
       $el.find('a:first').attr({
         'aria-controls': id,
@@ -60,7 +57,7 @@ class Accordion extends Plugin {
       $content.attr({'role': 'region', 'aria-labelledby': linkId, 'aria-hidden': true, 'id': id});
     });
 
-    var $initActive = this.$element.find('.is-active').children('[data-tab-content]');
+    const $initActive = this.$element.find('.is-active').children('[data-tab-content]');
     if ($initActive.length) {
       // Save up the initial hash to return to it later when going back in history
       this._initialAnchor = $initActive.prev('a').attr('href');
@@ -68,7 +65,7 @@ class Accordion extends Plugin {
     }
 
     this._checkDeepLink = () => {
-      var anchor = window.location.hash;
+      let anchor = window.location.hash;
 
       if (!anchor.length) {
         // If we are still initializing and there is no anchor, then there is nothing to do
@@ -77,10 +74,10 @@ class Accordion extends Plugin {
         if (this._initialAnchor) anchor = this._initialAnchor;
       }
 
-      var $anchor = anchor && $(anchor);
-      var $link = anchor && this.$element.find(`[href$="${anchor}"]`);
+      const $anchor = anchor && $(anchor);
+      const $link = anchor && this.$element.find(`[href$="${anchor}"]`);
       // Whether the anchor element that has been found is part of this element
-      var isOwnAnchor = !!($anchor.length && $link.length);
+      const isOwnAnchor = !!($anchor.length && $link.length);
 
       if (isOwnAnchor) {
         // If there is an anchor for the hash, open it (if not already active)
@@ -97,7 +94,7 @@ class Accordion extends Plugin {
         // Roll up a little to show the titles
         if (this.options.deepLinkSmudge) {
           onLoad($(window), () => {
-            var offset = this.$element.offset();
+            const offset = this.$element.offset();
             $('html, body').animate({ scrollTop: offset.top - this.options.deepLinkSmudgeOffset }, this.options.deepLinkSmudgeDelay);
           });
         }
@@ -125,41 +122,41 @@ class Accordion extends Plugin {
    * @private
    */
   _events() {
-    var _this = this;
+    const _this = this;
 
     this.$tabs.each(function() {
-      var $elem = $(this);
-      var $tabContent = $elem.children('[data-tab-content]');
+      const $elem = $(this);
+      const $tabContent = $elem.children('[data-tab-content]');
       if ($tabContent.length) {
         $elem.children('a').off('click.zf.accordion keydown.zf.accordion')
-               .on('click.zf.accordion', function(e) {
+               .on('click.zf.accordion', e => {
           e.preventDefault();
           _this.toggle($tabContent);
-        }).on('keydown.zf.accordion', function(e) {
+        }).on('keydown.zf.accordion', e => {
           Keyboard.handleKey(e, 'Accordion', {
             toggle: function() {
               _this.toggle($tabContent);
             },
             next: function() {
-              var $a = $elem.next().find('a').focus();
+              const $a = $elem.next().find('a').focus();
               if (!_this.options.multiExpand) {
                 $a.trigger('click.zf.accordion')
               }
             },
             previous: function() {
-              var $a = $elem.prev().find('a').focus();
+              const $a = $elem.prev().find('a').focus();
               if (!_this.options.multiExpand) {
                 $a.trigger('click.zf.accordion')
               }
             },
             first: function() {
-              var $a = _this.$tabs.first().find('.accordion-title').focus();
+              const $a = _this.$tabs.first().find('.accordion-title').focus();
               if (!_this.options.multiExpand) {
                  $a.trigger('click.zf.accordion');
               }
             },
             last: function() {
-              var $a = _this.$tabs.last().find('.accordion-title').focus();
+              const $a = _this.$tabs.last().find('.accordion-title').focus();
               if (!_this.options.multiExpand) {
                  $a.trigger('click.zf.accordion');
               }
@@ -193,7 +190,7 @@ class Accordion extends Plugin {
     }
     //either replace or update browser history
     if (this.options.deepLink) {
-      var anchor = $target.prev('a').attr('href');
+      const anchor = $target.prev('a').attr('href');
 
       if (this.options.updateHistory) {
         history.pushState({}, '', anchor);
@@ -324,7 +321,7 @@ class Accordion extends Plugin {
    * @private
    */
   _closeAllTabs() {
-    var $activeTabs = this.$element.children('.is-active').children('[data-tab-content]');
+    const $activeTabs = this.$element.children('.is-active').children('[data-tab-content]');
     if ($activeTabs.length) {
       this._closeTab($activeTabs);
     }
