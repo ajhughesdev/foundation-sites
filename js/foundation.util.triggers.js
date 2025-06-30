@@ -134,7 +134,7 @@ Triggers.Listeners.Global  = {
 // Global, parses whole document.
 Triggers.Initializers.addClosemeListener = pluginName => {
   const yetiBoxes = $('[data-yeti-box]');
-  let plugNames = ['dropdown', 'tooltip', 'reveal'];
+  const plugNames = ['dropdown', 'tooltip', 'reveal'];
 
   if(pluginName){
     if(typeof pluginName === 'string'){
