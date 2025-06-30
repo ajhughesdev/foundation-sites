@@ -18,7 +18,6 @@
 _build
 .customizer
 
-bower_components
 ./bundle
 ./build/*
 /docs2/public/*

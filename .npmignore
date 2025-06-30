@@ -15,7 +15,6 @@
 .sass-lint.yml
 .travis.yml
 .versions
-bower.json
 browserstack.json
 composer.json
 package.js
@@ -55,7 +54,6 @@ yarn.lock
 _build
 .customizer
 
-bower_components
 bundle
 build/*
 /docs2/public/*
