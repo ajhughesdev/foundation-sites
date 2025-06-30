@@ -7,7 +7,7 @@ class Plugin {
 
   constructor(element, options) {
     this._setup(element, options);
-    var pluginName = getPluginName(this);
+    const pluginName = getPluginName(this);
     this.uuid = GetYoDigits(6, pluginName);
 
     if(!this.$element.attr(`data-${pluginName}`)){ this.$element.attr(`data-${pluginName}`, this.uuid); }
@@ -21,14 +21,14 @@ class Plugin {
 
   destroy() {
     this._destroy();
-    var pluginName = getPluginName(this);
+    const pluginName = getPluginName(this);
     this.$element.removeAttr(`data-${pluginName}`).removeData('zfPlugin')
         /**
          * Fires when the plugin has been destroyed.
          * @event Plugin#destroyed
          */
         .trigger(`destroyed.zf.${pluginName}`);
-    for(var prop in this){
+    for(const prop in this){
       if (this.hasOwnProperty(prop)) {
         this[prop] = null; //clean up script to prep for garbage collection.
       }

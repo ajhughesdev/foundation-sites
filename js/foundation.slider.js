@@ -122,7 +122,7 @@ class Slider extends Plugin {
   * @param {Number} value - floating point (the value) to be transformed using to a relative position on the slider (the inverse of _value)
   */
   _pctOfBar(value) {
-    var pctOfBar = percent(value - this.options.start, this.options.end - this.options.start)
+    let pctOfBar = percent(value - this.options.start, this.options.end - this.options.start);
 
     switch(this.options.positionValueFunction) {
     case "pow":
@@ -151,7 +151,7 @@ class Slider extends Plugin {
       break;
     }
 
-    var value
+    let value;
     if (this.options.vertical) {
       // linear interpolation which is working with negative values for start
       // https://math.stackexchange.com/a/1019084
@@ -203,44 +203,47 @@ class Slider extends Plugin {
     if (location < this.options.start) { location = this.options.start; }
     else if (location > this.options.end) { location = this.options.end; }
 
-    var isDbl = this.options.doubleSided;
+    const isDbl = this.options.doubleSided;
 
     if (isDbl) { //this block is to prevent 2 handles from crossing eachother. Could/should be improved.
       if (this.handles.index($hndl) === 0) {
-        var h2Val = parseFloat(this.$handle2.attr('aria-valuenow'));
+        const h2Val = parseFloat(this.$handle2.attr('aria-valuenow'));
         location = location >= h2Val ? h2Val - this.options.step : location;
       } else {
-        var h1Val = parseFloat(this.$handle.attr('aria-valuenow'));
+        const h1Val = parseFloat(this.$handle.attr('aria-valuenow'));
         location = location <= h1Val ? h1Val + this.options.step : location;
       }
     }
 
-    var _this = this,
-        vert = this.options.vertical,
-        hOrW = vert ? 'height' : 'width',
-        lOrT = vert ? 'top' : 'left',
-        handleDim = $hndl[0].getBoundingClientRect()[hOrW],
-        elemDim = this.$element[0].getBoundingClientRect()[hOrW],
-        //percentage of bar min/max value based on click or drag point
-        pctOfBar = this._pctOfBar(location),
-        //number of actual pixels to shift the handle, based on the percentage obtained above
-        pxToMove = (elemDim - handleDim) * pctOfBar,
-        //percentage of bar to shift the handle
-        movement = (percent(pxToMove, elemDim) * 100).toFixed(this.options.decimal);
+    const _this = this,
+          vert = this.options.vertical,
+          hOrW = vert ? 'height' : 'width',
+          lOrT = vert ? 'top' : 'left',
+          handleDim = $hndl[0].getBoundingClientRect()[hOrW],
+          elemDim = this.$element[0].getBoundingClientRect()[hOrW],
+          //percentage of bar min/max value based on click or drag point
+          pctOfBar = this._pctOfBar(location),
+          //number of actual pixels to shift the handle, based on the percentage obtained above
+          pxToMove = (elemDim - handleDim) * pctOfBar,
+          //percentage of bar to shift the handle
+          movement = (percent(pxToMove, elemDim) * 100).toFixed(this.options.decimal);
         //fixing the decimal value for the location number, is passed to other methods as a fixed floating-point value
         location = parseFloat(location.toFixed(this.options.decimal));
         // declare empty object for css adjustments, only used with 2 handled-sliders
-    var css = {};
+    const css = {};
 
     this._setValues($hndl, location);
 
     // TODO update to calculate based on values set to respective inputs??
     if (isDbl) {
-      var isLeftHndl = this.handles.index($hndl) === 0,
-          //empty variable, will be used for min-height/width for fill bar
-          dim,
-          //percentage w/h of the handle compared to the slider bar
-          handlePct =  Math.floor(percent(handleDim, elemDim) * 100);
+      const isLeftHndl = this.handles.index($hndl) === 0;
+
+      let //empty variable, will be used for min-height/width for fill bar
+      dim;
+
+      const //percentage w/h of the handle compared to the slider bar
+      handlePct =  Math.floor(percent(handleDim, elemDim) * 100);
+
       //if left handle, the math is slightly different than if it's the right handle, and the left/top property needs to be changed for the fill bar
       if (isLeftHndl) {
         //left or top percentage value to apply to the fill bar.
@@ -252,7 +255,7 @@ class Slider extends Plugin {
         if (cb && typeof cb === 'function') { cb(); }//this is only needed for the initialization of 2 handled sliders
       } else {
         //just caching the value of the left/bottom handle's left/top property
-        var handlePos = parseFloat(this.$handle[0].style[lOrT]);
+        const handlePos = parseFloat(this.$handle[0].style[lOrT]);
         //calculate the new min-height/width for the fill bar. Use isNaN to prevent false positives for numbers <= 0
         //based on the percentage of movement of the handle being manipulated, less the opposing handle's left/top position, plus the percentage w/h of the handle itself
         dim = movement - (isNaN(handlePos) ? (this.options.initialStart - this.options.start)/((this.options.end-this.options.start)/100) : handlePos) + handlePct;
@@ -262,9 +265,9 @@ class Slider extends Plugin {
     }
 
     //because we don't know exactly how the handle will be moved, check the amount of time it should take to move.
-    var moveTime = this.$element.data('dragging') ? 1000/60 : this.options.moveTime;
+    const moveTime = this.$element.data('dragging') ? 1000/60 : this.options.moveTime;
 
-    Move(moveTime, $hndl, function() {
+    Move(moveTime, $hndl, () => {
       // adjusting the left/top property of the handle, based on the percentage calculated above
       // if movement isNaN, that is because the slider is hidden and we cannot determine handle width,
       // fall back to next best guess.
@@ -285,7 +288,7 @@ class Slider extends Plugin {
     });
 
     if (this.initialized) {
-      this.$element.one('finished.zf.animate', function() {
+      this.$element.one('finished.zf.animate', () => {
         /**
          * Fires when the handle is done moving.
          * @event Slider#moved
@@ -297,7 +300,7 @@ class Slider extends Plugin {
        * @event Slider#changed
        */
       clearTimeout(_this.timeout);
-      _this.timeout = setTimeout(function(){
+      _this.timeout = setTimeout(() => {
         _this.$element.trigger('changed.zf.slider', [$hndl]);
       }, _this.options.changedDelay);
     }
@@ -310,8 +313,8 @@ class Slider extends Plugin {
    * @param {Number} idx - index of the current handle/input to use.
    */
   _setInitAttr(idx) {
-    var initVal = (idx === 0 ? this.options.initialStart : this.options.initialEnd)
-    var id = this.inputs.eq(idx).attr('id') || GetYoDigits(6, 'slider');
+    const initVal = (idx === 0 ? this.options.initialStart : this.options.initialEnd);
+    const id = this.inputs.eq(idx).attr('id') || GetYoDigits(6, 'slider');
     this.inputs.eq(idx).attr({
       'id': id,
       'max': this.options.end,
@@ -338,7 +341,7 @@ class Slider extends Plugin {
    * @param {Number} val - floating point of the new value.
    */
   _setValues($handle, val) {
-    var idx = this.options.doubleSided ? this.handles.index($handle) : 0;
+    const idx = this.options.doubleSided ? this.handles.index($handle) : 0;
     this.inputs.eq(idx).val(val);
     $handle.attr('aria-valuenow', val);
   }
@@ -355,24 +358,25 @@ class Slider extends Plugin {
    * TODO clean this up, there's a lot of repeated code between this and the _setHandlePos fn.
    */
   _handleEvent(e, $handle, val) {
-    var value;
-    if (!val) {//click or drag events
+    let value;
+    if (!val) {
+      //click or drag events
       e.preventDefault();
-      var _this = this,
-          vertical = this.options.vertical,
-          param = vertical ? 'height' : 'width',
-          direction = vertical ? 'top' : 'left',
-          eventOffset = vertical ? e.pageY : e.pageX,
-          barDim = this.$element[0].getBoundingClientRect()[param],
-          windowScroll = vertical ? $(window).scrollTop() : $(window).scrollLeft();
+      const _this = this;
+      const vertical = this.options.vertical;
+      const param = vertical ? 'height' : 'width';
+      const direction = vertical ? 'top' : 'left';
+      let eventOffset = vertical ? e.pageY : e.pageX;
+      const barDim = this.$element[0].getBoundingClientRect()[param];
+      const windowScroll = vertical ? $(window).scrollTop() : $(window).scrollLeft();
 
-      var elemOffset = this.$element.offset()[direction];
+      const elemOffset = this.$element.offset()[direction];
 
       // touch events emulated by the touch util give position relative to screen, add window.scroll to event coordinates...
       // best way to guess this is simulated is if clientY == pageY
       if (e.clientY === e.pageY) { eventOffset = eventOffset + windowScroll; }
-      var eventFromBar = eventOffset - elemOffset;
-      var barXY;
+      const eventFromBar = eventOffset - elemOffset;
+      let barXY;
       if (eventFromBar < 0) {
         barXY = 0;
       } else if (eventFromBar > barDim) {
@@ -380,7 +384,7 @@ class Slider extends Plugin {
       } else {
         barXY = eventFromBar;
       }
-      var offsetPct = percent(barXY, barDim);
+      const offsetPct = percent(barXY, barDim);
 
       value = this._value(offsetPct);
 
@@ -390,11 +394,9 @@ class Slider extends Plugin {
       value = _this._adjustValue(null, value);
 
       if (!$handle) {//figure out which handle it is, pass it to the next function.
-        var firstHndlPos = absPosition(this.$handle, direction, barXY, param),
-            secndHndlPos = absPosition(this.$handle2, direction, barXY, param);
+        const firstHndlPos = absPosition(this.$handle, direction, barXY, param), secndHndlPos = absPosition(this.$handle2, direction, barXY, param);
             $handle = firstHndlPos <= secndHndlPos ? this.$handle : this.$handle2;
       }
-
     } else {//change event on input
       value = this._adjustValue(null, val);
     }
@@ -410,10 +412,12 @@ class Slider extends Plugin {
    * @param {Number} value - value to adjust. used if $handle is falsy
    */
   _adjustValue($handle, value) {
-    var val,
-      step = this.options.step,
-      div = parseFloat(step/2),
-      left, previousVal, nextVal;
+    let val;
+    const step = this.options.step;
+    const div = parseFloat(step/2);
+    let left;
+    let previousVal;
+    let nextVal;
     if (!!$handle) {
       val = parseFloat($handle.attr('aria-valuenow'));
     }
@@ -454,55 +458,55 @@ class Slider extends Plugin {
    * @param {jQuery} $handle - the current handle to apply listeners to.
    */
   _eventsForHandle($handle) {
-    var _this = this,
-        curHandle;
+    const _this = this;
+    let curHandle;
 
-      const handleChangeEvent = function(e) {
-        const idx = _this.inputs.index($(this));
-        _this._handleEvent(e, _this.handles.eq(idx), $(this).val());
-      };
+    const handleChangeEvent = function(e) {
+      const idx = _this.inputs.index($(this));
+      _this._handleEvent(e, _this.handles.eq(idx), $(this).val());
+    };
 
-      // IE only triggers the change event when the input loses focus which strictly follows the HTML specification
-      // listen for the enter key and trigger a change
-      // @see https://html.spec.whatwg.org/multipage/input.html#common-input-element-events
-      this.inputs.off('keyup.zf.slider').on('keyup.zf.slider', function (e) {
-        if(e.keyCode === 13) handleChangeEvent.call(this, e);
-      });
+    // IE only triggers the change event when the input loses focus which strictly follows the HTML specification
+    // listen for the enter key and trigger a change
+    // @see https://html.spec.whatwg.org/multipage/input.html#common-input-element-events
+    this.inputs.off('keyup.zf.slider').on('keyup.zf.slider', function (e) {
+      if(e.keyCode === 13) handleChangeEvent.call(this, e);
+    });
 
-      this.inputs.off('change.zf.slider').on('change.zf.slider', handleChangeEvent);
+    this.inputs.off('change.zf.slider').on('change.zf.slider', handleChangeEvent);
 
-      if (this.options.clickSelect) {
-        this.$element.off('click.zf.slider').on('click.zf.slider', function(e) {
-          if (_this.$element.data('dragging')) { return false; }
+    if (this.options.clickSelect) {
+      this.$element.off('click.zf.slider').on('click.zf.slider', e => {
+        if (_this.$element.data('dragging')) { return false; }
 
-          if (!$(e.target).is('[data-slider-handle]')) {
-            if (_this.options.doubleSided) {
-              _this._handleEvent(e);
-            } else {
-              _this._handleEvent(e, _this.$handle);
-            }
+        if (!$(e.target).is('[data-slider-handle]')) {
+          if (_this.options.doubleSided) {
+            _this._handleEvent(e);
+          } else {
+            _this._handleEvent(e, _this.$handle);
           }
-        });
-      }
+        }
+      });
+    }
 
     if (this.options.draggable) {
       this.handles.addTouch();
 
-      var $body = $('body');
+      const $body = $('body');
       $handle
         .off('mousedown.zf.slider')
-        .on('mousedown.zf.slider', function(e) {
+        .on('mousedown.zf.slider', e => {
           $handle.addClass('is-dragging');
           _this.$fill.addClass('is-dragging');//
           _this.$element.data('dragging', true);
 
           curHandle = $(e.currentTarget);
 
-          $body.on('mousemove.zf.slider', function(ev) {
+          $body.on('mousemove.zf.slider', ev => {
             ev.preventDefault();
             _this._handleEvent(ev, curHandle);
 
-          }).on('mouseup.zf.slider', function(ev) {
+          }).on('mouseup.zf.slider', ev => {
             _this._handleEvent(ev, curHandle);
 
             $handle.removeClass('is-dragging');
@@ -513,16 +517,16 @@ class Slider extends Plugin {
           });
       })
       // prevent events triggered by touch
-      .on('selectstart.zf.slider touchmove.zf.slider', function(e) {
+      .on('selectstart.zf.slider touchmove.zf.slider', e => {
         e.preventDefault();
       });
     }
 
     $handle.off('keydown.zf.slider').on('keydown.zf.slider', function(e) {
-      var _$handle = $(this),
-          idx = _this.options.doubleSided ? _this.handles.index(_$handle) : 0,
-          oldValue = parseFloat($handle.attr('aria-valuenow')),
-          newValue;
+      const _$handle = $(this);
+      const idx = _this.options.doubleSided ? _this.handles.index(_$handle) : 0;
+      const oldValue = parseFloat($handle.attr('aria-valuenow'));
+      let newValue;
 
       // handle keyboard event with keyboard util
       Keyboard.handleKey(e, 'Slider', {

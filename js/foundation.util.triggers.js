@@ -2,9 +2,9 @@ import $ from 'jquery';
 import { onLoad } from './foundation.core.utils';
 import { Motion } from './foundation.util.motion';
 
-const MutationObserver = (function () {
-  var prefixes = ['WebKit', 'Moz', 'O', 'Ms', ''];
-  for (var i=0; i < prefixes.length; i++) {
+const MutationObserver = (() => {
+  const prefixes = ['WebKit', 'Moz', 'O', 'Ms', ''];
+  for (let i=0; i < prefixes.length; i++) {
     if (`${prefixes[i]}MutationObserver` in window) {
       return window[`${prefixes[i]}MutationObserver`];
     }
@@ -18,13 +18,13 @@ const triggers = (el, type) => {
   });
 };
 
-var Triggers = {
+const Triggers = {
   Listeners: {
     Basic: {},
     Global: {}
   },
   Initializers: {}
-}
+};
 
 Triggers.Listeners.Basic  = {
   openListener: function() {
@@ -132,9 +132,9 @@ Triggers.Listeners.Global  = {
 }
 
 // Global, parses whole document.
-Triggers.Initializers.addClosemeListener = function(pluginName) {
-  var yetiBoxes = $('[data-yeti-box]'),
-      plugNames = ['dropdown', 'tooltip', 'reveal'];
+Triggers.Initializers.addClosemeListener = pluginName => {
+  const yetiBoxes = $('[data-yeti-box]');
+  let plugNames = ['dropdown', 'tooltip', 'reveal'];
 
   if(pluginName){
     if(typeof pluginName === 'string'){
@@ -156,35 +156,35 @@ Triggers.Initializers.addClosemeListener = function(pluginName) {
 
 function debounceGlobalListener(debounce, trigger, listener) {
   let timer, args = Array.prototype.slice.call(arguments, 3);
-  $(window).on(trigger, function() {
+  $(window).on(trigger, () => {
     if (timer) { clearTimeout(timer); }
-    timer = setTimeout(function(){
+    timer = setTimeout(() => {
       listener.apply(null, args);
     }, debounce || 10); //default time to emit scroll event
   });
 }
 
-Triggers.Initializers.addResizeListener = function(debounce){
+Triggers.Initializers.addResizeListener = debounce => {
   let $nodes = $('[data-resize]');
   if($nodes.length){
     debounceGlobalListener(debounce, 'resize.zf.trigger', Triggers.Listeners.Global.resizeListener, $nodes);
   }
 }
 
-Triggers.Initializers.addScrollListener = function(debounce){
+Triggers.Initializers.addScrollListener = debounce => {
   let $nodes = $('[data-scroll]');
   if($nodes.length){
     debounceGlobalListener(debounce, 'scroll.zf.trigger', Triggers.Listeners.Global.scrollListener, $nodes);
   }
 }
 
-Triggers.Initializers.addMutationEventsListener = function($elem) {
+Triggers.Initializers.addMutationEventsListener = $elem => {
   if(!MutationObserver){ return false; }
   let $nodes = $elem.find('[data-resize], [data-scroll], [data-mutate]');
 
   //element callback
-  var listeningElementsMutation = function (mutationRecordsList) {
-    var $target = $(mutationRecordsList[0].target);
+  const listeningElementsMutation = mutationRecordsList => {
+    const $target = $(mutationRecordsList[0].target);
 
     //trigger the event handler for the element depending on type
     switch (mutationRecordsList[0].type) {
@@ -214,14 +214,14 @@ Triggers.Initializers.addMutationEventsListener = function($elem) {
 
   if ($nodes.length) {
     //for each element that needs to listen for resizing, scrolling, or mutation add a single observer
-    for (var i = 0; i <= $nodes.length - 1; i++) {
-      var elementObserver = new MutationObserver(listeningElementsMutation);
+    for (let i = 0; i <= $nodes.length - 1; i++) {
+      const elementObserver = new MutationObserver(listeningElementsMutation);
       elementObserver.observe($nodes[i], { attributes: true, childList: true, characterData: false, subtree: true, attributeFilter: ["data-events", "style"] });
     }
   }
 }
 
-Triggers.Initializers.addSimpleListeners = function() {
+Triggers.Initializers.addSimpleListeners = () => {
   let $document = $(document);
 
   Triggers.Initializers.addOpenListener($document);
@@ -232,7 +232,7 @@ Triggers.Initializers.addSimpleListeners = function() {
 
 }
 
-Triggers.Initializers.addGlobalListeners = function() {
+Triggers.Initializers.addGlobalListeners = () => {
   let $document = $(document);
   Triggers.Initializers.addMutationEventsListener($document);
   Triggers.Initializers.addResizeListener(250);
@@ -241,8 +241,8 @@ Triggers.Initializers.addGlobalListeners = function() {
 }
 
 
-Triggers.init = function (__, Foundation) {
-  onLoad($(window), function () {
+Triggers.init = (__, Foundation) => {
+  onLoad($(window), () => {
     if ($.triggersInitialized !== true) {
       Triggers.Initializers.addSimpleListeners();
       Triggers.Initializers.addGlobalListeners();

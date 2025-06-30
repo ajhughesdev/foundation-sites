@@ -6,7 +6,7 @@ import $ from 'jquery';
  * @param {Func} callback - Function to execute when image is fully loaded.
  */
 function onImagesLoaded(images, callback){
-  var unloaded = images.length;
+  let unloaded = images.length;
 
   if (unloaded === 0) {
     callback();
@@ -19,9 +19,9 @@ function onImagesLoaded(images, callback){
     }
     else {
       // If the above check failed, simulate loading on detached element.
-      var image = new Image();
+      const image = new Image();
       // Still count image as loaded if it finalizes with an error.
-      var events = "load.zf.images error.zf.images";
+      const events = "load.zf.images error.zf.images";
       $(image).one(events, function me(){
         // Unbind the event listeners. We're using 'one' but only one of the two events will have fired.
         $(this).off(events, me);

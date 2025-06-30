@@ -1,9 +1,9 @@
-var Box = {
+const Box = {
   ImNotTouchingYou: ImNotTouchingYou,
   OverlapArea: OverlapArea,
   GetDimensions: GetDimensions,
   GetExplicitOffsets: GetExplicitOffsets
-}
+};
 
 /**
  * Compares the dimensions of an element to a container and determines collision events with container.
@@ -20,10 +20,13 @@ function ImNotTouchingYou(element, parent, lrOnly, tbOnly, ignoreBottom) {
 }
 
 function OverlapArea(element, parent, lrOnly, tbOnly, ignoreBottom) {
-  var eleDims = GetDimensions(element),
-  topOver, bottomOver, leftOver, rightOver;
+  const eleDims = GetDimensions(element);
+  let topOver;
+  let bottomOver;
+  let leftOver;
+  let rightOver;
   if (parent) {
-    var parDims = GetDimensions(parent);
+    const parDims = GetDimensions(parent);
 
     bottomOver = (parDims.height + parDims.offset.top) - (eleDims.offset.top + eleDims.height);
     topOver    = eleDims.offset.top - parDims.offset.top;
@@ -67,11 +70,7 @@ function GetDimensions(elem){
     throw new Error("I'm sorry, Dave. I'm afraid I can't do that.");
   }
 
-  var rect = elem.getBoundingClientRect(),
-      parRect = elem.parentNode.getBoundingClientRect(),
-      winRect = document.body.getBoundingClientRect(),
-      winY = window.pageYOffset,
-      winX = window.pageXOffset;
+  const rect = elem.getBoundingClientRect(), parRect = elem.parentNode.getBoundingClientRect(), winRect = document.body.getBoundingClientRect(), winY = window.pageYOffset, winX = window.pageXOffset;
 
   return {
     width: rect.width,
@@ -114,10 +113,9 @@ function GetDimensions(elem){
  * TODO alter/rewrite to work with `em` values as well/instead of pixels
  */
 function GetExplicitOffsets(element, anchor, position, alignment, vOffset, hOffset, isOverflow) {
-  var $eleDims = GetDimensions(element),
-      $anchorDims = anchor ? GetDimensions(anchor) : null;
+  const $eleDims = GetDimensions(element), $anchorDims = anchor ? GetDimensions(anchor) : null;
 
-      var topVal, leftVal;
+      let topVal, leftVal;
 
   if ($anchorDims !== null) {
   // set position related attribute

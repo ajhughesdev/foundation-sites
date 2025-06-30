@@ -20,7 +20,7 @@ const Motion = {
 }
 
 function Move(duration, elem, fn){
-  var anim, prog, start = null;
+  let anim, prog, start = null;
 
   if (duration === 0) {
     fn.apply(elem);
@@ -56,8 +56,8 @@ function animate(isIn, element, animation, cb) {
 
   if (!element.length) return;
 
-  var initClass = isIn ? initClasses[0] : initClasses[1];
-  var activeClass = isIn ? activeClasses[0] : activeClasses[1];
+  const initClass = isIn ? initClasses[0] : initClasses[1];
+  const activeClass = isIn ? activeClasses[0] : activeClasses[1];
 
   // Set up the animation
   reset();

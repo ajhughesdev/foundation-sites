@@ -47,7 +47,7 @@ class AccordionMenu extends Plugin {
   _init() {
     Nest.Feather(this.$element, 'accordion');
 
-    var _this = this;
+    const _this = this;
 
     this.$element.find('[data-submenu]').not('.is-active').slideUp(0);//.find('a').css('padding-left', '1rem');
     this.$element.attr({
@@ -56,11 +56,7 @@ class AccordionMenu extends Plugin {
 
     this.$menuLinks = this.$element.find('.is-accordion-submenu-parent');
     this.$menuLinks.each(function() {
-      var linkId = this.id || GetYoDigits(6, 'acc-menu-link'),
-          $elem = $(this),
-          $sub = $elem.children('[data-submenu]'),
-          subId = $sub[0].id || GetYoDigits(6, 'acc-menu'),
-          isActive = $sub.hasClass('is-active');
+      const linkId = this.id || GetYoDigits(6, 'acc-menu-link'), $elem = $(this), $sub = $elem.children('[data-submenu]'), subId = $sub[0].id || GetYoDigits(6, 'acc-menu'), isActive = $sub.hasClass('is-active');
 
       if (_this.options.parentLink) {
         let $anchor = $elem.children('a');
@@ -84,7 +80,7 @@ class AccordionMenu extends Plugin {
         'id': subId
       });
     });
-    var initPanes = this.$element.find('.is-active');
+    const initPanes = this.$element.find('.is-active');
     if (initPanes.length) {
       initPanes.each(function() {
         _this.down($(this));
@@ -98,29 +94,29 @@ class AccordionMenu extends Plugin {
    * @private
    */
   _events() {
-    var _this = this;
+    const _this = this;
 
     this.$element.find('li').each(function() {
-      var $submenu = $(this).children('[data-submenu]');
+      const $submenu = $(this).children('[data-submenu]');
 
       if ($submenu.length) {
         if (_this.options.submenuToggle) {
-          $(this).children('.submenu-toggle').off('click.zf.accordionMenu').on('click.zf.accordionMenu', function() {
+          $(this).children('.submenu-toggle').off('click.zf.accordionMenu').on('click.zf.accordionMenu', () => {
             _this.toggle($submenu);
           });
         } else {
-            $(this).children('a').off('click.zf.accordionMenu').on('click.zf.accordionMenu', function(e) {
+            $(this).children('a').off('click.zf.accordionMenu').on('click.zf.accordionMenu', e => {
               e.preventDefault();
               _this.toggle($submenu);
             });
         }
       }
     }).on('keydown.zf.accordionMenu', function(e) {
-      var $element = $(this),
-          $elements = $element.parent('ul').children('li'),
-          $prevElement,
-          $nextElement,
-          $target = $element.children('[data-submenu]');
+      const $element = $(this);
+      const $elements = $element.parent('ul').children('li');
+      let $prevElement;
+      let $nextElement;
+      const $target = $element.children('[data-submenu]');
 
       $elements.each(function(i) {
         if ($(this).is($element)) {

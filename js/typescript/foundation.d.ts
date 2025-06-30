@@ -627,7 +627,7 @@ interface JQuery {
   foundation(method?: string | Array<any>, ...args: any[]): JQuery;
 }
 
-declare var Foundation: FoundationSites.FoundationSitesStatic;
+declare const Foundation: FoundationSites.FoundationSitesStatic;
 
 declare module "Foundation" {
   export = Foundation;

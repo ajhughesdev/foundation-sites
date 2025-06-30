@@ -14,7 +14,7 @@ const ALIGNMENTS = {
 }
 
 function nextItem(item, array) {
-  var currentIdx = array.indexOf(item);
+  const currentIdx = array.indexOf(item);
   if(currentIdx === array.length - 1) {
     return array[0];
   } else {
@@ -89,8 +89,8 @@ class Positionable extends Plugin {
   }
 
   _positionsExhausted() {
-    var isExhausted = true;
-    for(var i = 0; i < POSITIONS.length; i++) {
+    let isExhausted = true;
+    for(let i = 0; i < POSITIONS.length; i++) {
       isExhausted = isExhausted && this._alignmentsExhausted(POSITIONS[i]);
     }
     return isExhausted;
@@ -127,9 +127,9 @@ class Positionable extends Plugin {
     $element.offset(Box.GetExplicitOffsets($element, $anchor, this.position, this.alignment, this._getVOffset(), this._getHOffset()));
 
     if(!this.options.allowOverlap) {
-      var minOverlap = 100000000;
+      let minOverlap = 100000000;
       // default coordinates to how we start, in case we can't figure out better
-      var minCoordinates = {position: this.position, alignment: this.alignment};
+      let minCoordinates = {position: this.position, alignment: this.alignment};
       while(!this._positionsExhausted()) {
         let overlap = Box.OverlapArea($element, $parent, false, false, this.options.allowBottomOverlap);
         if(overlap === 0) {

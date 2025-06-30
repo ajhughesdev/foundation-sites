@@ -47,7 +47,7 @@ class Dropdown extends Positionable {
    * @private
    */
   _init() {
-    var $id = this.$element.attr('id');
+    const $id = this.$element.attr('id');
 
     this.$anchors = $(`[data-toggle="${$id}"]`).length ? $(`[data-toggle="${$id}"]`) : $(`[data-open="${$id}"]`);
     this.$anchors.attr({
@@ -88,7 +88,7 @@ class Dropdown extends Positionable {
 
   _getDefaultPosition() {
     // handle legacy classnames
-    var position = this.$element[0].className.match(/(top|left|right|bottom)/g);
+    const position = this.$element[0].className.match(/(top|left|right|bottom)/g);
     if(position) {
       return position[0];
     } else {
@@ -98,7 +98,7 @@ class Dropdown extends Positionable {
 
   _getDefaultAlignment() {
     // handle legacy float approach
-    var horizontalPosition = /float-(\S+)/.exec(this.$currentAnchor.attr('class'));
+    const horizontalPosition = /float-(\S+)/.exec(this.$currentAnchor.attr('class'));
     if(horizontalPosition) {
       return horizontalPosition[1];
     }
@@ -137,8 +137,7 @@ class Dropdown extends Positionable {
    * @private
    */
   _events() {
-    var _this = this,
-        hasTouch = 'ontouchstart' in window || (typeof window.ontouchstart !== 'undefined');
+    const _this = this, hasTouch = 'ontouchstart' in window || (typeof window.ontouchstart !== 'undefined');
 
     this.$element.on({
       'open.zf.trigger': this.open.bind(this),
@@ -167,28 +166,28 @@ class Dropdown extends Positionable {
       .on('mouseenter.zf.dropdown', function(){
         _this._setCurrentAnchor(this);
 
-        var bodyData = $('body').data();
+        const bodyData = $('body').data();
         if(typeof(bodyData.whatinput) === 'undefined' || bodyData.whatinput === 'mouse') {
           clearTimeout(_this.timeout);
-          _this.timeout = setTimeout(function(){
+          _this.timeout = setTimeout(() => {
             _this.open();
             _this.$anchors.data('hover', true);
           }, _this.options.hoverDelay);
         }
-      }).on('mouseleave.zf.dropdown', ignoreMousedisappear(function(){
+      }).on('mouseleave.zf.dropdown', ignoreMousedisappear(() => {
         clearTimeout(_this.timeout);
-        _this.timeout = setTimeout(function(){
+        _this.timeout = setTimeout(() => {
           _this.close();
           _this.$anchors.data('hover', false);
         }, _this.options.hoverDelay);
       }));
       if(this.options.hoverPane){
         this.$element.off('mouseenter.zf.dropdown mouseleave.zf.dropdown')
-            .on('mouseenter.zf.dropdown', function(){
+            .on('mouseenter.zf.dropdown', () => {
               clearTimeout(_this.timeout);
-            }).on('mouseleave.zf.dropdown', ignoreMousedisappear(function(){
+            }).on('mouseleave.zf.dropdown', ignoreMousedisappear(() => {
               clearTimeout(_this.timeout);
-              _this.timeout = setTimeout(function(){
+              _this.timeout = setTimeout(() => {
                 _this.close();
                 _this.$anchors.data('hover', false);
               }, _this.options.hoverDelay);
@@ -197,7 +196,7 @@ class Dropdown extends Positionable {
     }
     this.$anchors.add(this.$element).on('keydown.zf.dropdown', function(e) {
 
-      var $target = $(this);
+      const $target = $(this);
 
       Keyboard.handleKey(e, 'Dropdown', {
         open: function() {
@@ -221,10 +220,9 @@ class Dropdown extends Positionable {
    * @private
    */
   _addBodyHandler() {
-     var $body = $(document.body).not(this.$element),
-         _this = this;
+     const $body = $(document.body).not(this.$element), _this = this;
      $body.off('click.zf.dropdown tap.zf.dropdown')
-          .on('click.zf.dropdown tap.zf.dropdown', function (e) {
+          .on('click.zf.dropdown tap.zf.dropdown', e => {
             if(_this.$anchors.is(e.target) || _this.$anchors.find(e.target).length) {
               return;
             }
@@ -259,7 +257,7 @@ class Dropdown extends Positionable {
         .attr({'aria-hidden': false});
 
     if(this.options.autoFocus){
-      var $focusable = Keyboard.findFocusable(this.$element);
+      const $focusable = Keyboard.findFocusable(this.$element);
       if($focusable.length){
         $focusable.eq(0).focus();
       }

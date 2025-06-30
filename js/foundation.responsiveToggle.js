@@ -36,14 +36,14 @@ class ResponsiveToggle extends Plugin {
    */
   _init() {
     MediaQuery._init();
-    var targetID = this.$element.data('responsive-toggle');
+    const targetID = this.$element.data('responsive-toggle');
     if (!targetID) {
       console.error('Your tab bar needs an ID of a Menu as the value of data-tab-bar.');
     }
 
     this.$targetMenu = $(`#${targetID}`);
     this.$toggler = this.$element.find('[data-toggle]').filter(function() {
-      var target = $(this).data('toggle');
+      const target = $(this).data('toggle');
       return (target === targetID || target === "");
     });
     this.options = $.extend({}, this.options, this.$targetMenu.data());

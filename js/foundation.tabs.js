@@ -42,7 +42,7 @@ class Tabs extends Plugin {
    * @private
    */
   _init() {
-    var _this = this;
+    const _this = this;
     this._isInitializing = true;
 
     this.$element.attr({'role': 'tablist'});
@@ -50,12 +50,7 @@ class Tabs extends Plugin {
     this.$tabContent = $(`[data-tabs-content="${this.$element[0].id}"]`);
 
     this.$tabTitles.each(function(){
-      var $elem = $(this),
-          $link = $elem.find('a'),
-          isActive = $elem.hasClass(`${_this.options.linkActiveClass}`),
-          hash = $link.attr('data-tabs-target') || $link[0].hash.slice(1),
-          linkId = $link[0].id ? $link[0].id : `${hash}-label`,
-          $tabContent = $(`#${hash}`);
+      const $elem = $(this), $link = $elem.find('a'), isActive = $elem.hasClass(`${_this.options.linkActiveClass}`), hash = $link.attr('data-tabs-target') || $link[0].hash.slice(1), linkId = $link[0].id ? $link[0].id : `${hash}-label`, $tabContent = $(`#${hash}`);
 
       $elem.attr({'role': 'presentation'});
 
@@ -82,7 +77,7 @@ class Tabs extends Plugin {
       }
 
       if(isActive && _this.options.autoFocus){
-        _this.onLoadListener = onLoad($(window), function() {
+        _this.onLoadListener = onLoad($(window), () => {
           $('html, body').animate({ scrollTop: $elem.offset().top }, _this.options.deepLinkSmudgeDelay, () => {
             $link.focus();
           });
@@ -91,7 +86,7 @@ class Tabs extends Plugin {
     });
 
     if(this.options.matchHeight) {
-      var $images = this.$tabContent.find('img');
+      const $images = this.$tabContent.find('img');
 
       if ($images.length) {
         onImagesLoaded($images, this._setHeight.bind(this));
@@ -102,7 +97,7 @@ class Tabs extends Plugin {
 
      // Current context-bound function to open tabs on page load or history hashchange
     this._checkDeepLink = () => {
-      var anchor = window.location.hash;
+      let anchor = window.location.hash;
 
       if (!anchor.length) {
         // If we are still initializing and there is no anchor, then there is nothing to do
@@ -111,11 +106,11 @@ class Tabs extends Plugin {
         if (this._initialAnchor) anchor = this._initialAnchor;
       }
 
-      var anchorNoHash = anchor.indexOf('#') >= 0 ? anchor.slice(1) : anchor;
-      var $anchor = anchorNoHash && $(`#${anchorNoHash}`);
-      var $link = anchor && this.$element.find(`[href$="${anchor}"],[data-tabs-target="${anchorNoHash}"]`).first();
+      const anchorNoHash = anchor.indexOf('#') >= 0 ? anchor.slice(1) : anchor;
+      const $anchor = anchorNoHash && $(`#${anchorNoHash}`);
+      const $link = anchor && this.$element.find(`[href$="${anchor}"],[data-tabs-target="${anchorNoHash}"]`).first();
       // Whether the anchor element that has been found is part of this element
-      var isOwnAnchor = !!($anchor.length && $link.length);
+      const isOwnAnchor = !!($anchor.length && $link.length);
 
       if (isOwnAnchor) {
         // If there is an anchor for the hash, select it
@@ -129,7 +124,7 @@ class Tabs extends Plugin {
 
         // Roll up a little to show the titles
         if (this.options.deepLinkSmudge) {
-          var offset = this.$element.offset();
+          const offset = this.$element.offset();
           $('html, body').animate({ scrollTop: offset.top - this.options.deepLinkSmudgeOffset}, this.options.deepLinkSmudgeDelay);
         }
 
@@ -176,7 +171,7 @@ class Tabs extends Plugin {
    * @private
    */
   _addClickHandler() {
-    var _this = this;
+    const _this = this;
 
     this.$element
       .off('click.zf.tabs')
@@ -191,16 +186,16 @@ class Tabs extends Plugin {
    * @private
    */
   _addKeyHandler() {
-    var _this = this;
+    const _this = this;
 
     this.$tabTitles.off('keydown.zf.tabs').on('keydown.zf.tabs', function(e){
       if (e.which === 9) return;
 
 
-      var $element = $(this),
-        $elements = $element.parent('ul').children('li'),
-        $prevElement,
-        $nextElement;
+      const $element = $(this);
+      const $elements = $element.parent('ul').children('li');
+      let $prevElement;
+      let $nextElement;
 
       $elements.each(function(i) {
         if ($(this).is($element)) {
@@ -253,8 +248,8 @@ class Tabs extends Plugin {
         return;
     }
 
-    var $oldTab = this.$element.
-          find(`.${this.options.linkClass}.${this.options.linkActiveClass}`),
+    const $oldTab = this.$element.
+                find(`.${this.options.linkClass}.${this.options.linkActiveClass}`),
           $tabLink = $target.find('[role="tab"]'),
           target = $tabLink.attr('data-tabs-target'),
           anchor = target && target.length ? `#${target}` : $tabLink[0].hash,
@@ -291,9 +286,7 @@ class Tabs extends Plugin {
    * @function
    */
   _openTab($target) {
-      var $tabLink = $target.find('[role="tab"]'),
-          hash = $tabLink.attr('data-tabs-target') || $tabLink[0].hash.slice(1),
-          $targetContent = this.$tabContent.find(`#${hash}`);
+      const $tabLink = $target.find('[role="tab"]'), hash = $tabLink.attr('data-tabs-target') || $tabLink[0].hash.slice(1), $targetContent = this.$tabContent.find(`#${hash}`);
 
       $target.addClass(`${this.options.linkActiveClass}`);
 
@@ -312,7 +305,7 @@ class Tabs extends Plugin {
    * @function
    */
   _collapseTab($target) {
-    var $targetAnchor = $target
+    const $targetAnchor = $target
       .removeClass(`${this.options.linkActiveClass}`)
       .find('[role="tab"]')
       .attr({
@@ -331,7 +324,7 @@ class Tabs extends Plugin {
    * @function
    */
   _collapse() {
-    var $activeTab = this.$element.find(`.${this.options.linkClass}.${this.options.linkActiveClass}`);
+    const $activeTab = this.$element.find(`.${this.options.linkClass}.${this.options.linkActiveClass}`);
 
     if ($activeTab.length) {
       this._collapseTab($activeTab);
@@ -351,7 +344,7 @@ class Tabs extends Plugin {
    * @function
    */
   selectTab(elem, historyHandled) {
-    var idStr, hashIdStr;
+    let idStr, hashIdStr;
 
     if (typeof elem === 'object') {
       idStr = elem[0].id;
@@ -366,7 +359,7 @@ class Tabs extends Plugin {
       idStr = idStr.slice(1);
     }
 
-    var $target = this.$tabTitles.has(`[href$="${hashIdStr}"],[data-tabs-target="${idStr}"]`).first();
+    const $target = this.$tabTitles.has(`[href$="${hashIdStr}"],[data-tabs-target="${idStr}"]`).first();
 
     this._handleTabChange($target, historyHandled);
   };
@@ -380,8 +373,8 @@ class Tabs extends Plugin {
    * @private
    */
   _setHeight() {
-    var max = 0,
-        _this = this; // Lock down the `this` value for the root tabs object
+    let max = 0; // Lock down the `this` value for the root tabs object
+    const _this = this;
 
     if (!this.$tabContent) {
       return;
@@ -392,14 +385,13 @@ class Tabs extends Plugin {
       .css('min-height', '')
       .each(function() {
 
-        var panel = $(this),
-            isActive = panel.hasClass(`${_this.options.panelActiveClass}`); // get the options from the parent instead of trying to get them from the child
+        const panel = $(this), isActive = panel.hasClass(`${_this.options.panelActiveClass}`); // get the options from the parent instead of trying to get them from the child
 
         if (!isActive) {
           panel.css({'visibility': 'hidden', 'display': 'block'});
         }
 
-        var temp = this.getBoundingClientRect().height;
+        const temp = this.getBoundingClientRect().height;
 
         if (!isActive) {
           panel.css({

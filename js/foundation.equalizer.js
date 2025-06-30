@@ -33,8 +33,8 @@ class Equalizer extends Plugin {
    * @private
    */
   _init() {
-    var eqId = this.$element.attr('data-equalizer') || '';
-    var $watched = this.$element.find(`[data-equalizer-watch="${eqId}"]`);
+    const eqId = this.$element.attr('data-equalizer') || '';
+    const $watched = this.$element.find(`[data-equalizer-watch="${eqId}"]`);
 
     MediaQuery._init();
 
@@ -50,8 +50,8 @@ class Equalizer extends Plugin {
       onPostEqualizedBound: this._onPostEqualized.bind(this)
     };
 
-    var imgs = this.$element.find('img');
-    var tooSmall;
+    const imgs = this.$element.find('img');
+    let tooSmall;
     if(this.options.equalizeOn){
       tooSmall = this._checkMQ();
       $(window).on('changed.zf.mediaquery', this._checkMQ.bind(this));
@@ -116,7 +116,7 @@ class Equalizer extends Plugin {
    * @private
    */
   _checkMQ() {
-    var tooSmall = !MediaQuery.is(this.options.equalizeOn);
+    const tooSmall = !MediaQuery.is(this.options.equalizeOn);
     if(tooSmall){
       if(this.isOn){
         this._pauseEvents();
@@ -173,8 +173,8 @@ class Equalizer extends Plugin {
    * @returns {Array} heights - An array of heights of children within Equalizer container
    */
   getHeights(cb) {
-    var heights = [];
-    for(var i = 0, len = this.$watched.length; i < len; i++){
+    const heights = [];
+    for(let i = 0, len = this.$watched.length; i < len; i++){
       this.$watched[i].style.height = 'auto';
       heights.push(this.$watched[i].offsetHeight);
     }
@@ -187,15 +187,15 @@ class Equalizer extends Plugin {
    * @returns {Array} groups - An array of heights of children within Equalizer container grouped by row with element,height and max as last child
    */
   getHeightsByRow(cb) {
-    var lastElTopOffset = (this.$watched.length ? this.$watched.first().offset().top : 0),
-        groups = [],
-        group = 0;
+    let lastElTopOffset = (this.$watched.length ? this.$watched.first().offset().top : 0);
+    const groups = [];
+    let group = 0;
     //group by Row
     groups[group] = [];
-    for(var i = 0, len = this.$watched.length; i < len; i++){
+    for(let i = 0, len = this.$watched.length; i < len; i++){
       this.$watched[i].style.height = 'auto';
       //maybe could use this.$watched[i].offsetTop
-      var elOffsetTop = $(this.$watched[i]).offset().top;
+      const elOffsetTop = $(this.$watched[i]).offset().top;
       if (elOffsetTop !== lastElTopOffset) {
         group++;
         groups[group] = [];
@@ -204,9 +204,9 @@ class Equalizer extends Plugin {
       groups[group].push([this.$watched[i],this.$watched[i].offsetHeight]);
     }
 
-    for (var j = 0, ln = groups.length; j < ln; j++) {
-      var heights = $(groups[j]).map(function(){ return this[1]; }).get();
-      var max         = Math.max.apply(null, heights);
+    for (let j = 0, ln = groups.length; j < ln; j++) {
+      const heights = $(groups[j]).map(function(){ return this[1]; }).get();
+      const max         = Math.max.apply(null, heights);
       groups[j].push(max);
     }
     cb(groups);
@@ -219,7 +219,7 @@ class Equalizer extends Plugin {
    * @fires Equalizer#postequalized
    */
   applyHeight(heights) {
-    var max = Math.max.apply(null, heights);
+    const max = Math.max.apply(null, heights);
     /**
      * Fires before the heights are applied
      * @event Equalizer#preequalized
@@ -248,9 +248,8 @@ class Equalizer extends Plugin {
      * Fires before the heights are applied
      */
     this.$element.trigger('preequalized.zf.equalizer');
-    for (var i = 0, len = groups.length; i < len ; i++) {
-      var groupsILength = groups[i].length,
-          max = groups[i][groupsILength - 1];
+    for (let i = 0, len = groups.length; i < len ; i++) {
+      const groupsILength = groups[i].length, max = groups[i][groupsILength - 1];
       if (groupsILength<=2) {
         $(groups[i][0][0]).css({'height':'auto'});
         continue;
@@ -260,7 +259,7 @@ class Equalizer extends Plugin {
         * @event Equalizer#preequalizedrow
         */
       this.$element.trigger('preequalizedrow.zf.equalizer');
-      for (var j = 0, lenJ = (groupsILength-1); j < lenJ ; j++) {
+      for (let j = 0, lenJ = (groupsILength-1); j < lenJ ; j++) {
         $(groups[i][j][0]).css({'height':max});
       }
       /**
