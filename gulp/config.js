@@ -54,7 +54,6 @@ module.exports = {
 
   // Dist
   VERSIONED_FILES: [
-    'bower.json',
     'composer.json',
     'docs/pages/installation.md',
     'js/foundation.core.js',
