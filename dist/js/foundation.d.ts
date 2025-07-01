@@ -1,4 +1,4 @@
-// Type definitions for Foundation Sites v6.3.1
+// Type definitions for Foundation Sites v6.9.0
 // Project: https://get.foundation/
 // Github: https://github.com/foundation/foundation-sites
 //
@@ -32,6 +32,10 @@ declare module FoundationSites {
     resetForm(): void;
   }
 
+  interface IAbideValidator {
+    (el: JQuery, required?: boolean, parent?: JQuery): boolean;
+  }
+
   interface AbideDefaults {
     validateOn: string | null;
     labelErrorClass: string;
@@ -43,7 +47,7 @@ declare module FoundationSites {
     liveValidate: boolean;
     validateOnBlur: boolean;
     patterns: IAbidePatterns;
-    validators: any; // TODO, maybe there is a better solution to describe how this object may look like
+    validators: Record<string, IAbideValidator>;
   }
 
   interface IAbidePatterns {
@@ -77,7 +81,7 @@ declare module FoundationSites {
     liveValidate?: boolean;
     validateOnBlur?: boolean;
     patterns?: IAbidePatterns;
-    validators?: any;
+    validators?: Record<string, IAbideValidator>;
   }
 
   // https://get.foundation/sites/docs/accordion.html#javascript-reference
@@ -497,7 +501,7 @@ declare module FoundationSites {
   }
 
   interface Move {
-    // TODO
+    (duration: number, elem: JQuery, fn: Function): void;
   }
 
   interface Nest {
@@ -518,7 +522,34 @@ declare module FoundationSites {
   }
 
   interface Triggers {
-    // TODO :extension on jQuery
+    Listeners: {
+      Basic: {
+        openListener(): void;
+        closeListener(e: Event): void;
+        toggleListener(): void;
+        closeableListener(e: Event): void;
+        toggleFocusListener(): void;
+      };
+      Global: {
+        resizeListener($nodes: JQuery): void;
+        scrollListener($nodes: JQuery): void;
+        closeMeListener(e: Event, pluginId: string): void;
+      };
+    };
+    Initializers: {
+      addOpenListener($elem: JQuery): void;
+      addCloseListener($elem: JQuery): void;
+      addToggleListener($elem: JQuery): void;
+      addCloseableListener($elem: JQuery): void;
+      addToggleFocusListener($elem: JQuery): void;
+      addClosemeListener(pluginNames?: string | string[]): void;
+      addResizeListener(debounce?: number): void;
+      addScrollListener(debounce?: number): void;
+      addMutationEventsListener($elem: JQuery): void;
+      addSimpleListeners(): void;
+      addGlobalListeners(): void;
+    };
+    init(jQuery: any, Foundation?: FoundationSitesStatic): void;
   }
 
   interface FoundationSitesStatic {
