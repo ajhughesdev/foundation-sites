@@ -48,7 +48,6 @@ class Reveal extends Plugin {
     MediaQuery._init();
     this.id = this.$element.attr('id');
     this.isActive = false;
-    this.cached = {mq: MediaQuery.current};
 
     this.$anchor = $(`[data-open="${this.id}"]`).length ? $(`[data-open="${this.id}"]`) : $(`[data-toggle="${this.id}"]`);
     this.$anchor.attr({
@@ -102,7 +101,6 @@ class Reveal extends Plugin {
 
   /**
    * Updates position of modal
-   * TODO:  Figure out if we actually need to cache these values or if it doesn't matter
    * @private
    */
   _updatePosition() {
@@ -190,6 +188,7 @@ class Reveal extends Plugin {
   */
   _disableScroll(scrollTop) {
     scrollTop = scrollTop || $(window).scrollTop();
+    this._scrollTop = scrollTop;
     if ($(document).height() > $(window).height()) {
       $("html")
         .css("top", -scrollTop);
@@ -201,12 +200,15 @@ class Reveal extends Plugin {
   * @param {number} scrollTop - Scroll to restore, html "top" property by default (as set by `_disableScroll`)
   */
   _enableScroll(scrollTop) {
-    scrollTop = scrollTop || parseInt($("html").css("top"), 10);
+    if (typeof scrollTop !== 'number') {
+      scrollTop = this._scrollTop || parseInt($("html").css("top"), 10);
+    }
     if ($(document).height() > $(window).height()) {
       $("html")
         .css("top", "");
       $(window).scrollTop(-scrollTop);
     }
+    this._scrollTop = null;
   }
 
 
@@ -433,11 +435,6 @@ class Reveal extends Plugin {
 
     function finishUp() {
 
-      // Get the current top before the modal is closed and restore the scroll after.
-      // TODO: use component properties instead of HTML properties
-      // See https://github.com/foundation/foundation-sites/pull/10786
-      const scrollTop = parseInt($("html").css("top"), 10);
-
       if ($('.reveal:visible').length  === 0) {
         _this._removeGlobalClasses(); // also remove .is-reveal-open from the html element when there is no opened reveal
       }
@@ -447,7 +444,7 @@ class Reveal extends Plugin {
       _this.$element.attr('aria-hidden', true);
 
       if ($('.reveal:visible').length  === 0) {
-        _this._enableScroll(scrollTop);
+        _this._enableScroll();
       }
 
       /**

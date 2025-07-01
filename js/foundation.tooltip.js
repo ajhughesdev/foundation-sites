@@ -185,9 +185,8 @@ class Tooltip extends Positionable {
   }
 
   /**
-   * adds event listeners for the tooltip and its anchor
-   * TODO combine some of the listeners like focus and mouseenter, etc.
-   * @private
+  * adds event listeners for the tooltip and its anchor
+  * @private
    */
   _events() {
     const _this = this;
@@ -197,56 +196,9 @@ class Tooltip extends Positionable {
     // `disableForTouch: Fully disable the tooltip on touch devices
     if (hasTouch && this.options.disableForTouch) return;
 
-    if (!this.options.disableHover) {
-      this.$element
-      .on('mouseenter.zf.tooltip', () => {
-        if (!_this.isActive) {
-          _this.timeout = setTimeout(() => {
-            _this.show();
-          }, _this.options.hoverDelay);
-        }
-      })
-      .on('mouseleave.zf.tooltip', ignoreMousedisappear(() => {
-        clearTimeout(_this.timeout);
-        if (!isFocus || (_this.isClick && !_this.options.clickOpen)) {
-          _this.hide();
-        }
-      }));
-    }
-
-    if (hasTouch) {
-      this.$element
-      .on('tap.zf.tooltip touchend.zf.tooltip', () => {
-        _this.isActive ? _this.hide() : _this.show();
-      });
-    }
-
-    if (this.options.clickOpen) {
-      this.$element.on('mousedown.zf.tooltip', () => {
-        if (_this.isClick) {
-          //_this.hide();
-          // _this.isClick = false;
-        } else {
-          _this.isClick = true;
-          if ((_this.options.disableHover || !_this.$element.attr('tabindex')) && !_this.isActive) {
-            _this.show();
-          }
-        }
-      });
-    } else {
-      this.$element.on('mousedown.zf.tooltip', () => {
-        _this.isClick = true;
-      });
-    }
-
-    this.$element.on({
-      // 'toggle.zf.trigger': this.toggle.bind(this),
-      // 'close.zf.trigger': this.hide.bind(this)
-      'close.zf.trigger': this.hide.bind(this)
-    });
-
-    this.$element
-      .on('focus.zf.tooltip', () => {
+    const events = {
+      'close.zf.trigger': this.hide.bind(this),
+      'focus.zf.tooltip': () => {
         isFocus = true;
         if (_this.isClick) {
           // If we're not showing open on clicks, we need to pretend a click-launched focus isn't
@@ -256,19 +208,65 @@ class Tooltip extends Positionable {
         } else {
           _this.show();
         }
-      })
-
-      .on('focusout.zf.tooltip', () => {
+      },
+      'focusout.zf.tooltip': () => {
         isFocus = false;
         _this.isClick = false;
         _this.hide();
-      })
-
-      .on('resizeme.zf.trigger', () => {
+      },
+      'resizeme.zf.trigger': () => {
         if (_this.isActive) {
           _this._setPosition();
         }
+      }
+    };
+
+    if (!this.options.disableHover) {
+      events['mouseenter.zf.tooltip'] = () => {
+        if (!_this.isActive) {
+          _this.timeout = setTimeout(() => {
+            _this.show();
+          }, _this.options.hoverDelay);
+        }
+      };
+      events['mouseleave.zf.tooltip'] = ignoreMousedisappear(() => {
+        clearTimeout(_this.timeout);
+        if (!isFocus || (_this.isClick && !_this.options.clickOpen)) {
+          _this.hide();
+        }
       });
+    }
+
+    if (hasTouch) {
+      events['tap.zf.tooltip touchend.zf.tooltip'] = () => {
+        _this.isActive ? _this.hide() : _this.show();
+      };
+    }
+
+    if (this.options.clickOpen) {
+      events['mousedown.zf.tooltip'] = () => {
+        if (_this.isClick) {
+          // noop
+        } else {
+          _this.isClick = true;
+          if ((_this.options.disableHover || !_this.$element.attr('tabindex')) && !_this.isActive) {
+            _this.show();
+          }
+        }
+      };
+    } else {
+      events['mousedown.zf.tooltip'] = () => {
+        _this.isClick = true;
+      };
+    }
+
+    this.$element.on(events);
+
+    $(window).on(`resize.zf.tooltip-${this.id}`, () => {
+      if (_this.isActive) {
+        _this._setPosition();
+      }
+    });
   }
 
   /**
@@ -295,6 +293,7 @@ class Tooltip extends Positionable {
                  .removeAttr('aria-describedby data-disable-hover data-resize data-toggle data-tooltip data-yeti-box');
 
     this.template.remove();
+    $(window).off(`resize.zf.tooltip-${this.id}`);
   }
 }
 
@@ -456,8 +455,6 @@ Tooltip.defaults = {
   allowHtml: false
 };
 
-/**
- * TODO utilize resize event trigger
- */
+
 
 export {Tooltip};
