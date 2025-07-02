@@ -270,8 +270,7 @@ $dropdown-menu-item-background-active: transparent !default;
       width: 100%;
     }
 
-    // [TODO] Cut back specificity
-    //&:not(.js-dropdown-nohover) > .is-dropdown-submenu-parent:hover > &, // why is this line needed? Opening is handled by JS and this causes some ugly flickering when the sub is re-positioned automatically...
+    // Submenus are displayed when `.js-dropdown-active` is set by the plugin.
     &.js-dropdown-active {
       display: block;
     }

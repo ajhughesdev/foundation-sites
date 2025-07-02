@@ -2,8 +2,10 @@
 // https://get.foundation
 // Licensed under MIT Open Source
 
-// [TODO] Check how plugin confirms disabled or vertical status
-// [TODO] Check if transition: all; is necessary
+// The JavaScript plugin toggles `.disabled` and `.vertical` classes
+// to indicate these states on the slider component.
+// `transition: all` is kept so the handle and fill animate smoothly
+// across browsers.
 
 ////
 /// @group slider
