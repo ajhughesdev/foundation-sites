@@ -3,36 +3,39 @@ import $ from 'jquery';
 const Nest = {
   Feather(menu, type = 'zf') {
     menu.attr('role', 'menubar');
-    menu.find('a').attr({'role': 'menuitem'});
+    menu.find('a').attr({ role: 'menuitem' });
 
-    const items = menu.find('li').attr({'role': 'none'}), subMenuClass = `is-${type}-submenu`, subItemClass = `${subMenuClass}-item`, hasSubClass = `is-${type}-submenu-parent`, applyAria = (type !== 'accordion'); // Accordions handle their own ARIA attriutes.
+    const items = menu.find('li').attr({ role: 'none' }),
+      subMenuClass = `is-${type}-submenu`,
+      subItemClass = `${subMenuClass}-item`,
+      hasSubClass = `is-${type}-submenu-parent`,
+      applyAria = type !== 'accordion'; // Accordions handle their own ARIA attriutes.
 
-    items.each(function() {
-      const $item = $(this), $sub = $item.children('ul');
+    items.each(function () {
+      const $item = $(this),
+        $sub = $item.children('ul');
 
       if ($sub.length) {
         $item.addClass(hasSubClass);
-        if(applyAria) {
+        if (applyAria) {
           const firstItem = $item.children('a:first');
           firstItem.attr({
             'aria-haspopup': true,
-            'aria-label': firstItem.attr('aria-label') || firstItem.text()
+            'aria-label': firstItem.attr('aria-label') || firstItem.text(),
           });
           // Note:  Drilldowns behave differently in how they hide, and so need
           // additional attributes.  We should look if this possibly over-generalized
           // utility (Nest) is appropriate when we rework menus in 6.4
-          if(type === 'drilldown') {
-            $item.attr({'aria-expanded': false});
+          if (type === 'drilldown') {
+            $item.attr({ 'aria-expanded': false });
           }
         }
-        $sub
-          .addClass(`submenu ${subMenuClass}`)
-          .attr({
-            'data-submenu': '',
-            'role': 'menubar'
-          });
-        if(type === 'drilldown') {
-          $sub.attr({'aria-hidden': true});
+        $sub.addClass(`submenu ${subMenuClass}`).attr({
+          'data-submenu': '',
+          role: 'menubar',
+        });
+        if (type === 'drilldown') {
+          $sub.attr({ 'aria-hidden': true });
         }
       }
 
@@ -46,16 +49,18 @@ const Nest = {
 
   Burn(menu, type) {
     const //items = menu.find('li'),
-          subMenuClass = `is-${type}-submenu`,
-          subItemClass = `${subMenuClass}-item`,
-          hasSubClass = `is-${type}-submenu-parent`;
+      subMenuClass = `is-${type}-submenu`,
+      subItemClass = `${subMenuClass}-item`,
+      hasSubClass = `is-${type}-submenu-parent`;
 
     menu
       .find('>li, > li > ul, .menu, .menu > li, [data-submenu] > li')
-      .removeClass(`${subMenuClass} ${subItemClass} ${hasSubClass} is-submenu-item submenu is-active`)
-      .removeAttr('data-submenu').css('display', '');
+      .removeClass(
+        `${subMenuClass} ${subItemClass} ${hasSubClass} is-submenu-item submenu is-active`
+      )
+      .removeAttr('data-submenu')
+      .css('display', '');
+  },
+};
 
-  }
-}
-
-export {Nest};
+export { Nest };

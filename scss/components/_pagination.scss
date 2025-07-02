@@ -74,7 +74,7 @@ $pagination-arrow-previous: '\00AB' !default;
 $pagination-arrow-next: '\00BB' !default;
 
 /// Adds styles for a pagination container. Apply this to a `<ul>`.
-@mixin pagination-container (
+@mixin pagination-container(
   $margin-bottom: $pagination-margin-bottom,
   $font-size: $pagination-font-size,
   $spacing: $pagination-item-spacing,
@@ -95,8 +95,7 @@ $pagination-arrow-next: '\00BB' !default;
 
     @if $pagination-mobile-items {
       display: inline-block;
-    }
-    @else {
+    } @else {
       display: none;
 
       &:last-child,
@@ -131,7 +130,7 @@ $pagination-arrow-next: '\00BB' !default;
 }
 
 /// Adds styles for the current pagination item. Apply this to an `<a>`.
-@mixin pagination-item-current (
+@mixin pagination-item-current(
   $padding: $pagination-item-padding,
   $background-current: $pagination-item-background-current,
   $color-current: $pagination-item-color-current
@@ -143,7 +142,7 @@ $pagination-arrow-next: '\00BB' !default;
 }
 
 /// Adds styles for a disabled pagination item. Apply this to an `<a>`.
-@mixin pagination-item-disabled (
+@mixin pagination-item-disabled(
   $padding: $pagination-item-padding,
   $color: $pagination-item-color-disabled
 ) {
@@ -157,7 +156,7 @@ $pagination-arrow-next: '\00BB' !default;
 }
 
 /// Adds styles for an ellipsis for use in a pagination list.
-@mixin pagination-ellipsis (
+@mixin pagination-ellipsis(
   $padding: $pagination-item-padding,
   $color: $pagination-ellipsis-color
 ) {

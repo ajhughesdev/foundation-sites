@@ -12,11 +12,7 @@ $prototype-transformation-breakpoints: $global-prototype-breakpoints !default;
 
 /// Map containing all the `text-transformation` classes
 /// @type Map
-$prototype-text-transformation: (
-  lowercase,
-  uppercase,
-  capitalize
-) !default;
+$prototype-text-transformation: (lowercase, uppercase, capitalize) !default;
 
 /// Text Transformation, by default coming through a map `$prototype-text-transformation`
 /// @param {String} $transformation [] Text Transformation

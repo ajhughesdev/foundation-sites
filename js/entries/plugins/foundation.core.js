@@ -4,7 +4,13 @@
 import $ from 'jquery';
 import { Foundation } from '../../foundation.core';
 import { Plugin } from '../../foundation.core.plugin';
-import { rtl, GetYoDigits, transitionend, RegExpEscape, onLoad } from '../../foundation.core.utils';
+import {
+  rtl,
+  GetYoDigits,
+  transitionend,
+  RegExpEscape,
+  onLoad,
+} from '../../foundation.core.utils';
 
 Foundation.addToJquery($);
 

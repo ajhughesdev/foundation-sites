@@ -6,37 +6,44 @@ import { transitionend } from './foundation.core.utils';
  * @module foundation.motion
  */
 
-const initClasses   = ['mui-enter', 'mui-leave'];
+const initClasses = ['mui-enter', 'mui-leave'];
 const activeClasses = ['mui-enter-active', 'mui-leave-active'];
 
 const Motion = {
-  animateIn: function(element, animation, cb) {
+  animateIn: function (element, animation, cb) {
     animate(true, element, animation, cb);
   },
 
-  animateOut: function(element, animation, cb) {
+  animateOut: function (element, animation, cb) {
     animate(false, element, animation, cb);
-  }
-}
+  },
+};
 
-function Move(duration, elem, fn){
-  let anim, prog, start = null;
+function Move(duration, elem, fn) {
+  let anim,
+    prog,
+    start = null;
 
   if (duration === 0) {
     fn.apply(elem);
-    elem.trigger('finished.zf.animate', [elem]).triggerHandler('finished.zf.animate', [elem]);
+    elem
+      .trigger('finished.zf.animate', [elem])
+      .triggerHandler('finished.zf.animate', [elem]);
     return;
   }
 
-  function move(ts){
-    if(!start) start = ts;
+  function move(ts) {
+    if (!start) start = ts;
     prog = ts - start;
     fn.apply(elem);
 
-    if(prog < duration){ anim = window.requestAnimationFrame(move, elem); }
-    else{
+    if (prog < duration) {
+      anim = window.requestAnimationFrame(move, elem);
+    } else {
       window.cancelAnimationFrame(anim);
-      elem.trigger('finished.zf.animate', [elem]).triggerHandler('finished.zf.animate', [elem]);
+      elem
+        .trigger('finished.zf.animate', [elem])
+        .triggerHandler('finished.zf.animate', [elem]);
     }
   }
   anim = window.requestAnimationFrame(move);
@@ -62,9 +69,7 @@ function animate(isIn, element, animation, cb) {
   // Set up the animation
   reset();
 
-  element
-    .addClass(animation)
-    .css('transition', 'none');
+  element.addClass(animation).css('transition', 'none');
 
   requestAnimationFrame(() => {
     element.addClass(initClass);
@@ -77,9 +82,7 @@ function animate(isIn, element, animation, cb) {
     // also called reflow or layout thrashing
     // see https://gist.github.com/paulirish/5d52fb081b3570c81e3a
     element[0].offsetWidth;
-    element
-      .css('transition', '')
-      .addClass(activeClass);
+    element.css('transition', '').addClass(activeClass);
   });
 
   // Clean up the animation when it finishes
@@ -100,4 +103,3 @@ function animate(isIn, element, animation, cb) {
 }
 
 export { Move, Motion };
-

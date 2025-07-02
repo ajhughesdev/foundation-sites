@@ -31,6 +31,15 @@
   $size: percentage(divide(1, $n));
 
   & > #{$selector} {
-    @include xy-cell($size, $gutter-output, $gutters, $gutter-type, $gutter-position, $breakpoint, $vertical, $output);
+    @include xy-cell(
+      $size,
+      $gutter-output,
+      $gutters,
+      $gutter-type,
+      $gutter-position,
+      $breakpoint,
+      $vertical,
+      $output
+    );
   }
 }

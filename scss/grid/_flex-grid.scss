@@ -33,8 +33,7 @@
       margin-right: 0;
       margin-left: 0;
     }
-  }
-  @else {
+  } @else {
     @include grid-row-size($size);
     margin-right: auto;
     margin-left: auto;
@@ -62,8 +61,7 @@
 
   @if $columns == shrink {
     $flex: 0 0 auto;
-  }
-  @else if $columns != expand {
+  } @else if $columns != expand {
     $flex: 0 0 grid-column($columns);
   }
 
@@ -74,10 +72,7 @@
 ///
 /// @param {Mixed} $columns [expand] - Width of the column. Refer to the `flex-grid-column()` function to see possible values.
 /// @param {Number|Map} $gutters [$grid-column-gutter] - Map or single value for gutters width. See the `grid-column-gutter` mixin.
-@mixin flex-grid-column(
-  $columns: expand,
-  $gutters: $grid-column-gutter
-) {
+@mixin flex-grid-column($columns: expand, $gutters: $grid-column-gutter) {
   // fixes recent Chrome version not limiting child width
   // https://stackoverflow.com/questions/34934586/white-space-nowrap-and-flexbox-did-not-work-in-chrome
   @if $columns == expand {
@@ -89,17 +84,13 @@
 
   // Gutters
   @include grid-column-gutter($gutters: $gutters);
-
 }
 
 /// Creates a block grid for a flex grid row.
 ///
 /// @param {Number} $n - Number of columns to display on each row.
 /// @param {String} $selector - Selector to use to target columns within the row.
-@mixin flex-grid-layout(
-  $n,
-  $selector: '.column'
-) {
+@mixin flex-grid-layout($n, $selector: '.column') {
   flex-wrap: wrap;
 
   > #{$selector} {
@@ -122,7 +113,6 @@
     max-width: grid-column($columns);
   }
 }
-
 
 @mixin foundation-flex-grid {
   // Row
@@ -235,11 +225,15 @@
 
     // Responsive collapsing
     .#{$-zf-size}-collapse {
-      > .column { @include grid-col-collapse; }
+      > .column {
+        @include grid-col-collapse;
+      }
     }
 
     .#{$-zf-size}-uncollapse {
-      > .column { @include grid-col-gutter($-zf-size); }
+      > .column {
+        @include grid-col-gutter($-zf-size);
+      }
     }
   }
 
@@ -256,6 +250,5 @@
 
   .columns {
     @extend .column; // sass-lint:disable-line placeholder-in-extend
-
   }
 }

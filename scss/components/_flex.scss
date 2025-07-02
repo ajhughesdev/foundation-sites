@@ -76,7 +76,7 @@ $flexbox-responsive-breakpoints: true !default;
       @include flex-align($x: $hdir);
     }
   }
-  
+
   // Horizontal alignment Specifically for Vertical Menu
   @each $hdir, $prop in map-remove($-zf-flex-justify, 'justify', 'spaced') {
     .align-#{$hdir} {

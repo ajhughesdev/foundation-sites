@@ -31,31 +31,31 @@ class Slider extends Plugin {
     this.className = 'Slider'; // ie9 back compat
     this.initialized = false;
 
-  // Touch and Triggers inits are idempotent, we just need to make sure it's initialied.
+    // Touch and Triggers inits are idempotent, we just need to make sure it's initialied.
     Touch.init($);
     Triggers.init($);
 
     this._init();
 
     Keyboard.register('Slider', {
-      'ltr': {
-        'ARROW_RIGHT': 'increase',
-        'ARROW_UP': 'increase',
-        'ARROW_DOWN': 'decrease',
-        'ARROW_LEFT': 'decrease',
-        'SHIFT_ARROW_RIGHT': 'increaseFast',
-        'SHIFT_ARROW_UP': 'increaseFast',
-        'SHIFT_ARROW_DOWN': 'decreaseFast',
-        'SHIFT_ARROW_LEFT': 'decreaseFast',
-        'HOME': 'min',
-        'END': 'max'
+      ltr: {
+        ARROW_RIGHT: 'increase',
+        ARROW_UP: 'increase',
+        ARROW_DOWN: 'decrease',
+        ARROW_LEFT: 'decrease',
+        SHIFT_ARROW_RIGHT: 'increaseFast',
+        SHIFT_ARROW_UP: 'increaseFast',
+        SHIFT_ARROW_DOWN: 'decreaseFast',
+        SHIFT_ARROW_LEFT: 'decreaseFast',
+        HOME: 'min',
+        END: 'max',
       },
-      'rtl': {
-        'ARROW_LEFT': 'increase',
-        'ARROW_RIGHT': 'decrease',
-        'SHIFT_ARROW_LEFT': 'increaseFast',
-        'SHIFT_ARROW_RIGHT': 'decreaseFast'
-      }
+      rtl: {
+        ARROW_LEFT: 'increase',
+        ARROW_RIGHT: 'decrease',
+        SHIFT_ARROW_LEFT: 'increaseFast',
+        SHIFT_ARROW_RIGHT: 'decreaseFast',
+      },
     });
   }
 
@@ -69,10 +69,17 @@ class Slider extends Plugin {
     this.handles = this.$element.find('[data-slider-handle]');
 
     this.$handle = this.handles.eq(0);
-    this.$input = this.inputs.length ? this.inputs.eq(0) : $(`#${this.$handle.attr('aria-controls')}`);
-    this.$fill = this.$element.find('[data-slider-fill]').css(this.options.vertical ? 'height' : 'width', 0);
+    this.$input = this.inputs.length
+      ? this.inputs.eq(0)
+      : $(`#${this.$handle.attr('aria-controls')}`);
+    this.$fill = this.$element
+      .find('[data-slider-fill]')
+      .css(this.options.vertical ? 'height' : 'width', 0);
 
-    if (this.options.disabled || this.$element.hasClass(this.options.disabledClass)) {
+    if (
+      this.options.disabled ||
+      this.$element.hasClass(this.options.disabledClass)
+    ) {
       this.options.disabled = true;
       this.$element.addClass(this.options.disabledClass);
     }
@@ -86,7 +93,10 @@ class Slider extends Plugin {
     if (this.handles[1]) {
       this.options.doubleSided = true;
       this.$handle2 = this.handles.eq(1);
-      this.$input2 = this.inputs.length > 1 ? this.inputs.eq(1) : $(`#${this.$handle2.attr('aria-controls')}`);
+      this.$input2 =
+        this.inputs.length > 1
+          ? this.inputs.eq(1)
+          : $(`#${this.$handle2.attr('aria-controls')}`);
 
       if (!this.inputs[1]) {
         this.inputs = this.inputs.add(this.$input2);
@@ -104,7 +114,7 @@ class Slider extends Plugin {
   }
 
   setHandles() {
-    if(this.handles[1]) {
+    if (this.handles[1]) {
       this._setHandlePos(this.$handle, this.inputs.eq(0).val(), () => {
         this._setHandlePos(this.$handle2, this.inputs.eq(1).val());
       });
@@ -117,68 +127,81 @@ class Slider extends Plugin {
     this.setHandles();
   }
   /**
-  * @function
-  * @private
-  * @param {Number} value - floating point (the value) to be transformed using to a relative position on the slider (the inverse of _value)
-  */
+   * @function
+   * @private
+   * @param {Number} value - floating point (the value) to be transformed using to a relative position on the slider (the inverse of _value)
+   */
   _pctOfBar(value) {
-    let pctOfBar = percent(value - this.options.start, this.options.end - this.options.start);
+    let pctOfBar = percent(
+      value - this.options.start,
+      this.options.end - this.options.start
+    );
 
-    switch(this.options.positionValueFunction) {
-    case "pow":
-      pctOfBar = this._logTransform(pctOfBar);
-      break;
-    case "log":
-      pctOfBar = this._powTransform(pctOfBar);
-      break;
+    switch (this.options.positionValueFunction) {
+      case 'pow':
+        pctOfBar = this._logTransform(pctOfBar);
+        break;
+      case 'log':
+        pctOfBar = this._powTransform(pctOfBar);
+        break;
     }
 
-    return pctOfBar.toFixed(2)
+    return pctOfBar.toFixed(2);
   }
 
   /**
-  * @function
-  * @private
-  * @param {Number} pctOfBar - floating point, the relative position of the slider (typically between 0-1) to be transformed to a value
-  */
+   * @function
+   * @private
+   * @param {Number} pctOfBar - floating point, the relative position of the slider (typically between 0-1) to be transformed to a value
+   */
   _value(pctOfBar) {
-    switch(this.options.positionValueFunction) {
-    case "pow":
-      pctOfBar = this._powTransform(pctOfBar);
-      break;
-    case "log":
-      pctOfBar = this._logTransform(pctOfBar);
-      break;
+    switch (this.options.positionValueFunction) {
+      case 'pow':
+        pctOfBar = this._powTransform(pctOfBar);
+        break;
+      case 'log':
+        pctOfBar = this._logTransform(pctOfBar);
+        break;
     }
 
     let value;
     if (this.options.vertical) {
       // linear interpolation which is working with negative values for start
       // https://math.stackexchange.com/a/1019084
-      value = parseFloat(this.options.end) + pctOfBar * (this.options.start - this.options.end)
+      value =
+        parseFloat(this.options.end) +
+        pctOfBar * (this.options.start - this.options.end);
     } else {
-      value = (this.options.end - this.options.start) * pctOfBar + parseFloat(this.options.start);
+      value =
+        (this.options.end - this.options.start) * pctOfBar +
+        parseFloat(this.options.start);
     }
 
-    return value
+    return value;
   }
 
   /**
-  * @function
-  * @private
-  * @param {Number} value - floating point (typically between 0-1) to be transformed using the log function
-  */
+   * @function
+   * @private
+   * @param {Number} value - floating point (typically between 0-1) to be transformed using the log function
+   */
   _logTransform(value) {
-    return baseLog(this.options.nonLinearBase, ((value*(this.options.nonLinearBase-1))+1))
+    return baseLog(
+      this.options.nonLinearBase,
+      value * (this.options.nonLinearBase - 1) + 1
+    );
   }
 
   /**
-  * @function
-  * @private
-  * @param {Number} value - floating point (typically between 0-1) to be transformed using the power function
-  */
+   * @function
+   * @private
+   * @param {Number} value - floating point (typically between 0-1) to be transformed using the power function
+   */
   _powTransform(value) {
-    return (Math.pow(this.options.nonLinearBase, value) - 1) / (this.options.nonLinearBase - 1)
+    return (
+      (Math.pow(this.options.nonLinearBase, value) - 1) /
+      (this.options.nonLinearBase - 1)
+    );
   }
 
   /**
@@ -197,15 +220,19 @@ class Slider extends Plugin {
       return;
     }
     //might need to alter that slightly for bars that will have odd number selections.
-    location = parseFloat(location);//on input change events, convert string to number...grumble.
+    location = parseFloat(location); //on input change events, convert string to number...grumble.
 
     // prevent slider from running out of bounds, if value exceeds the limits set through options, override the value to min/max
-    if (location < this.options.start) { location = this.options.start; }
-    else if (location > this.options.end) { location = this.options.end; }
+    if (location < this.options.start) {
+      location = this.options.start;
+    } else if (location > this.options.end) {
+      location = this.options.end;
+    }
 
     const isDbl = this.options.doubleSided;
 
-    if (isDbl) { //this block is to prevent 2 handles from crossing eachother. Could/should be improved.
+    if (isDbl) {
+      //this block is to prevent 2 handles from crossing eachother. Could/should be improved.
       if (this.handles.index($hndl) === 0) {
         const h2Val = parseFloat(this.$handle2.attr('aria-valuenow'));
         location = location >= h2Val ? h2Val - this.options.step : location;
@@ -216,20 +243,22 @@ class Slider extends Plugin {
     }
 
     const _this = this,
-          vert = this.options.vertical,
-          hOrW = vert ? 'height' : 'width',
-          lOrT = vert ? 'top' : 'left',
-          handleDim = $hndl[0].getBoundingClientRect()[hOrW],
-          elemDim = this.$element[0].getBoundingClientRect()[hOrW],
-          //percentage of bar min/max value based on click or drag point
-          pctOfBar = this._pctOfBar(location),
-          //number of actual pixels to shift the handle, based on the percentage obtained above
-          pxToMove = (elemDim - handleDim) * pctOfBar,
-          //percentage of bar to shift the handle
-          movement = (percent(pxToMove, elemDim) * 100).toFixed(this.options.decimal);
-        //fixing the decimal value for the location number, is passed to other methods as a fixed floating-point value
-        location = parseFloat(location.toFixed(this.options.decimal));
-        // declare empty object for css adjustments, only used with 2 handled-sliders
+      vert = this.options.vertical,
+      hOrW = vert ? 'height' : 'width',
+      lOrT = vert ? 'top' : 'left',
+      handleDim = $hndl[0].getBoundingClientRect()[hOrW],
+      elemDim = this.$element[0].getBoundingClientRect()[hOrW],
+      //percentage of bar min/max value based on click or drag point
+      pctOfBar = this._pctOfBar(location),
+      //number of actual pixels to shift the handle, based on the percentage obtained above
+      pxToMove = (elemDim - handleDim) * pctOfBar,
+      //percentage of bar to shift the handle
+      movement = (percent(pxToMove, elemDim) * 100).toFixed(
+        this.options.decimal
+      );
+    //fixing the decimal value for the location number, is passed to other methods as a fixed floating-point value
+    location = parseFloat(location.toFixed(this.options.decimal));
+    // declare empty object for css adjustments, only used with 2 handled-sliders
     const css = {};
 
     this._setValues($hndl, location);
@@ -238,10 +267,10 @@ class Slider extends Plugin {
       const isLeftHndl = this.handles.index($hndl) === 0;
 
       let //empty variable, will be used for min-height/width for fill bar
-      dim;
+        dim;
 
       const //percentage w/h of the handle compared to the slider bar
-      handlePct =  Math.floor(percent(handleDim, elemDim) * 100);
+        handlePct = Math.floor(percent(handleDim, elemDim) * 100);
 
       //if left handle, the math is slightly different than if it's the right handle, and the left/top property needs to be changed for the fill bar
       if (isLeftHndl) {
@@ -251,20 +280,30 @@ class Slider extends Plugin {
         dim = parseFloat(this.$handle2[0].style[lOrT]) - movement + handlePct;
         //this callback is necessary to prevent errors and allow the proper placement and initialization of a 2-handled slider
         //plus, it means we don't care if 'dim' isNaN on init, it won't be in the future.
-        if (cb && typeof cb === 'function') { cb(); }//this is only needed for the initialization of 2 handled sliders
+        if (cb && typeof cb === 'function') {
+          cb();
+        } //this is only needed for the initialization of 2 handled sliders
       } else {
         //just caching the value of the left/bottom handle's left/top property
         const handlePos = parseFloat(this.$handle[0].style[lOrT]);
         //calculate the new min-height/width for the fill bar. Use isNaN to prevent false positives for numbers <= 0
         //based on the percentage of movement of the handle being manipulated, less the opposing handle's left/top position, plus the percentage w/h of the handle itself
-        dim = movement - (isNaN(handlePos) ? (this.options.initialStart - this.options.start)/((this.options.end-this.options.start)/100) : handlePos) + handlePct;
+        dim =
+          movement -
+          (isNaN(handlePos)
+            ? (this.options.initialStart - this.options.start) /
+              ((this.options.end - this.options.start) / 100)
+            : handlePos) +
+          handlePct;
       }
       // assign the min-height/width to our css object
       css[`min-${hOrW}`] = `${dim}%`;
     }
 
     //because we don't know exactly how the handle will be moved, check the amount of time it should take to move.
-    const moveTime = this.$element.data('dragging') ? 1000/60 : this.options.moveTime;
+    const moveTime = this.$element.data('dragging')
+      ? 1000 / 60
+      : this.options.moveTime;
 
     Move(moveTime, $hndl, () => {
       // adjusting the left/top property of the handle, based on the percentage calculated above
@@ -272,8 +311,7 @@ class Slider extends Plugin {
       // fall back to next best guess.
       if (isNaN(movement)) {
         $hndl.css(lOrT, `${pctOfBar * 100}%`);
-      }
-      else {
+      } else {
         $hndl.css(lOrT, `${movement}%`);
       }
 
@@ -312,23 +350,24 @@ class Slider extends Plugin {
    * @param {Number} idx - index of the current handle/input to use.
    */
   _setInitAttr(idx) {
-    const initVal = (idx === 0 ? this.options.initialStart : this.options.initialEnd);
+    const initVal =
+      idx === 0 ? this.options.initialStart : this.options.initialEnd;
     const id = this.inputs.eq(idx).attr('id') || GetYoDigits(6, 'slider');
     this.inputs.eq(idx).attr({
-      'id': id,
-      'max': this.options.end,
-      'min': this.options.start,
-      'step': this.options.step
+      id: id,
+      max: this.options.end,
+      min: this.options.start,
+      step: this.options.step,
     });
     this.inputs.eq(idx).val(initVal);
     this.handles.eq(idx).attr({
-      'role': 'slider',
+      role: 'slider',
       'aria-controls': id,
       'aria-valuemax': this.options.end,
       'aria-valuemin': this.options.start,
       'aria-valuenow': initVal,
       'aria-orientation': this.options.vertical ? 'vertical' : 'horizontal',
-      'tabindex': 0
+      tabindex: 0,
     });
   }
 
@@ -366,13 +405,17 @@ class Slider extends Plugin {
       const direction = vertical ? 'top' : 'left';
       let eventOffset = vertical ? e.pageY : e.pageX;
       const barDim = this.$element[0].getBoundingClientRect()[param];
-      const windowScroll = vertical ? $(window).scrollTop() : $(window).scrollLeft();
+      const windowScroll = vertical
+        ? $(window).scrollTop()
+        : $(window).scrollLeft();
 
       const elemOffset = this.$element.offset()[direction];
 
       // touch events emulated by the touch util give position relative to screen, add window.scroll to event coordinates...
       // best way to guess this is simulated is if clientY == pageY
-      if (e.clientY === e.pageY) { eventOffset = eventOffset + windowScroll; }
+      if (e.clientY === e.pageY) {
+        eventOffset = eventOffset + windowScroll;
+      }
       const eventFromBar = eventOffset - elemOffset;
       let barXY;
       if (eventFromBar < 0) {
@@ -387,15 +430,20 @@ class Slider extends Plugin {
       value = this._value(offsetPct);
 
       // turn everything around for RTL, yay math!
-      if (Rtl() && !this.options.vertical) {value = this.options.end - value;}
+      if (Rtl() && !this.options.vertical) {
+        value = this.options.end - value;
+      }
 
       value = _this._adjustValue(null, value);
 
-      if (!$handle) {//figure out which handle it is, pass it to the next function.
-        const firstHndlPos = absPosition(this.$handle, direction, barXY, param), secndHndlPos = absPosition(this.$handle2, direction, barXY, param);
-            $handle = firstHndlPos <= secndHndlPos ? this.$handle : this.$handle2;
+      if (!$handle) {
+        //figure out which handle it is, pass it to the next function.
+        const firstHndlPos = absPosition(this.$handle, direction, barXY, param),
+          secndHndlPos = absPosition(this.$handle2, direction, barXY, param);
+        $handle = firstHndlPos <= secndHndlPos ? this.$handle : this.$handle2;
       }
-    } else {//change event on input
+    } else {
+      //change event on input
       value = this._adjustValue(null, val);
     }
 
@@ -412,14 +460,13 @@ class Slider extends Plugin {
   _adjustValue($handle, value) {
     let val;
     const step = this.options.step;
-    const div = parseFloat(step/2);
+    const div = parseFloat(step / 2);
     let left;
     let previousVal;
     let nextVal;
     if (!!$handle) {
       val = parseFloat($handle.attr('aria-valuenow'));
-    }
-    else {
+    } else {
       val = value;
     }
     if (val >= 0) {
@@ -443,11 +490,10 @@ class Slider extends Plugin {
    */
   _events() {
     this._eventsForHandle(this.$handle);
-    if(this.handles[1]) {
+    if (this.handles[1]) {
       this._eventsForHandle(this.$handle2);
     }
   }
-
 
   /**
    * Adds event listeners a particular handle
@@ -459,7 +505,7 @@ class Slider extends Plugin {
     const _this = this;
     let curHandle;
 
-    const handleChangeEvent = function(e) {
+    const handleChangeEvent = function (e) {
       const idx = _this.inputs.index($(this));
       _this._handleEvent(e, _this.handles.eq(idx), $(this).val());
     };
@@ -468,14 +514,18 @@ class Slider extends Plugin {
     // listen for the enter key and trigger a change
     // @see https://html.spec.whatwg.org/multipage/input.html#common-input-element-events
     this.inputs.off('keyup.zf.slider').on('keyup.zf.slider', function (e) {
-      if(e.keyCode === 13) handleChangeEvent.call(this, e);
+      if (e.keyCode === 13) handleChangeEvent.call(this, e);
     });
 
-    this.inputs.off('change.zf.slider').on('change.zf.slider', handleChangeEvent);
+    this.inputs
+      .off('change.zf.slider')
+      .on('change.zf.slider', handleChangeEvent);
 
     if (this.options.clickSelect) {
-      this.$element.off('click.zf.slider').on('click.zf.slider', e => {
-        if (_this.$element.data('dragging')) { return false; }
+      this.$element.off('click.zf.slider').on('click.zf.slider', (e) => {
+        if (_this.$element.data('dragging')) {
+          return false;
+        }
 
         if (!$(e.target).is('[data-slider-handle]')) {
           if (_this.options.doubleSided) {
@@ -493,34 +543,35 @@ class Slider extends Plugin {
       const $body = $('body');
       $handle
         .off('mousedown.zf.slider')
-        .on('mousedown.zf.slider', e => {
+        .on('mousedown.zf.slider', (e) => {
           $handle.addClass('is-dragging');
-          _this.$fill.addClass('is-dragging');//
+          _this.$fill.addClass('is-dragging'); //
           _this.$element.data('dragging', true);
 
           curHandle = $(e.currentTarget);
 
-          $body.on('mousemove.zf.slider', ev => {
-            ev.preventDefault();
-            _this._handleEvent(ev, curHandle);
+          $body
+            .on('mousemove.zf.slider', (ev) => {
+              ev.preventDefault();
+              _this._handleEvent(ev, curHandle);
+            })
+            .on('mouseup.zf.slider', (ev) => {
+              _this._handleEvent(ev, curHandle);
 
-          }).on('mouseup.zf.slider', ev => {
-            _this._handleEvent(ev, curHandle);
+              $handle.removeClass('is-dragging');
+              _this.$fill.removeClass('is-dragging');
+              _this.$element.data('dragging', false);
 
-            $handle.removeClass('is-dragging');
-            _this.$fill.removeClass('is-dragging');
-            _this.$element.data('dragging', false);
-
-            $body.off('mousemove.zf.slider mouseup.zf.slider');
-          });
-      })
-      // prevent events triggered by touch
-      .on('selectstart.zf.slider touchmove.zf.slider', e => {
-        e.preventDefault();
-      });
+              $body.off('mousemove.zf.slider mouseup.zf.slider');
+            });
+        })
+        // prevent events triggered by touch
+        .on('selectstart.zf.slider touchmove.zf.slider', (e) => {
+          e.preventDefault();
+        });
     }
 
-    $handle.off('keydown.zf.slider').on('keydown.zf.slider', function(e) {
+    $handle.off('keydown.zf.slider').on('keydown.zf.slider', function (e) {
       const _$handle = $(this);
       const idx = _this.options.doubleSided ? _this.handles.index(_$handle) : 0;
       const oldValue = parseFloat($handle.attr('aria-valuenow'));
@@ -528,28 +579,29 @@ class Slider extends Plugin {
 
       // handle keyboard event with keyboard util
       Keyboard.handleKey(e, 'Slider', {
-        decrease: function() {
+        decrease: function () {
           newValue = oldValue - _this.options.step;
         },
-        increase: function() {
+        increase: function () {
           newValue = oldValue + _this.options.step;
         },
-        decreaseFast: function() {
+        decreaseFast: function () {
           newValue = oldValue - _this.options.step * 10;
         },
-        increaseFast: function() {
+        increaseFast: function () {
           newValue = oldValue + _this.options.step * 10;
         },
-        min: function() {
+        min: function () {
           newValue = _this.options.start;
         },
-        max: function() {
+        max: function () {
           newValue = _this.options.end;
         },
-        handled: function() { // only set handle pos when event was handled specially
+        handled: function () {
+          // only set handle pos when event was handled specially
           e.preventDefault();
           _this._setHandlePos(_$handle, newValue);
-        }
+        },
       });
       /*if (newValue) { // if pressed key has special function, update value
         e.preventDefault();
@@ -669,7 +721,7 @@ Slider.defaults = {
    * @type {number}
    * @default 200
    */
-  moveTime: 200,//update this if changing the transition time in the sass
+  moveTime: 200, //update this if changing the transition time in the sass
   /**
    * Class applied to disabled sliders.
    * @option
@@ -692,29 +744,29 @@ Slider.defaults = {
    */
   changedDelay: 500,
   /**
-  * Basevalue for non-linear sliders
-  * @option
-  * @type {number}
-  * @default 5
-  */
+   * Basevalue for non-linear sliders
+   * @option
+   * @type {number}
+   * @default 5
+   */
   nonLinearBase: 5,
   /**
-  * Basevalue for non-linear sliders, possible values are: `'linear'`, `'pow'` & `'log'`. Pow and Log use the nonLinearBase setting.
-  * @option
-  * @type {string}
-  * @default 'linear'
-  */
+   * Basevalue for non-linear sliders, possible values are: `'linear'`, `'pow'` & `'log'`. Pow and Log use the nonLinearBase setting.
+   * @option
+   * @type {string}
+   * @default 'linear'
+   */
   positionValueFunction: 'linear',
 };
 
 function percent(frac, num) {
-  return (frac / num);
+  return frac / num;
 }
 function absPosition($handle, dir, clickPos, param) {
-  return Math.abs(($handle.position()[dir] + ($handle[param]() / 2)) - clickPos);
+  return Math.abs($handle.position()[dir] + $handle[param]() / 2 - clickPos);
 }
 function baseLog(base, value) {
-  return Math.log(value)/Math.log(base)
+  return Math.log(value) / Math.log(base);
 }
 
-export {Slider};
+export { Slider };

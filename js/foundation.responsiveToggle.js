@@ -22,7 +22,12 @@ class ResponsiveToggle extends Plugin {
    */
   _setup(element, options) {
     this.$element = $(element);
-    this.options = $.extend({}, ResponsiveToggle.defaults, this.$element.data(), options);
+    this.options = $.extend(
+      {},
+      ResponsiveToggle.defaults,
+      this.$element.data(),
+      options
+    );
     this.className = 'ResponsiveToggle'; // ie9 back compat
 
     this._init();
@@ -38,18 +43,20 @@ class ResponsiveToggle extends Plugin {
     MediaQuery._init();
     const targetID = this.$element.data('responsive-toggle');
     if (!targetID) {
-      console.error('Your tab bar needs an ID of a Menu as the value of data-tab-bar.');
+      console.error(
+        'Your tab bar needs an ID of a Menu as the value of data-tab-bar.'
+      );
     }
 
     this.$targetMenu = $(`#${targetID}`);
-    this.$toggler = this.$element.find('[data-toggle]').filter(function() {
+    this.$toggler = this.$element.find('[data-toggle]').filter(function () {
       const target = $(this).data('toggle');
-      return (target === targetID || target === "");
+      return target === targetID || target === '';
     });
     this.options = $.extend({}, this.options, this.$targetMenu.data());
 
     // If they were set, parse the animation classes
-    if(this.options.animate) {
+    if (this.options.animate) {
       let input = this.options.animate.split(' ');
 
       this.animationIn = input[0];
@@ -102,26 +109,26 @@ class ResponsiveToggle extends Plugin {
        * Fires when the element attached to the tab bar toggles.
        * @event ResponsiveToggle#toggled
        */
-      if(this.options.animate) {
+      if (this.options.animate) {
         if (this.$targetMenu.is(':hidden')) {
           Motion.animateIn(this.$targetMenu, this.animationIn, () => {
             this.$element.trigger('toggled.zf.responsiveToggle');
-            this.$targetMenu.find('[data-mutate]').triggerHandler('mutateme.zf.trigger');
+            this.$targetMenu
+              .find('[data-mutate]')
+              .triggerHandler('mutateme.zf.trigger');
           });
-        }
-        else {
+        } else {
           Motion.animateOut(this.$targetMenu, this.animationOut, () => {
             this.$element.trigger('toggled.zf.responsiveToggle');
           });
         }
-      }
-      else {
+      } else {
         this.$targetMenu.toggle(0);
         this.$targetMenu.find('[data-mutate]').trigger('mutateme.zf.trigger');
         this.$element.trigger('toggled.zf.responsiveToggle');
       }
     }
-  };
+  }
 
   _destroy() {
     this.$element.off('.zf.responsiveToggle');
@@ -146,7 +153,7 @@ ResponsiveToggle.defaults = {
    * @type {boolean}
    * @default false
    */
-  animate: false
+  animate: false,
 };
 
 export { ResponsiveToggle };

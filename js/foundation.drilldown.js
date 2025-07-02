@@ -23,19 +23,24 @@ class Drilldown extends Plugin {
    */
   _setup(element, options) {
     this.$element = element;
-    this.options = $.extend({}, Drilldown.defaults, this.$element.data(), options);
+    this.options = $.extend(
+      {},
+      Drilldown.defaults,
+      this.$element.data(),
+      options
+    );
     this.className = 'Drilldown'; // ie9 back compat
 
     this._init();
 
     Keyboard.register('Drilldown', {
-      'ENTER': 'open',
-      'SPACE': 'open',
-      'ARROW_RIGHT': 'next',
-      'ARROW_UP': 'up',
-      'ARROW_DOWN': 'down',
-      'ARROW_LEFT': 'previous',
-      'ESCAPE': 'close',
+      ENTER: 'open',
+      SPACE: 'open',
+      ARROW_RIGHT: 'next',
+      ARROW_UP: 'up',
+      ARROW_DOWN: 'down',
+      ARROW_LEFT: 'previous',
+      ESCAPE: 'close',
     });
   }
 
@@ -46,22 +51,33 @@ class Drilldown extends Plugin {
   _init() {
     Nest.Feather(this.$element, 'drilldown');
 
-    if(this.options.autoApplyClass) {
+    if (this.options.autoApplyClass) {
       this.$element.addClass('drilldown');
     }
 
     this.$element.attr({
-      'aria-multiselectable': false
+      'aria-multiselectable': false,
     });
-    this.$submenuAnchors = this.$element.find('li.is-drilldown-submenu-parent').children('a');
-    this.$submenus = this.$submenuAnchors.parent('li').children('[data-submenu]').attr('role', 'group');
-    this.$menuItems = this.$element.find('li').not('.js-drilldown-back').find('a');
+    this.$submenuAnchors = this.$element
+      .find('li.is-drilldown-submenu-parent')
+      .children('a');
+    this.$submenus = this.$submenuAnchors
+      .parent('li')
+      .children('[data-submenu]')
+      .attr('role', 'group');
+    this.$menuItems = this.$element
+      .find('li')
+      .not('.js-drilldown-back')
+      .find('a');
 
     // Set the main menu as current by default (unless a submenu is selected)
     // Used to set the wrapper height when the drilldown is closed/reopened from any (sub)menu
     this.$currentMenu = this.$element;
 
-    this.$element.attr('data-mutate', (this.$element.attr('data-drilldown') || GetYoDigits(6, 'drilldown')));
+    this.$element.attr(
+      'data-mutate',
+      this.$element.attr('data-drilldown') || GetYoDigits(6, 'drilldown')
+    );
 
     this._prepareMenu();
     this._registerEvents();
@@ -81,47 +97,59 @@ class Drilldown extends Plugin {
     // if(!this.options.holdOpen){
     //   this._menuLinkEvents();
     // }
-    this.$submenuAnchors.each(function(){
+    this.$submenuAnchors.each(function () {
       const $link = $(this);
       const $sub = $link.parent();
-      if(_this.options.parentLink){
-        $link.clone().prependTo($sub.children('[data-submenu]')).wrap('<li data-is-parent-link class="is-submenu-parent-item is-submenu-item is-drilldown-submenu-item" role="none"></li>');
+      if (_this.options.parentLink) {
+        $link
+          .clone()
+          .prependTo($sub.children('[data-submenu]'))
+          .wrap(
+            '<li data-is-parent-link class="is-submenu-parent-item is-submenu-item is-drilldown-submenu-item" role="none"></li>'
+          );
       }
-      $link.data('savedHref', $link.attr('href')).removeAttr('href').attr('tabindex', 0);
-      $link.children('[data-submenu]')
-          .attr({
-            'aria-hidden': true,
-            'tabindex': 0,
-            'role': 'group'
-          });
+      $link
+        .data('savedHref', $link.attr('href'))
+        .removeAttr('href')
+        .attr('tabindex', 0);
+      $link.children('[data-submenu]').attr({
+        'aria-hidden': true,
+        tabindex: 0,
+        role: 'group',
+      });
       _this._events($link);
     });
-    this.$submenus.each(function(){
-      const $menu = $(this), $back = $menu.find('.js-drilldown-back');
-      if(!$back.length) {
+    this.$submenus.each(function () {
+      const $menu = $(this),
+        $back = $menu.find('.js-drilldown-back');
+      if (!$back.length) {
         switch (_this.options.backButtonPosition) {
-          case "bottom":
+          case 'bottom':
             $menu.append(_this.options.backButton);
             break;
-          case "top":
+          case 'top':
             $menu.prepend(_this.options.backButton);
             break;
           default:
-            console.error("Unsupported backButtonPosition value '" + _this.options.backButtonPosition + "'");
+            console.error(
+              "Unsupported backButtonPosition value '" +
+                _this.options.backButtonPosition +
+                "'"
+            );
         }
       }
       _this._back($menu);
     });
 
     this.$submenus.addClass('invisible');
-    if(!this.options.autoHeight) {
+    if (!this.options.autoHeight) {
       this.$submenus.addClass('drilldown-submenu-cover-previous');
     }
 
     // create a wrapper on element if it doesn't exist.
-    if(!this.$element.parent().hasClass('is-drilldown')){
+    if (!this.$element.parent().hasClass('is-drilldown')) {
       this.$wrapper = $(this.options.wrapper).addClass('is-drilldown');
-      if(this.options.animateHeight) this.$wrapper.addClass('animate-height');
+      if (this.options.animateHeight) this.$wrapper.addClass('animate-height');
       this.$element.wrap(this.$wrapper);
     }
     // set wrapper
@@ -130,7 +158,7 @@ class Drilldown extends Plugin {
   }
 
   _resize() {
-    this.$wrapper.css({'max-width': 'none', 'min-height': 'none'});
+    this.$wrapper.css({ 'max-width': 'none', 'min-height': 'none' });
     // _getMaxDims has side effects (boo) but calling it should update all other necessary heights & widths
     this.$wrapper.css(this._getMaxDims());
   }
@@ -144,9 +172,12 @@ class Drilldown extends Plugin {
   _events($elem) {
     const _this = this;
 
-    $elem.off('click.zf.drilldown')
-    .on('click.zf.drilldown', e => {
-      if($(e.target).parentsUntil('ul', 'li').hasClass('is-drilldown-submenu-parent')){
+    $elem.off('click.zf.drilldown').on('click.zf.drilldown', (e) => {
+      if (
+        $(e.target)
+          .parentsUntil('ul', 'li')
+          .hasClass('is-drilldown-submenu-parent')
+      ) {
         e.preventDefault();
       }
 
@@ -155,10 +186,15 @@ class Drilldown extends Plugin {
       // }
       _this._show($elem.parent('li'));
 
-      if(_this.options.closeOnClick){
+      if (_this.options.closeOnClick) {
         const $body = $('body');
-        $body.off('.zf.drilldown').on('click.zf.drilldown', ev => {
-          if (ev.target === _this.$element[0] || $.contains(_this.$element[0], ev.target)) { return; }
+        $body.off('.zf.drilldown').on('click.zf.drilldown', (ev) => {
+          if (
+            ev.target === _this.$element[0] ||
+            $.contains(_this.$element[0], ev.target)
+          ) {
+            return;
+          }
           ev.preventDefault();
           _this._hideAll();
           $body.off('.zf.drilldown');
@@ -173,9 +209,12 @@ class Drilldown extends Plugin {
    * @private
    */
   _registerEvents() {
-    if(this.options.scrollTop){
+    if (this.options.scrollTop) {
       this._bindHandler = this._scrollTop.bind(this);
-      this.$element.on('open.zf.drilldown hide.zf.drilldown close.zf.drilldown closed.zf.drilldown',this._bindHandler);
+      this.$element.on(
+        'open.zf.drilldown hide.zf.drilldown close.zf.drilldown closed.zf.drilldown',
+        this._bindHandler
+      );
     }
     this.$element.on('mutateme.zf.trigger', this._resize.bind(this));
   }
@@ -187,14 +226,29 @@ class Drilldown extends Plugin {
    */
   _scrollTop() {
     const _this = this;
-    const $scrollTopElement = _this.options.scrollTopElement !== ''?$(_this.options.scrollTopElement):_this.$element, scrollPos = parseInt($scrollTopElement.offset().top+_this.options.scrollTopOffset, 10);
-    $('html, body').stop(true).animate({ scrollTop: scrollPos }, _this.options.animationDuration, _this.options.animationEasing,function(){
-      /**
-        * Fires after the menu has scrolled
-        * @event Drilldown#scrollme
-        */
-      if(this===$('html')[0])_this.$element.trigger('scrollme.zf.drilldown');
-    });
+    const $scrollTopElement =
+        _this.options.scrollTopElement !== ''
+          ? $(_this.options.scrollTopElement)
+          : _this.$element,
+      scrollPos = parseInt(
+        $scrollTopElement.offset().top + _this.options.scrollTopOffset,
+        10
+      );
+    $('html, body')
+      .stop(true)
+      .animate(
+        { scrollTop: scrollPos },
+        _this.options.animationDuration,
+        _this.options.animationEasing,
+        function () {
+          /**
+           * Fires after the menu has scrolled
+           * @event Drilldown#scrollme
+           */
+          if (this === $('html')[0])
+            _this.$element.trigger('scrollme.zf.drilldown');
+        }
+      );
   }
 
   /**
@@ -204,82 +258,123 @@ class Drilldown extends Plugin {
   _keyboardEvents() {
     const _this = this;
 
-    this.$menuItems.add(this.$element.find('.js-drilldown-back > a, .is-submenu-parent-item > a')).on('keydown.zf.drilldown', function(e){
-      const $element = $(this);
-      const $elements = $element.parent('li').parent('ul').children('li').children('a');
-      let $prevElement;
-      let $nextElement;
+    this.$menuItems
+      .add(
+        this.$element.find(
+          '.js-drilldown-back > a, .is-submenu-parent-item > a'
+        )
+      )
+      .on('keydown.zf.drilldown', function (e) {
+        const $element = $(this);
+        const $elements = $element
+          .parent('li')
+          .parent('ul')
+          .children('li')
+          .children('a');
+        let $prevElement;
+        let $nextElement;
 
-      $elements.each(function(i) {
-        if ($(this).is($element)) {
-          $prevElement = $elements.eq(Math.max(0, i-1));
-          $nextElement = $elements.eq(Math.min(i+1, $elements.length-1));
-          return;
-        }
-      });
+        $elements.each(function (i) {
+          if ($(this).is($element)) {
+            $prevElement = $elements.eq(Math.max(0, i - 1));
+            $nextElement = $elements.eq(Math.min(i + 1, $elements.length - 1));
+            return;
+          }
+        });
 
-      Keyboard.handleKey(e, 'Drilldown', {
-        next: function() {
-          if ($element.is(_this.$submenuAnchors)) {
-            _this._show($element.parent('li'));
-            $element.parent('li').one(transitionend($element), () => {
-              $element.parent('li').find('ul li a').not('.js-drilldown-back a').first().focus();
-            });
-            return true;
-          }
-        },
-        previous: function() {
-          _this._hide($element.parent('li').parent('ul'));
-          $element.parent('li').parent('ul').one(transitionend($element), () => {
-            setTimeout(() => {
-              $element.parent('li').parent('ul').parent('li').children('a').first().focus();
-            }, 1);
-          });
-          return true;
-        },
-        up: function() {
-          $prevElement.focus();
-          // Don't tap focus on first element in root ul
-          return !$element.is(_this.$element.find('> li:first-child > a'));
-        },
-        down: function() {
-          $nextElement.focus();
-          // Don't tap focus on last element in root ul
-          return !$element.is(_this.$element.find('> li:last-child > a'));
-        },
-        close: function() {
-          // Don't close on element in root ul
-          if (!$element.is(_this.$element.find('> li > a'))) {
-            _this._hide($element.parent().parent());
-            $element.parent().parent().siblings('a').focus();
-          }
-        },
-        open: function() {
-          if (_this.options.parentLink && $element.attr('href')) { // Link with href
-            return false;
-          } else if (!$element.is(_this.$menuItems)) { // not menu item means back button
+        Keyboard.handleKey(e, 'Drilldown', {
+          next: function () {
+            if ($element.is(_this.$submenuAnchors)) {
+              _this._show($element.parent('li'));
+              $element.parent('li').one(transitionend($element), () => {
+                $element
+                  .parent('li')
+                  .find('ul li a')
+                  .not('.js-drilldown-back a')
+                  .first()
+                  .focus();
+              });
+              return true;
+            }
+          },
+          previous: function () {
             _this._hide($element.parent('li').parent('ul'));
-            $element.parent('li').parent('ul').one(transitionend($element), () => {
-              setTimeout(() => {
-                $element.parent('li').parent('ul').parent('li').children('a').first().focus();
-              }, 1);
-            });
+            $element
+              .parent('li')
+              .parent('ul')
+              .one(transitionend($element), () => {
+                setTimeout(() => {
+                  $element
+                    .parent('li')
+                    .parent('ul')
+                    .parent('li')
+                    .children('a')
+                    .first()
+                    .focus();
+                }, 1);
+              });
             return true;
-          } else if ($element.is(_this.$submenuAnchors)) { // Sub menu item
-            _this._show($element.parent('li'));
-            $element.parent('li').one(transitionend($element), () => {
-              $element.parent('li').find('ul li a').not('.js-drilldown-back a').first().focus();
-            });
-            return true;
-          }
-        },
-        handled: function(preventDefault) {
-          if (preventDefault) {
-            e.preventDefault();
-          }
-        }
-      });
-    }); // end keyboardAccess
+          },
+          up: function () {
+            $prevElement.focus();
+            // Don't tap focus on first element in root ul
+            return !$element.is(_this.$element.find('> li:first-child > a'));
+          },
+          down: function () {
+            $nextElement.focus();
+            // Don't tap focus on last element in root ul
+            return !$element.is(_this.$element.find('> li:last-child > a'));
+          },
+          close: function () {
+            // Don't close on element in root ul
+            if (!$element.is(_this.$element.find('> li > a'))) {
+              _this._hide($element.parent().parent());
+              $element.parent().parent().siblings('a').focus();
+            }
+          },
+          open: function () {
+            if (_this.options.parentLink && $element.attr('href')) {
+              // Link with href
+              return false;
+            } else if (!$element.is(_this.$menuItems)) {
+              // not menu item means back button
+              _this._hide($element.parent('li').parent('ul'));
+              $element
+                .parent('li')
+                .parent('ul')
+                .one(transitionend($element), () => {
+                  setTimeout(() => {
+                    $element
+                      .parent('li')
+                      .parent('ul')
+                      .parent('li')
+                      .children('a')
+                      .first()
+                      .focus();
+                  }, 1);
+                });
+              return true;
+            } else if ($element.is(_this.$submenuAnchors)) {
+              // Sub menu item
+              _this._show($element.parent('li'));
+              $element.parent('li').one(transitionend($element), () => {
+                $element
+                  .parent('li')
+                  .find('ul li a')
+                  .not('.js-drilldown-back a')
+                  .first()
+                  .focus();
+              });
+              return true;
+            }
+          },
+          handled: function (preventDefault) {
+            if (preventDefault) {
+              e.preventDefault();
+            }
+          },
+        });
+      }); // end keyboardAccess
   }
 
   /**
@@ -324,19 +419,17 @@ class Drilldown extends Plugin {
   _back($elem) {
     const _this = this;
     $elem.off('click.zf.drilldown');
-    $elem.children('.js-drilldown-back')
-      .on('click.zf.drilldown', () => {
-        _this._hide($elem);
+    $elem.children('.js-drilldown-back').on('click.zf.drilldown', () => {
+      _this._hide($elem);
 
-        // If there is a parent submenu, call show
-        let parentSubMenu = $elem.parent('li').parent('ul').parent('li');
-        if (parentSubMenu.length) {
-          _this._show(parentSubMenu);
-        }
-        else {
-          _this.$currentMenu = _this.$element;
-        }
-      });
+      // If there is a parent submenu, call show
+      let parentSubMenu = $elem.parent('li').parent('ul').parent('li');
+      if (parentSubMenu.length) {
+        _this._show(parentSubMenu);
+      } else {
+        _this.$currentMenu = _this.$element;
+      }
+    });
   }
 
   /**
@@ -346,12 +439,13 @@ class Drilldown extends Plugin {
    */
   _menuLinkEvents() {
     const _this = this;
-    this.$menuItems.not('.is-drilldown-submenu-parent')
-        .off('click.zf.drilldown')
-        .on('click.zf.drilldown', () => {
-          setTimeout(() => {
-            _this._hideAll();
-          }, 0);
+    this.$menuItems
+      .not('.is-drilldown-submenu-parent')
+      .off('click.zf.drilldown')
+      .on('click.zf.drilldown', () => {
+        setTimeout(() => {
+          _this._hideAll();
+        }, 0);
       });
   }
 
@@ -363,7 +457,10 @@ class Drilldown extends Plugin {
    * @param {boolean} trigger - trigger drilldown event
    */
   _setShowSubMenuClasses($elem, trigger) {
-    $elem.addClass('is-active').removeClass('invisible').attr('aria-hidden', false);
+    $elem
+      .addClass('is-active')
+      .removeClass('invisible')
+      .attr('aria-hidden', false);
     $elem.parent('li').attr('aria-expanded', true);
     if (trigger === true) {
       this.$element.trigger('open.zf.drilldown', [$elem]);
@@ -378,7 +475,10 @@ class Drilldown extends Plugin {
    * @param {boolean} trigger - trigger drilldown event
    */
   _setHideSubMenuClasses($elem, trigger) {
-    $elem.removeClass('is-active').addClass('invisible').attr('aria-hidden', true);
+    $elem
+      .removeClass('is-active')
+      .addClass('invisible')
+      .attr('aria-hidden', true);
     $elem.parent('li').attr('aria-expanded', false);
     if (trigger === true) {
       $elem.trigger('hide.zf.drilldown', [$elem]);
@@ -394,12 +494,13 @@ class Drilldown extends Plugin {
    * @param {boolean} autoFocus - if true the first link in the target (sub)menu gets auto focused
    */
   _showMenu($elem, autoFocus) {
-
     const _this = this;
 
     // Reset drilldown
-    const $expandedSubmenus = this.$element.find('li[aria-expanded="true"] > ul[data-submenu]');
-    $expandedSubmenus.each(function() {
+    const $expandedSubmenus = this.$element.find(
+      'li[aria-expanded="true"] > ul[data-submenu]'
+    );
+    $expandedSubmenus.each(function () {
       _this._setHideSubMenuClasses($(this));
     });
 
@@ -409,16 +510,19 @@ class Drilldown extends Plugin {
     // If target menu is root, focus first link & exit
     if ($elem.is('[data-drilldown]')) {
       if (autoFocus === true) $elem.find('li > a').first().focus();
-      if (this.options.autoHeight) this.$wrapper.css('height', $elem.data('calcHeight'));
+      if (this.options.autoHeight)
+        this.$wrapper.css('height', $elem.data('calcHeight'));
       return;
     }
 
     // Find all submenus on way to root incl. the element itself
-    const $submenus = $elem.children().first().parentsUntil('[data-drilldown]', '[data-submenu]');
+    const $submenus = $elem
+      .children()
+      .first()
+      .parentsUntil('[data-drilldown]', '[data-submenu]');
 
     // Open target menu and all submenus on its way to root
-    $submenus.each(function(index) {
-
+    $submenus.each(function (index) {
       // Update height of first child (target menu) if autoHeight option true
       if (index === 0 && _this.options.autoHeight) {
         _this.$wrapper.css('height', $(this).data('calcHeight'));
@@ -458,7 +562,10 @@ class Drilldown extends Plugin {
     $elem.parent().closest('ul').addClass('invisible');
 
     // add visible class to submenu to override invisible class above
-    $submenu.addClass('is-active visible').removeClass('invisible').attr('aria-hidden', false);
+    $submenu
+      .addClass('is-active visible')
+      .removeClass('invisible')
+      .attr('aria-hidden', false);
 
     if (this.options.autoHeight) {
       this.$wrapper.css({ height: $submenu.data('calcHeight') });
@@ -478,15 +585,17 @@ class Drilldown extends Plugin {
    * @param {jQuery} $elem - the current sub-menu to hide, i.e. the `ul` tag.
    */
   _hide($elem) {
-    if(this.options.autoHeight) this.$wrapper.css({height:$elem.parent().closest('ul').data('calcHeight')});
+    if (this.options.autoHeight)
+      this.$wrapper.css({
+        height: $elem.parent().closest('ul').data('calcHeight'),
+      });
     $elem.parent().closest('ul').removeClass('invisible');
     $elem.parent('li').attr('aria-expanded', false);
     $elem.attr('aria-hidden', true);
-    $elem.addClass('is-closing')
-         .one(transitionend($elem), () => {
-           $elem.removeClass('is-active is-closing visible');
-           $elem.blur().addClass('invisible');
-         });
+    $elem.addClass('is-closing').one(transitionend($elem), () => {
+      $elem.removeClass('is-active is-closing visible');
+      $elem.blur().addClass('invisible');
+    });
     /**
      * Fires when the submenu has closed.
      * @event Drilldown#hide
@@ -506,20 +615,19 @@ class Drilldown extends Plugin {
     const _this = this;
 
     // Recalculate menu heights and total max height
-    this.$submenus.add(this.$element).each(function(){
+    this.$submenus.add(this.$element).each(function () {
       const height = Box.GetDimensions(this).height;
 
       maxHeight = height > maxHeight ? height : maxHeight;
 
-      if(_this.options.autoHeight) {
-        $(this).data('calcHeight',height);
+      if (_this.options.autoHeight) {
+        $(this).data('calcHeight', height);
       }
     });
 
     if (this.options.autoHeight)
       result.height = this.$currentMenu.data('calcHeight');
-    else
-      result['min-height'] = `${maxHeight}px`;
+    else result['min-height'] = `${maxHeight}px`;
 
     result['max-width'] = `${this.$element[0].getBoundingClientRect().width}px`;
 
@@ -532,29 +640,39 @@ class Drilldown extends Plugin {
    */
   _destroy() {
     $('body').off('.zf.drilldown');
-    if(this.options.scrollTop) this.$element.off('.zf.drilldown',this._bindHandler);
+    if (this.options.scrollTop)
+      this.$element.off('.zf.drilldown', this._bindHandler);
     this._hideAll();
-	  this.$element.off('mutateme.zf.trigger');
+    this.$element.off('mutateme.zf.trigger');
     Nest.Burn(this.$element, 'drilldown');
-    this.$element.unwrap()
-                 .find('.js-drilldown-back, .is-submenu-parent-item').remove()
-                 .end().find('.is-active, .is-closing, .is-drilldown-submenu').removeClass('is-active is-closing is-drilldown-submenu').off('transitionend otransitionend webkitTransitionEnd')
-                 .end().find('[data-submenu]').removeAttr('aria-hidden tabindex role');
-    this.$submenuAnchors.each(function() {
+    this.$element
+      .unwrap()
+      .find('.js-drilldown-back, .is-submenu-parent-item')
+      .remove()
+      .end()
+      .find('.is-active, .is-closing, .is-drilldown-submenu')
+      .removeClass('is-active is-closing is-drilldown-submenu')
+      .off('transitionend otransitionend webkitTransitionEnd')
+      .end()
+      .find('[data-submenu]')
+      .removeAttr('aria-hidden tabindex role');
+    this.$submenuAnchors.each(function () {
       $(this).off('.zf.drilldown');
     });
 
     this.$element.find('[data-is-parent-link]').detach();
     this.$submenus.removeClass('drilldown-submenu-cover-previous invisible');
 
-    this.$element.find('a').each(function(){
+    this.$element.find('a').each(function () {
       const $link = $(this);
       $link.removeAttr('tabindex');
-      if($link.data('savedHref')){
+      if ($link.data('savedHref')) {
         $link.attr('href', $link.data('savedHref')).removeData('savedHref');
-      }else{ return; }
+      } else {
+        return;
+      }
     });
-  };
+  }
 }
 
 Drilldown.defaults = {
@@ -650,8 +768,8 @@ Drilldown.defaults = {
    * @see {@link https://api.jquery.com/animate|JQuery animate}
    * @default 'swing'
    */
-  animationEasing: 'swing'
+  animationEasing: 'swing',
   // holdOpen: false
 };
 
-export {Drilldown};
+export { Drilldown };

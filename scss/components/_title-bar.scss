@@ -44,8 +44,7 @@ $titlebar-icon-spacing: 0.25rem !default;
       display: flex;
       justify-content: flex-start;
       align-items: center;
-    }
-    @else {
+    } @else {
       @include clearfix;
     }
 
@@ -64,8 +63,7 @@ $titlebar-icon-spacing: 0.25rem !default;
     .title-bar-right {
       text-align: right;
     }
-  }
-  @else {
+  } @else {
     .title-bar-left {
       float: left;
     }

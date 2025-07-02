@@ -23,13 +23,13 @@ const Foundation = {
    * Defines a Foundation plugin, adding it to the `Foundation` namespace and the list of plugins to initialize when reflowing.
    * @param {Object} plugin - The constructor of the plugin.
    */
-  plugin: function(plugin, name) {
+  plugin: function (plugin, name) {
     // Object key to use when adding to global Foundation object
     // Examples: Foundation.Reveal, Foundation.OffCanvas
-    const className = (name || functionName(plugin));
+    const className = name || functionName(plugin);
     // Object key to use when storing the plugin, also used to create the identifying data attribute for the plugin
     // Examples: data-reveal, data-off-canvas
-    const attrName  = hyphenate(className);
+    const attrName = hyphenate(className);
 
     // Add to the Foundation object and the plugins list (for reflowing)
     this._plugins[attrName] = this[className] = plugin;
@@ -43,16 +43,22 @@ const Foundation = {
    * @param {String} name - the name of the plugin, passed as a camelCased string.
    * @fires Plugin#init
    */
-  registerPlugin: function(plugin, name){
-    const pluginName = name ? hyphenate(name) : functionName(plugin.constructor).toLowerCase();
+  registerPlugin: function (plugin, name) {
+    const pluginName = name
+      ? hyphenate(name)
+      : functionName(plugin.constructor).toLowerCase();
     plugin.uuid = GetYoDigits(6, pluginName);
 
-    if(!plugin.$element.attr(`data-${pluginName}`)){ plugin.$element.attr(`data-${pluginName}`, plugin.uuid); }
-    if(!plugin.$element.data('zfPlugin')){ plugin.$element.data('zfPlugin', plugin); }
-          /**
-           * Fires when the plugin has initialized.
-           * @event Plugin#init
-           */
+    if (!plugin.$element.attr(`data-${pluginName}`)) {
+      plugin.$element.attr(`data-${pluginName}`, plugin.uuid);
+    }
+    if (!plugin.$element.data('zfPlugin')) {
+      plugin.$element.data('zfPlugin', plugin);
+    }
+    /**
+     * Fires when the plugin has initialized.
+     * @event Plugin#init
+     */
     plugin.$element.trigger(`init.zf.${pluginName}`);
 
     this._uuids.push(plugin.uuid);
@@ -67,18 +73,22 @@ const Foundation = {
    * @param {Object} plugin - an instance of a plugin, usually `this` in context.
    * @fires Plugin#destroyed
    */
-  unregisterPlugin: function(plugin){
-    const pluginName = hyphenate(functionName(plugin.$element.data('zfPlugin').constructor));
+  unregisterPlugin: function (plugin) {
+    const pluginName = hyphenate(
+      functionName(plugin.$element.data('zfPlugin').constructor)
+    );
 
     this._uuids.splice(this._uuids.indexOf(plugin.uuid), 1);
-    plugin.$element.removeAttr(`data-${pluginName}`).removeData('zfPlugin')
-          /**
-           * Fires when the plugin has been destroyed.
-           * @event Plugin#destroyed
-           */
-          .trigger(`destroyed.zf.${pluginName}`);
-    for(const prop in plugin){
-      if(typeof plugin[prop] === 'function'){
+    plugin.$element
+      .removeAttr(`data-${pluginName}`)
+      .removeData('zfPlugin')
+      /**
+       * Fires when the plugin has been destroyed.
+       * @event Plugin#destroyed
+       */
+      .trigger(`destroyed.zf.${pluginName}`);
+    for (const prop in plugin) {
+      if (typeof plugin[prop] === 'function') {
         plugin[prop] = null; //clean up script to prep for garbage collection.
       }
     }
@@ -91,47 +101,46 @@ const Foundation = {
    * @param {String} plugins - optional string of an individual plugin key, attained by calling `$(element).data('pluginName')`, or string of a plugin class i.e. `'dropdown'`
    * @default If no argument is passed, reflow all currently active plugins.
    */
-   reInit: function(plugins){
-     const isJQ = plugins instanceof $;
-     try{
-       if(isJQ){
-         plugins.each(function(){
-           $(this).data('zfPlugin')._init();
-         });
-       }else{
-         const type = typeof plugins,
-               _this = this,
-               fns = {
-                 'object': function(plgs){
-                   plgs.forEach(p => {
-                     p = hyphenate(p);
-                     $('[data-'+ p +']').foundation('_init');
-                   });
-                 },
-                 'string': function(){
-                   plugins = hyphenate(plugins);
-                   $('[data-'+ plugins +']').foundation('_init');
-                 },
-                 'undefined': function(){
-                   this.object(Object.keys(_this._plugins));
-                 }
-               };
-         fns[type](plugins);
-       }
-     }catch(err){
-       console.error(err);
-     }finally{
-       return plugins;
-     }
-   },
+  reInit: function (plugins) {
+    const isJQ = plugins instanceof $;
+    try {
+      if (isJQ) {
+        plugins.each(function () {
+          $(this).data('zfPlugin')._init();
+        });
+      } else {
+        const type = typeof plugins,
+          _this = this,
+          fns = {
+            object: function (plgs) {
+              plgs.forEach((p) => {
+                p = hyphenate(p);
+                $('[data-' + p + ']').foundation('_init');
+              });
+            },
+            string: function () {
+              plugins = hyphenate(plugins);
+              $('[data-' + plugins + ']').foundation('_init');
+            },
+            undefined: function () {
+              this.object(Object.keys(_this._plugins));
+            },
+          };
+        fns[type](plugins);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      return plugins;
+    }
+  },
 
   /**
    * Initialize plugins on any elements within `elem` (and `elem` itself) that aren't already initialized.
    * @param {Object} elem - jQuery object containing the element to check inside. Also checks the element itself, unless it's the `document` object.
    * @param {String|Array} plugins - A list of plugins to initialize. Leave this out to initialize everything.
    */
-  reflow: function(elem, plugins) {
-
+  reflow: function (elem, plugins) {
     // If plugins is undefined, just grab everything
     if (typeof plugins === 'undefined') {
       plugins = Object.keys(this._plugins);
@@ -149,25 +158,34 @@ const Foundation = {
       const plugin = _this._plugins[name];
 
       // Localize the search to all elements inside elem, as well as elem itself, unless elem === document
-      const $elem = $(elem).find('[data-'+name+']').addBack('[data-'+name+']').filter(function () {
-        return typeof $(this).data("zfPlugin") === 'undefined';
-      });
+      const $elem = $(elem)
+        .find('[data-' + name + ']')
+        .addBack('[data-' + name + ']')
+        .filter(function () {
+          return typeof $(this).data('zfPlugin') === 'undefined';
+        });
 
       // For each plugin found, initialize it
-      $elem.each(function() {
-        const $el = $(this), opts = { reflow: true };
+      $elem.each(function () {
+        const $el = $(this),
+          opts = { reflow: true };
 
-        if($el.attr('data-options')){
-          $el.attr('data-options').split(';').forEach(option => {
-            const opt = option.split(':').map(el => { return el.trim(); });
-            if(opt[0]) opts[opt[0]] = parseValue(opt[1]);
-          });
+        if ($el.attr('data-options')) {
+          $el
+            .attr('data-options')
+            .split(';')
+            .forEach((option) => {
+              const opt = option.split(':').map((el) => {
+                return el.trim();
+              });
+              if (opt[0]) opts[opt[0]] = parseValue(opt[1]);
+            });
         }
-        try{
+        try {
           $el.data('zfPlugin', new plugin($(this), opts));
-        }catch(er){
+        } catch (er) {
           console.error(er);
-        }finally{
+        } finally {
           return;
         }
       });
@@ -175,44 +193,63 @@ const Foundation = {
   },
   getFnName: functionName,
 
-  addToJquery: function() {
+  addToJquery: function () {
     /**
      * The Foundation jQuery method.
      * @param {String|Array} method - An action to perform on the current jQuery object.
      */
-    const foundation = function(method) {
-      const type = typeof method, $noJS = $('.no-js');
+    const foundation = function (method) {
+      const type = typeof method,
+        $noJS = $('.no-js');
 
-      if($noJS.length){
+      if ($noJS.length) {
         $noJS.removeClass('no-js');
       }
 
-      if(type === 'undefined'){//needs to initialize the Foundation object, or an individual plugin.
+      if (type === 'undefined') {
+        //needs to initialize the Foundation object, or an individual plugin.
         MediaQuery._init();
         Foundation.reflow(this);
-      }else if(type === 'string'){//an individual method to invoke on a plugin or group of plugins
-        const args = Array.prototype.slice.call(arguments, 1);//collect all the arguments, if necessary
-        const plugClass = this.data('zfPlugin');//determine the class of plugin
+      } else if (type === 'string') {
+        //an individual method to invoke on a plugin or group of plugins
+        const args = Array.prototype.slice.call(arguments, 1); //collect all the arguments, if necessary
+        const plugClass = this.data('zfPlugin'); //determine the class of plugin
 
-        if(typeof plugClass !== 'undefined' && typeof plugClass[method] !== 'undefined'){//make sure both the class and method exist
-          if(this.length === 1){//if there's only one, call it directly.
-              plugClass[method].apply(plugClass, args);
-          }else{
-            this.each((i, el) => {//otherwise loop through the jQuery collection and invoke the method on each
+        if (
+          typeof plugClass !== 'undefined' &&
+          typeof plugClass[method] !== 'undefined'
+        ) {
+          //make sure both the class and method exist
+          if (this.length === 1) {
+            //if there's only one, call it directly.
+            plugClass[method].apply(plugClass, args);
+          } else {
+            this.each((i, el) => {
+              //otherwise loop through the jQuery collection and invoke the method on each
               plugClass[method].apply($(el).data('zfPlugin'), args);
             });
           }
-        }else{//error for no class or no method
-          throw new ReferenceError("We're sorry, '" + method + "' is not an available method for " + (plugClass ? functionName(plugClass) : 'this element') + '.');
+        } else {
+          //error for no class or no method
+          throw new ReferenceError(
+            "We're sorry, '" +
+              method +
+              "' is not an available method for " +
+              (plugClass ? functionName(plugClass) : 'this element') +
+              '.'
+          );
         }
-      }else{//error for invalid argument type
-        throw new TypeError(`We're sorry, ${type} is not a valid parameter. You must use a string representing the method you wish to invoke.`);
+      } else {
+        //error for invalid argument type
+        throw new TypeError(
+          `We're sorry, ${type} is not a valid parameter. You must use a string representing the method you wish to invoke.`
+        );
       }
       return this;
     };
     $.fn.foundation = foundation;
     return $;
-  }
+  },
 };
 
 Foundation.util = {
@@ -227,7 +264,8 @@ Foundation.util = {
     let timer = null;
 
     return function () {
-      const context = this, args = arguments;
+      const context = this,
+        args = arguments;
 
       if (timer === null) {
         timer = setTimeout(() => {
@@ -236,7 +274,7 @@ Foundation.util = {
         }, delay);
       }
     };
-  }
+  },
 };
 
 window.Foundation = Foundation;
@@ -244,54 +282,65 @@ window.Foundation = Foundation;
 // Polyfill for requestAnimationFrame
 (() => {
   if (!Date.now || !window.Date.now)
-    window.Date.now = Date.now = () => { return new Date().getTime(); };
+    window.Date.now = Date.now = () => {
+      return new Date().getTime();
+    };
 
   const vendors = ['webkit', 'moz'];
   for (let i = 0; i < vendors.length && !window.requestAnimationFrame; ++i) {
-      const vp = vendors[i];
-      window.requestAnimationFrame = window[vp+'RequestAnimationFrame'];
-      window.cancelAnimationFrame = (window[vp+'CancelAnimationFrame']
-                                 || window[vp+'CancelRequestAnimationFrame']);
+    const vp = vendors[i];
+    window.requestAnimationFrame = window[vp + 'RequestAnimationFrame'];
+    window.cancelAnimationFrame =
+      window[vp + 'CancelAnimationFrame'] ||
+      window[vp + 'CancelRequestAnimationFrame'];
   }
-  if (/iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent)
-    || !window.requestAnimationFrame || !window.cancelAnimationFrame) {
+  if (
+    /iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent) ||
+    !window.requestAnimationFrame ||
+    !window.cancelAnimationFrame
+  ) {
     let lastTime = 0;
-    window.requestAnimationFrame = callback => {
-        const now = Date.now();
-        const nextTime = Math.max(lastTime + 16, now);
-        return setTimeout(() => { callback(lastTime = nextTime); },
-                          nextTime - now);
+    window.requestAnimationFrame = (callback) => {
+      const now = Date.now();
+      const nextTime = Math.max(lastTime + 16, now);
+      return setTimeout(() => {
+        callback((lastTime = nextTime));
+      }, nextTime - now);
     };
     window.cancelAnimationFrame = clearTimeout;
   }
   /**
    * Polyfill for performance.now, required by rAF
    */
-  if(!window.performance || !window.performance.now){
+  if (!window.performance || !window.performance.now) {
     window.performance = {
       start: Date.now(),
-      now: function(){ return Date.now() - this.start; }
+      now: function () {
+        return Date.now() - this.start;
+      },
     };
   }
 })();
 if (!Function.prototype.bind) {
   /* eslint-disable no-extend-native */
-  Function.prototype.bind = function(oThis) {
+  Function.prototype.bind = function (oThis) {
     if (typeof this !== 'function') {
       // closest thing possible to the ECMAScript 5
       // internal IsCallable function
-      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+      throw new TypeError(
+        'Function.prototype.bind - what is trying to be bound is not callable'
+      );
     }
 
-    const aArgs   = Array.prototype.slice.call(arguments, 1),
-          fToBind = this,
-          fNOP    = () => {},
-          fBound  = function() {
-            return fToBind.apply(this instanceof fNOP
-                   ? this
-                   : oThis,
-                   aArgs.concat(Array.prototype.slice.call(arguments)));
-          };
+    const aArgs = Array.prototype.slice.call(arguments, 1),
+      fToBind = this,
+      fNOP = () => {},
+      fBound = function () {
+        return fToBind.apply(
+          this instanceof fNOP ? this : oThis,
+          aArgs.concat(Array.prototype.slice.call(arguments))
+        );
+      };
 
     if (this.prototype) {
       // native functions don't have a prototype
@@ -306,17 +355,15 @@ if (!Function.prototype.bind) {
 function functionName(fn) {
   if (typeof Function.prototype.name === 'undefined') {
     const funcNameRegex = /function\s([^(]{1,})\(/;
-    const results = (funcNameRegex).exec((fn).toString());
-    return (results && results.length > 1) ? results[1].trim() : "";
-  }
-  else if (typeof fn.prototype === 'undefined') {
+    const results = funcNameRegex.exec(fn.toString());
+    return results && results.length > 1 ? results[1].trim() : '';
+  } else if (typeof fn.prototype === 'undefined') {
     return fn.constructor.name;
-  }
-  else {
+  } else {
     return fn.prototype.constructor.name;
   }
 }
-function parseValue(str){
+function parseValue(str) {
   if ('true' === str) return true;
   else if ('false' === str) return false;
   else if (!isNaN(str * 1)) return parseFloat(str);
@@ -328,4 +375,4 @@ function hyphenate(str) {
   return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
-export {Foundation};
+export { Foundation };

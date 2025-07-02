@@ -19,48 +19,58 @@ const keyCodes = {
   37: 'ARROW_LEFT',
   38: 'ARROW_UP',
   39: 'ARROW_RIGHT',
-  40: 'ARROW_DOWN'
-}
+  40: 'ARROW_DOWN',
+};
 
 const commands = {};
 
 // Functions pulled out to be referenceable from internals
 function findFocusable($element) {
-  if(!$element) {return false; }
-  return $element.find('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]').filter(function() {
-    if (!$(this).is(':visible') || $(this).attr('tabindex') < 0) { return false; } //only have visible elements and those that have a tabindex greater or equal 0
-    return true;
-  })
-  .sort( (a, b) => {
-    if ($(a).attr('tabindex') === $(b).attr('tabindex')) {
-      return 0;
-    }
-    let aTabIndex = parseInt($(a).attr('tabindex'), 10),
-      bTabIndex = parseInt($(b).attr('tabindex'), 10);
-    // Undefined is treated the same as 0
-    if (typeof $(a).attr('tabindex') === 'undefined' && bTabIndex > 0) {
-      return 1;
-    }
-    if (typeof $(b).attr('tabindex') === 'undefined' && aTabIndex > 0) {
-      return -1;
-    }
-    if (aTabIndex === 0 && bTabIndex > 0) {
-      return 1;
-    }
-    if (bTabIndex === 0 && aTabIndex > 0) {
-      return -1;
-    }
-    if (aTabIndex < bTabIndex) {
-      return -1;
-    }
-    if (aTabIndex > bTabIndex) {
-      return 1;
-    }
-  });
+  if (!$element) {
+    return false;
+  }
+  return $element
+    .find(
+      'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]'
+    )
+    .filter(function () {
+      if (!$(this).is(':visible') || $(this).attr('tabindex') < 0) {
+        return false;
+      } //only have visible elements and those that have a tabindex greater or equal 0
+      return true;
+    })
+    .sort((a, b) => {
+      if ($(a).attr('tabindex') === $(b).attr('tabindex')) {
+        return 0;
+      }
+      let aTabIndex = parseInt($(a).attr('tabindex'), 10),
+        bTabIndex = parseInt($(b).attr('tabindex'), 10);
+      // Undefined is treated the same as 0
+      if (typeof $(a).attr('tabindex') === 'undefined' && bTabIndex > 0) {
+        return 1;
+      }
+      if (typeof $(b).attr('tabindex') === 'undefined' && aTabIndex > 0) {
+        return -1;
+      }
+      if (aTabIndex === 0 && bTabIndex > 0) {
+        return 1;
+      }
+      if (bTabIndex === 0 && aTabIndex > 0) {
+        return -1;
+      }
+      if (aTabIndex < bTabIndex) {
+        return -1;
+      }
+      if (aTabIndex > bTabIndex) {
+        return 1;
+      }
+    });
 }
 
 function parseKey(event) {
-  let key = keyCodes[event.which || event.keyCode] || String.fromCharCode(event.which).toUpperCase();
+  let key =
+    keyCodes[event.which || event.keyCode] ||
+    String.fromCharCode(event.which).toUpperCase();
 
   // Remove un-printable characters, e.g. for `fromCharCode` calls for CTRL only events
   key = key.replace(/\W+/, '');
@@ -106,11 +116,11 @@ const Keyboard = {
 
     // This component does not differentiate between ltr and rtl
     if (typeof commandList.ltr === 'undefined') {
-        cmds = commandList; // use plain list
-    } else { // merge ltr and rtl: if document is rtl, rtl overwrites ltr and vice versa
-        if (Rtl()) cmds = $.extend({}, commandList.ltr, commandList.rtl);
-
-        else cmds = $.extend({}, commandList.rtl, commandList.ltr);
+      cmds = commandList; // use plain list
+    } else {
+      // merge ltr and rtl: if document is rtl, rtl overwrites ltr and vice versa
+      if (Rtl()) cmds = $.extend({}, commandList.ltr, commandList.rtl);
+      else cmds = $.extend({}, commandList.rtl, commandList.ltr);
     }
     command = cmds[keyCode];
 
@@ -124,12 +134,12 @@ const Keyboard = {
 
       // Execute function when event was handled
       if (functions.handled || typeof functions.handled === 'function') {
-          functions.handled(returnValue);
+        functions.handled(returnValue);
       }
     } else {
-       // Execute function when event was not handled
+      // Execute function when event was not handled
       if (functions.unhandled || typeof functions.unhandled === 'function') {
-          functions.unhandled();
+        functions.unhandled();
       }
     }
   },
@@ -152,20 +162,23 @@ const Keyboard = {
     commands[componentName] = cmds;
   },
 
-
   /**
    * Traps the focus in the given element.
    * @param  {jQuery} $element  jQuery object to trap the foucs into.
    */
   trapFocus($element) {
-    const $focusable = findFocusable($element), $firstFocusable = $focusable.eq(0), $lastFocusable = $focusable.eq(-1);
+    const $focusable = findFocusable($element),
+      $firstFocusable = $focusable.eq(0),
+      $lastFocusable = $focusable.eq(-1);
 
-    $element.on('keydown.zf.trapfocus', event => {
+    $element.on('keydown.zf.trapfocus', (event) => {
       if (event.target === $lastFocusable[0] && parseKey(event) === 'TAB') {
         event.preventDefault();
         $firstFocusable.focus();
-      }
-      else if (event.target === $firstFocusable[0] && parseKey(event) === 'SHIFT_TAB') {
+      } else if (
+        event.target === $firstFocusable[0] &&
+        parseKey(event) === 'SHIFT_TAB'
+      ) {
         event.preventDefault();
         $lastFocusable.focus();
       }
@@ -177,7 +190,7 @@ const Keyboard = {
    */
   releaseFocus($element) {
     $element.off('keydown.zf.trapfocus');
-  }
+  },
 };
 
 /*
@@ -192,4 +205,4 @@ function getKeyCodes(kcs) {
   return k;
 }
 
-export {Keyboard};
+export { Keyboard };

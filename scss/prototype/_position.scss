@@ -12,12 +12,7 @@ $prototype-position-breakpoints: $global-prototype-breakpoints !default;
 
 /// Map containing all the `position` classes
 /// @type Map
-$prototype-position: (
-  static,
-  relative,
-  absolute,
-  fixed
-) !default;
+$prototype-position: (static, relative, absolute, fixed) !default;
 
 /// z-index for fixed positioning
 /// @type Number
@@ -53,18 +48,14 @@ $prototype-position-z-index: 975 !default;
 
 /// Position Fixed on top corners
 /// @param {Number} $z-index [$prototype-position-z-index] z-index for `position-fixed-top`
-@mixin position-fixed-top(
-  $z-index: $prototype-position-z-index
-) {
+@mixin position-fixed-top($z-index: $prototype-position-z-index) {
   @include position(fixed, 0, 0, null, 0);
   z-index: $z-index;
 }
 
 /// Position Fixed on bottom corners
 /// @param {Number} $z-index [$prototype-position-z-index] z-index for `position-fixed-bottom`
-@mixin position-fixed-bottom(
-  $z-index: $prototype-position-z-index
-) {
+@mixin position-fixed-bottom($z-index: $prototype-position-z-index) {
   @include position(fixed, null, 0, 0, 0);
   z-index: $z-index;
 }

@@ -15,7 +15,9 @@ $print-hrefs: true !default;
 // sass-lint:disable-all
 
 @mixin foundation-print-styles {
-  .show-for-print { display: none !important; }
+  .show-for-print {
+    display: none !important;
+  }
 
   @media print {
     * {
@@ -35,30 +37,54 @@ $print-hrefs: true !default;
       text-shadow: none !important;
     }
 
-    .show-for-print { display: block !important; }
-    .hide-for-print { display: none !important; }
+    .show-for-print {
+      display: block !important;
+    }
+    .hide-for-print {
+      display: none !important;
+    }
 
-    table.show-for-print { display: table !important; }
-    thead.show-for-print { display: table-header-group !important; }
-    tbody.show-for-print { display: table-row-group !important; }
-    tr.show-for-print { display: table-row !important; }
-    td.show-for-print { display: table-cell !important; }
-    th.show-for-print { display: table-cell !important; }
+    table.show-for-print {
+      display: table !important;
+    }
+    thead.show-for-print {
+      display: table-header-group !important;
+    }
+    tbody.show-for-print {
+      display: table-row-group !important;
+    }
+    tr.show-for-print {
+      display: table-row !important;
+    }
+    td.show-for-print {
+      display: table-cell !important;
+    }
+    th.show-for-print {
+      display: table-cell !important;
+    }
 
     // Display the URL of a link after the text
     a,
-    a:visited { text-decoration: underline;}
+    a:visited {
+      text-decoration: underline;
+    }
     @if $print-hrefs {
-      a[href]:after { content: ' (' attr(href) ')'; }
+      a[href]:after {
+        content: ' (' attr(href) ')';
+      }
     }
 
     // Don't display the URL for images or JavaScript/internal links
     .ir a:after,
     a[href^='javascript:']:after,
-    a[href^='#']:after { content: ''; }
+    a[href^='#']:after {
+      content: '';
+    }
 
     // Display what an abbreviation stands for after the text
-    abbr[title]:after { content: ' (' attr(title) ')'; }
+    abbr[title]:after {
+      content: ' (' attr(title) ')';
+    }
 
     // Prevent page breaks in the middle of a blockquote or preformatted text block
     pre,
@@ -68,14 +94,22 @@ $print-hrefs: true !default;
     }
 
     // h5bp.com/t
-    thead { display: table-header-group; }
+    thead {
+      display: table-header-group;
+    }
 
     tr,
-    img { page-break-inside: avoid; }
+    img {
+      page-break-inside: avoid;
+    }
 
-    img { max-width: 100% !important; }
+    img {
+      max-width: 100% !important;
+    }
 
-    @page { margin: 0.5cm; }
+    @page {
+      margin: 0.5cm;
+    }
 
     p,
     h2,
@@ -86,7 +120,9 @@ $print-hrefs: true !default;
 
     // Avoid page breaks after a heading
     h2,
-    h3 { page-break-after: avoid; }
+    h3 {
+      page-break-after: avoid;
+    }
 
     // Helper to re-allow page breaks in the middle of certain elements (e.g. pre, blockquote, tr)
     .print-break-inside {

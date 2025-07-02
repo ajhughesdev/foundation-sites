@@ -90,7 +90,11 @@ $tooltip-radius: $global-radius !default;
 
   &.top {
     &::before {
-      @include css-triangle($tooltip-pip-width, $tooltip-background-color, down);
+      @include css-triangle(
+        $tooltip-pip-width,
+        $tooltip-background-color,
+        down
+      );
       top: 100%;
       bottom: auto;
     }
@@ -103,7 +107,11 @@ $tooltip-radius: $global-radius !default;
 
   &.left {
     &::before {
-      @include css-triangle($tooltip-pip-width, $tooltip-background-color, right);
+      @include css-triangle(
+        $tooltip-pip-width,
+        $tooltip-background-color,
+        right
+      );
       left: 100%;
     }
 
@@ -116,7 +124,11 @@ $tooltip-radius: $global-radius !default;
 
   &.right {
     &::before {
-      @include css-triangle($tooltip-pip-width, $tooltip-background-color, left);
+      @include css-triangle(
+        $tooltip-pip-width,
+        $tooltip-background-color,
+        left
+      );
       right: 100%;
       left: auto;
     }

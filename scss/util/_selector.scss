@@ -13,14 +13,15 @@
 @function text-inputs($types: (), $modifier: '') {
   $return: ();
 
-  $all-types: text password date datetime datetime-local month week email number search tel time url color;
+  $all-types: text password date datetime datetime-local month week email number
+    search tel time url color;
 
   @if not has-value($types) {
     $types: $all-types;
   }
 
   @each $type in $types {
-    $return: append($return, unquote('[type=\'#{$type}\']#{$modifier}'), comma);
+    $return: append($return, unquote("[type='#{$type}']#{$modifier}"), comma);
   }
 
   @return $return;

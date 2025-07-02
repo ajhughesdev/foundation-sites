@@ -20,7 +20,6 @@
 ) {
   // First, lets negate any margins on the top level
   @if ($gutter-type == 'margin') {
-
     @include breakpoint($min-breakpoint) {
       @each $value in $gutter-position {
         margin-#{$value}: 0;
@@ -37,7 +36,7 @@
 
     // Output new widths to not include gutters
     @each $bp in $breakpoint-classes {
-      @if(sl-contain($excluded-bps, $bp)) {
+      @if (sl-contain($excluded-bps, $bp)) {
         @include breakpoint($min-breakpoint) {
           @for $i from 1 through $grid-columns {
             // Sizing (percentage)
@@ -57,9 +56,7 @@
         }
       }
     }
-  }
-  @else {
-
+  } @else {
     @include breakpoint($min-breakpoint) {
       @each $value in $gutter-position {
         margin-#{$value}: 0;

@@ -14,7 +14,6 @@
   $breakpoint: null,
   $include-base: true
 ) {
-
   @if $include-base {
     overflow: hidden;
     position: relative;
@@ -51,8 +50,7 @@
         }
         width: calc(#{$unit} + #{$gutter});
       }
-    }
-    @else {
+    } @else {
       @if $vertical == true {
         height: if($nested == true, 100%, 100vh);
       } @else {
@@ -65,9 +63,7 @@
 /// Modifies a cell to give it "block" behavior (overflow auto, inertial scrolling)
 ///
 /// @param {Boolean} $vertical [false] - Is grid vertical or horizontal. Should match grid.
-@mixin xy-cell-block(
-  $vertical: false
-) {
+@mixin xy-cell-block($vertical: false) {
   $property: if($vertical == true, 'overflow-y', 'overflow-x');
 
   @if $vertical == true {

@@ -55,7 +55,6 @@ $dropdown-sizes: (
 
   font-size: $dropdown-font-size;
 
-
   // Allow an intermittent state to do positioning before making visible.
   &.is-opening {
     display: block;

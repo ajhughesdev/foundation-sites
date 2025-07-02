@@ -38,9 +38,11 @@ class Sticky extends Plugin {
   _init() {
     MediaQuery._init();
 
-    const $parent = this.$element.parent('[data-sticky-container]'), id = this.$element[0].id || GetYoDigits(6, 'sticky'), _this = this;
+    const $parent = this.$element.parent('[data-sticky-container]'),
+      id = this.$element[0].id || GetYoDigits(6, 'sticky'),
+      _this = this;
 
-    if($parent.length){
+    if ($parent.length) {
       this.$container = $parent;
     } else {
       this.wasWrapped = true;
@@ -49,16 +51,21 @@ class Sticky extends Plugin {
     }
     this.$container.addClass(this.options.containerClass);
 
-    this.$element.addClass(this.options.stickyClass).attr({ 'data-resize': id, 'data-mutate': id });
+    this.$element
+      .addClass(this.options.stickyClass)
+      .attr({ 'data-resize': id, 'data-mutate': id });
     if (this.options.anchor !== '') {
-        $('#' + _this.options.anchor).attr({ 'data-mutate': id });
+      $('#' + _this.options.anchor).attr({ 'data-mutate': id });
     }
 
     this.scrollCount = this.options.checkEvery;
     this.isStuck = false;
     this.onLoadListener = onLoad($(window), () => {
       //We calculate the container height to have correct values for anchor points offset calculation.
-      _this.containerHeight = _this.$element.css("display") === "none" ? 0 : _this.$element[0].getBoundingClientRect().height;
+      _this.containerHeight =
+        _this.$element.css('display') === 'none'
+          ? 0
+          : _this.$element[0].getBoundingClientRect().height;
       _this.$container.css('height', _this.containerHeight);
       _this.elemHeight = _this.containerHeight;
       if (_this.options.anchor !== '') {
@@ -72,7 +79,7 @@ class Sticky extends Plugin {
         _this._calc(false, scroll);
         //Unstick the element will ensure that proper classes are set.
         if (!_this.isStuck) {
-          _this._removeSticky((scroll >= _this.topPoint) ? false : true);
+          _this._removeSticky(scroll >= _this.topPoint ? false : true);
         }
       });
       _this._events(id.split('-').reverse().join('-'));
@@ -85,13 +92,20 @@ class Sticky extends Plugin {
    * @private
    */
   _parsePoints() {
-    const top = this.options.topAnchor === "" ? 1 : this.options.topAnchor, btm = this.options.btmAnchor === "" ? document.documentElement.scrollHeight : this.options.btmAnchor, pts = [top, btm], breaks = {};
+    const top = this.options.topAnchor === '' ? 1 : this.options.topAnchor,
+      btm =
+        this.options.btmAnchor === ''
+          ? document.documentElement.scrollHeight
+          : this.options.btmAnchor,
+      pts = [top, btm],
+      breaks = {};
     for (let i = 0, len = pts.length; i < len && pts[i]; i++) {
       let pt;
       if (typeof pts[i] === 'number') {
         pt = pts[i];
       } else {
-        const place = pts[i].split(':'), anchor = $(`#${place[0]}`);
+        const place = pts[i].split(':'),
+          anchor = $(`#${place[0]}`);
 
         pt = anchor.offset().top;
         if (place[1] && place[1].toLowerCase() === 'bottom') {
@@ -100,7 +114,6 @@ class Sticky extends Plugin {
       }
       breaks[i] = pt;
     }
-
 
     this.points = breaks;
     return;
@@ -112,36 +125,39 @@ class Sticky extends Plugin {
    * @param {String} id - pseudo-random id for unique scroll event listener.
    */
   _events(id) {
-    const _this = this, scrollListener = this.scrollListener = `scroll.zf.${id}`;
-    if (this.isOn) { return; }
+    const _this = this,
+      scrollListener = (this.scrollListener = `scroll.zf.${id}`);
+    if (this.isOn) {
+      return;
+    }
     if (this.canStick) {
       this.isOn = true;
-      $(window).off(scrollListener)
-               .on(scrollListener, () => {
-                 if (_this.scrollCount === 0) {
-                   _this.scrollCount = _this.options.checkEvery;
-                   _this._setSizes(() => {
-                     _this._calc(false, window.pageYOffset);
-                   });
-                 } else {
-                   _this.scrollCount--;
-                   _this._calc(false, window.pageYOffset);
-                 }
-              });
+      $(window)
+        .off(scrollListener)
+        .on(scrollListener, () => {
+          if (_this.scrollCount === 0) {
+            _this.scrollCount = _this.options.checkEvery;
+            _this._setSizes(() => {
+              _this._calc(false, window.pageYOffset);
+            });
+          } else {
+            _this.scrollCount--;
+            _this._calc(false, window.pageYOffset);
+          }
+        });
     }
 
-    this.$element.off('resizeme.zf.trigger')
-                 .on('resizeme.zf.trigger', () => {
-                    _this._eventsHandler(id);
+    this.$element.off('resizeme.zf.trigger').on('resizeme.zf.trigger', () => {
+      _this._eventsHandler(id);
     });
 
     this.$element.on('mutateme.zf.trigger', () => {
-        _this._eventsHandler(id);
+      _this._eventsHandler(id);
     });
 
-    if(this.$anchor) {
+    if (this.$anchor) {
       this.$anchor.on('mutateme.zf.trigger', () => {
-          _this._eventsHandler(id);
+        _this._eventsHandler(id);
       });
     }
   }
@@ -152,18 +168,19 @@ class Sticky extends Plugin {
    * @param {String} id - pseudo-random id for unique scroll event listener.
    */
   _eventsHandler(id) {
-       const _this = this, scrollListener = this.scrollListener = `scroll.zf.${id}`;
+    const _this = this,
+      scrollListener = (this.scrollListener = `scroll.zf.${id}`);
 
-       _this._setSizes(() => {
-       _this._calc(false);
-       if (_this.canStick) {
-         if (!_this.isOn) {
-           _this._events(id);
-         }
-       } else if (_this.isOn) {
-         _this._pauseListeners(scrollListener);
-       }
-     });
+    _this._setSizes(() => {
+      _this._calc(false);
+      if (_this.canStick) {
+        if (!_this.isOn) {
+          _this._events(id);
+        }
+      } else if (_this.isOn) {
+        _this._pauseListeners(scrollListener);
+      }
+    });
   }
 
   /**
@@ -180,7 +197,7 @@ class Sticky extends Plugin {
      * @event Sticky#pause
      * @private
      */
-     this.$element.trigger('pause.zf.sticky');
+    this.$element.trigger('pause.zf.sticky');
   }
 
   /**
@@ -190,7 +207,9 @@ class Sticky extends Plugin {
    * @param {Number} scroll - current scroll position passed from scroll event cb function. If not passed, defaults to `window.pageYOffset`.
    */
   _calc(checkSizes, scroll) {
-    if (checkSizes) { this._setSizes(); }
+    if (checkSizes) {
+      this._setSizes();
+    }
 
     if (!this.canStick) {
       if (this.isStuck) {
@@ -199,7 +218,9 @@ class Sticky extends Plugin {
       return false;
     }
 
-    if (!scroll) { scroll = window.pageYOffset; }
+    if (!scroll) {
+      scroll = window.pageYOffset;
+    }
 
     if (scroll >= this.topPoint) {
       if (scroll <= this.bottomPoint) {
@@ -226,24 +247,32 @@ class Sticky extends Plugin {
    * @private
    */
   _setSticky() {
-    const _this = this, stickTo = this.options.stickTo, mrgn = stickTo === 'top' ? 'marginTop' : 'marginBottom', notStuckTo = stickTo === 'top' ? 'bottom' : 'top', css = {};
+    const _this = this,
+      stickTo = this.options.stickTo,
+      mrgn = stickTo === 'top' ? 'marginTop' : 'marginBottom',
+      notStuckTo = stickTo === 'top' ? 'bottom' : 'top',
+      css = {};
 
     css[mrgn] = `${this.options[mrgn]}em`;
     css[stickTo] = 0;
     css[notStuckTo] = 'auto';
     this.isStuck = true;
-    this.$element.removeClass(`is-anchored is-at-${notStuckTo}`)
-                 .addClass(`is-stuck is-at-${stickTo}`)
-                 .css(css)
-                 /**
-                  * Fires when the $element has become `position: fixed;`
-                  * Namespaced to `top` or `bottom`, e.g. `sticky.zf.stuckto:top`
-                  * @event Sticky#stuckto
-                  */
-                 .trigger(`sticky.zf.stuckto:${stickTo}`);
-    this.$element.on("transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd", () => {
-      _this._setSizes();
-    });
+    this.$element
+      .removeClass(`is-anchored is-at-${notStuckTo}`)
+      .addClass(`is-stuck is-at-${stickTo}`)
+      .css(css)
+      /**
+       * Fires when the $element has become `position: fixed;`
+       * Namespaced to `top` or `bottom`, e.g. `sticky.zf.stuckto:top`
+       * @event Sticky#stuckto
+       */
+      .trigger(`sticky.zf.stuckto:${stickTo}`);
+    this.$element.on(
+      'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
+      () => {
+        _this._setSizes();
+      }
+    );
   }
 
   /**
@@ -255,27 +284,35 @@ class Sticky extends Plugin {
    * @private
    */
   _removeSticky(isTop) {
-    const stickTo = this.options.stickTo, stickToTop = stickTo === 'top', css = {}, anchorPt = (this.points ? this.points[1] - this.points[0] : this.anchorHeight) - this.elemHeight, mrgn = stickToTop ? 'marginTop' : 'marginBottom', topOrBottom = isTop ? 'top' : 'bottom';
+    const stickTo = this.options.stickTo,
+      stickToTop = stickTo === 'top',
+      css = {},
+      anchorPt =
+        (this.points ? this.points[1] - this.points[0] : this.anchorHeight) -
+        this.elemHeight,
+      mrgn = stickToTop ? 'marginTop' : 'marginBottom',
+      topOrBottom = isTop ? 'top' : 'bottom';
 
     css[mrgn] = 0;
 
     css.bottom = 'auto';
-    if(isTop) {
+    if (isTop) {
       css.top = 0;
     } else {
       css.top = anchorPt;
     }
 
     this.isStuck = false;
-    this.$element.removeClass(`is-stuck is-at-${stickTo}`)
-                 .addClass(`is-anchored is-at-${topOrBottom}`)
-                 .css(css)
-                 /**
-                  * Fires when the $element has become anchored.
-                  * Namespaced to `top` or `bottom`, e.g. `sticky.zf.unstuckfrom:bottom`
-                  * @event Sticky#unstuckfrom
-                  */
-                 .trigger(`sticky.zf.unstuckfrom:${topOrBottom}`);
+    this.$element
+      .removeClass(`is-stuck is-at-${stickTo}`)
+      .addClass(`is-anchored is-at-${topOrBottom}`)
+      .css(css)
+      /**
+       * Fires when the $element has become anchored.
+       * Namespaced to `top` or `bottom`, e.g. `sticky.zf.unstuckfrom:bottom`
+       * @event Sticky#unstuckfrom
+       */
+      .trigger(`sticky.zf.unstuckfrom:${topOrBottom}`);
   }
 
   /**
@@ -287,10 +324,15 @@ class Sticky extends Plugin {
   _setSizes(cb) {
     this.canStick = MediaQuery.is(this.options.stickyOn);
     if (!this.canStick) {
-      if (cb && typeof cb === 'function') { cb(); }
+      if (cb && typeof cb === 'function') {
+        cb();
+      }
     }
 
-    const newElemWidth = this.$container[0].getBoundingClientRect().width, comp = window.getComputedStyle(this.$container[0]), pdngl = parseInt(comp['padding-left'], 10), pdngr = parseInt(comp['padding-right'], 10);
+    const newElemWidth = this.$container[0].getBoundingClientRect().width,
+      comp = window.getComputedStyle(this.$container[0]),
+      pdngl = parseInt(comp['padding-left'], 10),
+      pdngr = parseInt(comp['padding-right'], 10);
 
     if (this.$anchor && this.$anchor.length) {
       this.anchorHeight = this.$anchor[0].getBoundingClientRect().height;
@@ -299,14 +341,16 @@ class Sticky extends Plugin {
     }
 
     this.$element.css({
-      'max-width': `${newElemWidth - pdngl - pdngr}px`
+      'max-width': `${newElemWidth - pdngl - pdngr}px`,
     });
 
     // Recalculate the height only if it is "dynamic"
     if (this.options.dynamicHeight || !this.containerHeight) {
       // Get the sticked element height and apply it to the container to "hold the place"
-      let newContainerHeight = this.$element[0].getBoundingClientRect().height || this.containerHeight;
-      newContainerHeight = this.$element.css("display") === "none" ? 0 : newContainerHeight;
+      let newContainerHeight =
+        this.$element[0].getBoundingClientRect().height || this.containerHeight;
+      newContainerHeight =
+        this.$element.css('display') === 'none' ? 0 : newContainerHeight;
       this.$container.css('height', newContainerHeight);
       this.containerHeight = newContainerHeight;
     }
@@ -314,13 +358,18 @@ class Sticky extends Plugin {
 
     if (!this.isStuck) {
       if (this.$element.hasClass('is-at-bottom')) {
-        const anchorPt = (this.points ? this.points[1] - this.$container.offset().top : this.anchorHeight) - this.elemHeight;
+        const anchorPt =
+          (this.points
+            ? this.points[1] - this.$container.offset().top
+            : this.anchorHeight) - this.elemHeight;
         this.$element.css('top', anchorPt);
       }
     }
 
     this._setBreakPoints(this.containerHeight, () => {
-      if (cb && typeof cb === 'function') { cb(); }
+      if (cb && typeof cb === 'function') {
+        cb();
+      }
     });
   }
 
@@ -332,24 +381,29 @@ class Sticky extends Plugin {
    */
   _setBreakPoints(elemHeight, cb) {
     if (!this.canStick) {
-      if (cb && typeof cb === 'function') { cb(); }
-      else { return false; }
+      if (cb && typeof cb === 'function') {
+        cb();
+      } else {
+        return false;
+      }
     }
     const mTop = emCalc(this.options.marginTop);
     const mBtm = emCalc(this.options.marginBottom);
     let topPoint = this.points ? this.points[0] : this.$anchor.offset().top;
-    let bottomPoint = this.points ? this.points[1] : topPoint + this.anchorHeight;
+    let bottomPoint = this.points
+      ? this.points[1]
+      : topPoint + this.anchorHeight;
 
     const // topPoint = this.$anchor.offset().top || this.points[0],
-    // bottomPoint = topPoint + this.anchorHeight || this.points[1],
-    winHeight = window.innerHeight;
+      // bottomPoint = topPoint + this.anchorHeight || this.points[1],
+      winHeight = window.innerHeight;
 
     if (this.options.stickTo === 'top') {
       topPoint -= mTop;
-      bottomPoint -= (elemHeight + mTop);
+      bottomPoint -= elemHeight + mTop;
     } else if (this.options.stickTo === 'bottom') {
-      topPoint -= (winHeight - (elemHeight + mBtm));
-      bottomPoint -= (winHeight - mBtm);
+      topPoint -= winHeight - (elemHeight + mBtm);
+      bottomPoint -= winHeight - mBtm;
     } else {
       //this would be the stickTo: both option... tricky
     }
@@ -357,7 +411,9 @@ class Sticky extends Plugin {
     this.topPoint = topPoint;
     this.bottomPoint = bottomPoint;
 
-    if (cb && typeof cb === 'function') { cb(); }
+    if (cb && typeof cb === 'function') {
+      cb();
+    }
   }
 
   /**
@@ -369,28 +425,28 @@ class Sticky extends Plugin {
   _destroy() {
     this._removeSticky(true);
 
-    this.$element.removeClass(`${this.options.stickyClass} is-anchored is-at-top`)
-                 .css({
-                   height: '',
-                   top: '',
-                   bottom: '',
-                   'max-width': ''
-                 })
-                 .off('resizeme.zf.trigger')
-                 .off('mutateme.zf.trigger');
+    this.$element
+      .removeClass(`${this.options.stickyClass} is-anchored is-at-top`)
+      .css({
+        height: '',
+        top: '',
+        bottom: '',
+        'max-width': '',
+      })
+      .off('resizeme.zf.trigger')
+      .off('mutateme.zf.trigger');
     if (this.$anchor && this.$anchor.length) {
       this.$anchor.off('change.zf.sticky');
     }
-    if (this.scrollListener) $(window).off(this.scrollListener)
-    if (this.onLoadListener) $(window).off(this.onLoadListener)
+    if (this.scrollListener) $(window).off(this.scrollListener);
+    if (this.onLoadListener) $(window).off(this.onLoadListener);
 
     if (this.wasWrapped) {
       this.$element.unwrap();
     } else {
-      this.$container.removeClass(this.options.containerClass)
-                     .css({
-                       height: ''
-                     });
+      this.$container.removeClass(this.options.containerClass).css({
+        height: '',
+      });
     }
   }
 }
@@ -479,7 +535,7 @@ Sticky.defaults = {
    * @type {number}
    * @default -1
    */
-  checkEvery: -1
+  checkEvery: -1,
 };
 
 /**
@@ -487,7 +543,9 @@ Sticky.defaults = {
  * @param Number {em} - number of em's to calculate into pixels
  */
 function emCalc(em) {
-  return parseInt(window.getComputedStyle(document.body, null).fontSize, 10) * em;
+  return (
+    parseInt(window.getComputedStyle(document.body, null).fontSize, 10) * em
+  );
 }
 
-export {Sticky};
+export { Sticky };

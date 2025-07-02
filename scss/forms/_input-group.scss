@@ -22,7 +22,10 @@ $input-prefix-border: 1px solid $medium-gray !default;
 $input-prefix-padding: 1rem !default;
 
 @mixin foundation-form-prepostfix {
-  $height: ($input-font-size * $input-line-height) + (get-side($input-padding, 'top') + get-side($input-padding, 'bottom')) - rem-calc(1);
+  $height: ($input-font-size * $input-line-height) +
+    (
+      get-side($input-padding, 'top') + get-side($input-padding, 'bottom')
+    ) - rem-calc(1);
 
   .input-group {
     display: if($global-flexbox, flex, table);
@@ -34,14 +37,24 @@ $input-prefix-padding: 1rem !default;
     }
 
     > :first-child {
-      &, &.input-group-button > * {
-        border-radius: if($global-text-direction == rtl, 0 $input-radius $input-radius 0, $input-radius 0 0 $input-radius);
+      &,
+      &.input-group-button > * {
+        border-radius: if(
+          $global-text-direction == rtl,
+          0 $input-radius $input-radius 0,
+          $input-radius 0 0 $input-radius
+        );
       }
     }
 
     > :last-child {
-      &, &.input-group-button > * {
-        border-radius: if($global-text-direction == rtl, $input-radius 0 0 $input-radius, 0 $input-radius $input-radius 0);
+      &,
+      &.input-group-button > * {
+        border-radius: if(
+          $global-text-direction == rtl,
+          $input-radius 0 0 $input-radius,
+          0 $input-radius $input-radius 0
+        );
       }
     }
   }
@@ -70,8 +83,7 @@ $input-prefix-padding: 1rem !default;
       display: flex;
       flex: 0 0 auto;
       align-items: center;
-    }
-    @else {
+    } @else {
       width: 1%;
       height: 100%;
     }
@@ -106,8 +118,7 @@ $input-prefix-padding: 1rem !default;
     @if $global-flexbox {
       display: flex;
       flex: 0 0 auto;
-    }
-    @else {
+    } @else {
       width: 1%;
       height: 100%;
     }
@@ -121,8 +132,7 @@ $input-prefix-padding: 1rem !default;
       @if $global-flexbox {
         align-self: stretch;
         height: auto;
-      }
-      @else {
+      } @else {
         height: $height;
       }
       padding-top: 0;

@@ -12,7 +12,10 @@ $switch-background: $medium-gray !default;
 
 /// Background color of a switch on focus.
 /// @type Color
-$switch-background-focus: scale-color($switch-background, $lightness: -10%) !default;
+$switch-background-focus: scale-color(
+  $switch-background,
+  $lightness: -10%
+) !default;
 
 /// Background active color of a switch.
 /// @type Color
@@ -20,7 +23,10 @@ $switch-background-active: $primary-color !default;
 
 /// Background active color of a switch on focus.
 /// @type Color
-$switch-background-active-focus: scale-color($switch-background-active, $lightness: -15%) !default;
+$switch-background-active-focus: scale-color(
+  $switch-background-active,
+  $lightness: -15%
+) !default;
 
 /// Height of a switch, with no class applied.
 /// @type Number
@@ -148,7 +154,6 @@ $switch-cursor-disabled: not-allowed !default;
     }
   }
 
-
   // Change the visual style when the switch is focused
   input:focus-visible ~ & {
     background: $switch-background-focus;
@@ -161,7 +166,6 @@ $switch-cursor-disabled: not-allowed !default;
   input:checked:focus-visible ~ & {
     background: $switch-background-active-focus;
   }
-
 
   // indicate a disabled switch
   input:disabled ~ & {
@@ -209,7 +213,6 @@ $switch-cursor-disabled: not-allowed !default;
   $switch-height: 2rem,
   $paddle-offset: 0.25rem
 ) {
-
   $switch-width: $switch-height * 2;
   $paddle-width: $switch-height - ($paddle-offset * 2);
   $paddle-height: $switch-height - ($paddle-offset * 2);
@@ -271,14 +274,26 @@ $switch-cursor-disabled: not-allowed !default;
 
   // Switch sizes
   .switch.tiny {
-    @include switch-size(rem-calc(10), $switch-height-tiny, $switch-paddle-offset);
+    @include switch-size(
+      rem-calc(10),
+      $switch-height-tiny,
+      $switch-paddle-offset
+    );
   }
 
   .switch.small {
-    @include switch-size(rem-calc(12), $switch-height-small, $switch-paddle-offset);
+    @include switch-size(
+      rem-calc(12),
+      $switch-height-small,
+      $switch-paddle-offset
+    );
   }
 
   .switch.large {
-    @include switch-size(rem-calc(16), $switch-height-large, $switch-paddle-offset);
+    @include switch-size(
+      rem-calc(16),
+      $switch-height-large,
+      $switch-paddle-offset
+    );
   }
 }

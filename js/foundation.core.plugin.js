@@ -4,14 +4,17 @@ import { GetYoDigits } from './foundation.core.utils';
 // {function} _setup (replaces previous constructor),
 // {function} _destroy (replaces previous destroy)
 class Plugin {
-
   constructor(element, options) {
     this._setup(element, options);
     const pluginName = getPluginName(this);
     this.uuid = GetYoDigits(6, pluginName);
 
-    if(!this.$element.attr(`data-${pluginName}`)){ this.$element.attr(`data-${pluginName}`, this.uuid); }
-    if(!this.$element.data('zfPlugin')){ this.$element.data('zfPlugin', this); }
+    if (!this.$element.attr(`data-${pluginName}`)) {
+      this.$element.attr(`data-${pluginName}`, this.uuid);
+    }
+    if (!this.$element.data('zfPlugin')) {
+      this.$element.data('zfPlugin', this);
+    }
     /**
      * Fires when the plugin has initialized.
      * @event Plugin#init
@@ -22,13 +25,15 @@ class Plugin {
   destroy() {
     this._destroy();
     const pluginName = getPluginName(this);
-    this.$element.removeAttr(`data-${pluginName}`).removeData('zfPlugin')
-        /**
-         * Fires when the plugin has been destroyed.
-         * @event Plugin#destroyed
-         */
-        .trigger(`destroyed.zf.${pluginName}`);
-    for(const prop in this){
+    this.$element
+      .removeAttr(`data-${pluginName}`)
+      .removeData('zfPlugin')
+      /**
+       * Fires when the plugin has been destroyed.
+       * @event Plugin#destroyed
+       */
+      .trigger(`destroyed.zf.${pluginName}`);
+    for (const prop in this) {
       if (this.hasOwnProperty(prop)) {
         this[prop] = null; //clean up script to prep for garbage collection.
       }
@@ -46,4 +51,4 @@ function getPluginName(obj) {
   return hyphenate(obj.className);
 }
 
-export {Plugin};
+export { Plugin };

@@ -23,7 +23,12 @@ class Tooltip extends Positionable {
    */
   _setup(element, options) {
     this.$element = element;
-    this.options = $.extend({}, Tooltip.defaults, this.$element.data(), options);
+    this.options = $.extend(
+      {},
+      Tooltip.defaults,
+      this.$element.data(),
+      options
+    );
     this.className = 'Tooltip'; // ie9 back compat
 
     this.isActive = false;
@@ -41,28 +46,29 @@ class Tooltip extends Positionable {
    */
   _init() {
     MediaQuery._init();
-    const elemId = this.$element.attr('aria-describedby') || GetYoDigits(6, 'tooltip');
+    const elemId =
+      this.$element.attr('aria-describedby') || GetYoDigits(6, 'tooltip');
 
     this.options.tipText = this.options.tipText || this.$element.attr('title');
-    this.template = this.options.template ? $(this.options.template) : this._buildTemplate(elemId);
+    this.template = this.options.template
+      ? $(this.options.template)
+      : this._buildTemplate(elemId);
 
     if (this.options.allowHtml) {
-      this.template.appendTo(document.body)
-        .html(this.options.tipText)
-        .hide();
+      this.template.appendTo(document.body).html(this.options.tipText).hide();
     } else {
-      this.template.appendTo(document.body)
-        .text(this.options.tipText)
-        .hide();
+      this.template.appendTo(document.body).text(this.options.tipText).hide();
     }
 
-    this.$element.attr({
-      'title': '',
-      'aria-describedby': elemId,
-      'data-yeti-box': elemId,
-      'data-toggle': elemId,
-      'data-resize': elemId
-    }).addClass(this.options.triggerClass);
+    this.$element
+      .attr({
+        title: '',
+        'aria-describedby': elemId,
+        'data-yeti-box': elemId,
+        'data-toggle': elemId,
+        'data-resize': elemId,
+      })
+      .addClass(this.options.triggerClass);
 
     super._init();
     this._events();
@@ -72,7 +78,7 @@ class Tooltip extends Positionable {
     // handle legacy classnames
     let elementClassName = this.$element[0].className;
     if (this.$element[0] instanceof SVGElement) {
-        elementClassName = elementClassName.baseVal;
+      elementClassName = elementClassName.baseVal;
     }
     const position = elementClassName.match(/\b(top|left|right|bottom)\b/g);
     return position ? position[0] : 'top';
@@ -83,18 +89,18 @@ class Tooltip extends Positionable {
   }
 
   _getHOffset() {
-    if(this.position === 'left' || this.position === 'right') {
+    if (this.position === 'left' || this.position === 'right') {
       return this.options.hOffset + this.options.tooltipWidth;
     } else {
-      return this.options.hOffset
+      return this.options.hOffset;
     }
   }
 
   _getVOffset() {
-    if(this.position === 'top' || this.position === 'bottom') {
+    if (this.position === 'top' || this.position === 'bottom') {
       return this.options.vOffset + this.options.tooltipHeight;
     } else {
-      return this.options.vOffset
+      return this.options.vOffset;
     }
   }
 
@@ -103,13 +109,14 @@ class Tooltip extends Positionable {
    * @private
    */
   _buildTemplate(id) {
-    const templateClasses = (`${this.options.tooltipClass} ${this.options.templateClasses}`).trim();
-    const $template =  $('<div></div>').addClass(templateClasses).attr({
-      'role': 'tooltip',
+    const templateClasses =
+      `${this.options.tooltipClass} ${this.options.templateClasses}`.trim();
+    const $template = $('<div></div>').addClass(templateClasses).attr({
+      role: 'tooltip',
       'aria-hidden': true,
       'data-is-active': false,
       'data-is-focus': false,
-      'id': id
+      id: id,
     });
     return $template;
   }
@@ -138,8 +145,10 @@ class Tooltip extends Positionable {
     const _this = this;
     this.template.css('visibility', 'hidden').show();
     this._setPosition();
-    this.template.removeClass('top bottom left right').addClass(this.position)
-    this.template.removeClass('align-top align-bottom align-left align-right align-center').addClass('align-' + this.alignment);
+    this.template.removeClass('top bottom left right').addClass(this.position);
+    this.template
+      .removeClass('align-top align-bottom align-left align-right align-center')
+      .addClass('align-' + this.alignment);
 
     /**
      * Fires to close all other open tooltips on the page
@@ -147,15 +156,18 @@ class Tooltip extends Positionable {
      */
     this.$element.trigger('closeme.zf.tooltip', this.template.attr('id'));
 
-
     this.template.attr({
       'data-is-active': true,
-      'aria-hidden': false
+      'aria-hidden': false,
     });
     _this.isActive = true;
-    this.template.stop().hide().css('visibility', '').fadeIn(this.options.fadeInDuration, () => {
-      //maybe do stuff?
-    });
+    this.template
+      .stop()
+      .hide()
+      .css('visibility', '')
+      .fadeIn(this.options.fadeInDuration, () => {
+        //maybe do stuff?
+      });
     /**
      * Fires when the tooltip is shown
      * @event Tooltip#show
@@ -170,13 +182,16 @@ class Tooltip extends Positionable {
    */
   hide() {
     const _this = this;
-    this.template.stop().attr({
-      'aria-hidden': true,
-      'data-is-active': false
-    }).fadeOut(this.options.fadeOutDuration, () => {
-      _this.isActive = false;
-      _this.isClick = false;
-    });
+    this.template
+      .stop()
+      .attr({
+        'aria-hidden': true,
+        'data-is-active': false,
+      })
+      .fadeOut(this.options.fadeOutDuration, () => {
+        _this.isActive = false;
+        _this.isClick = false;
+      });
     /**
      * fires when the tooltip is hidden
      * @event Tooltip#hide
@@ -185,12 +200,13 @@ class Tooltip extends Positionable {
   }
 
   /**
-  * adds event listeners for the tooltip and its anchor
-  * @private
+   * adds event listeners for the tooltip and its anchor
+   * @private
    */
   _events() {
     const _this = this;
-    const hasTouch = 'ontouchstart' in window || (typeof window.ontouchstart !== 'undefined');
+    const hasTouch =
+      'ontouchstart' in window || typeof window.ontouchstart !== 'undefined';
     let isFocus = false;
 
     // `disableForTouch: Fully disable the tooltip on touch devices
@@ -203,7 +219,9 @@ class Tooltip extends Positionable {
         if (_this.isClick) {
           // If we're not showing open on clicks, we need to pretend a click-launched focus isn't
           // a real focus, otherwise on hover and come back we get bad behavior
-          if(!_this.options.clickOpen) { isFocus = false; }
+          if (!_this.options.clickOpen) {
+            isFocus = false;
+          }
           return false;
         } else {
           _this.show();
@@ -218,7 +236,7 @@ class Tooltip extends Positionable {
         if (_this.isActive) {
           _this._setPosition();
         }
-      }
+      },
     };
 
     if (!this.options.disableHover) {
@@ -249,7 +267,10 @@ class Tooltip extends Positionable {
           // noop
         } else {
           _this.isClick = true;
-          if ((_this.options.disableHover || !_this.$element.attr('tabindex')) && !_this.isActive) {
+          if (
+            (_this.options.disableHover || !_this.$element.attr('tabindex')) &&
+            !_this.isActive
+          ) {
             _this.show();
           }
         }
@@ -286,11 +307,14 @@ class Tooltip extends Positionable {
    * @function
    */
   _destroy() {
-    this.$element.attr('title', this.template.text())
-                 .off('.zf.trigger .zf.tooltip')
-                 .removeClass(this.options.triggerClass)
-                 .removeClass('top right left bottom')
-                 .removeAttr('aria-describedby data-disable-hover data-resize data-toggle data-tooltip data-yeti-box');
+    this.$element
+      .attr('title', this.template.text())
+      .off('.zf.trigger .zf.tooltip')
+      .removeClass(this.options.triggerClass)
+      .removeClass('top right left bottom')
+      .removeAttr(
+        'aria-describedby data-disable-hover data-resize data-toggle data-tooltip data-yeti-box'
+      );
 
     this.template.remove();
     $(window).off(`resize.zf.tooltip-${this.id}`);
@@ -445,16 +469,14 @@ Tooltip.defaults = {
    * @default 12
    */
   tooltipWidth: 12,
-    /**
+  /**
    * Allow HTML in tooltip. Warning: If you are loading user-generated content into tooltips,
    * allowing HTML may open yourself up to XSS attacks.
    * @option
    * @type {boolean}
    * @default false
    */
-  allowHtml: false
+  allowHtml: false,
 };
 
-
-
-export {Tooltip};
+export { Tooltip };

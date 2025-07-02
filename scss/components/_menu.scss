@@ -96,8 +96,7 @@ $menu-icons-back-compat: true !default;
     li {
       flex: 1 1 0px; // sass-lint:disable-line zero-unit
     }
-  }
-  @else {
+  } @else {
     display: table;
     width: 100%;
 
@@ -113,12 +112,10 @@ $menu-icons-back-compat: true !default;
   @if $alignment == left {
     @if $global-flexbox {
       justify-content: flex-start;
-    }
-    @else {
+    } @else {
       text-align: $global-left;
     }
-  }
-  @else if $alignment == right {
+  } @else if $alignment == right {
     @if $global-flexbox {
       li {
         display: flex;
@@ -137,8 +134,7 @@ $menu-icons-back-compat: true !default;
           text-align: $global-right;
         }
       }
-    }
-    @else {
+    } @else {
       text-align: $global-right;
 
       .submenu li {
@@ -151,8 +147,7 @@ $menu-icons-back-compat: true !default;
         }
       }
     }
-  }
-  @else if $alignment == center {
+  } @else if $alignment == center {
     @if $global-flexbox {
       li {
         display: flex;
@@ -162,8 +157,7 @@ $menu-icons-back-compat: true !default;
           justify-content: flex-start;
         }
       }
-    }
-    @else {
+    } @else {
       text-align: center;
 
       .submenu li {
@@ -180,25 +174,21 @@ $menu-icons-back-compat: true !default;
     @if $global-flexbox {
       flex-wrap: wrap;
       flex-direction: row;
-    }
-    @else {
+    } @else {
       li {
         display: inline-block;
       }
     }
-  }
-  @else if $dir == vertical {
+  } @else if $dir == vertical {
     @if $global-flexbox {
       flex-wrap: nowrap;
       flex-direction: column;
-    }
-    @else {
+    } @else {
       li {
         display: block;
       }
     }
-  }
-  @else {
+  } @else {
     @warn 'The direction used for menu-direction() must be horizontal or vertical.';
   }
 }
@@ -223,19 +213,14 @@ $menu-icons-back-compat: true !default;
 /// Adds styles for a nested Menu, by adding `margin-left` to the menu.
 /// @param {Keyword|Number} $margin [$menu-nested-margin] - Length of the margin.
 /// @param {Keyword} $nested-alignment [left] - Alignment of the nested class
-@mixin menu-nested(
-  $margin: $menu-nested-margin,
-  $nested-alignment: left
-) {
+@mixin menu-nested($margin: $menu-nested-margin, $nested-alignment: left) {
   @if $nested-alignment == right {
     margin-#{$global-right}: $margin;
     margin-#{$global-left}: 0;
-  }
-  @else {
+  } @else {
     margin-#{$global-right}: 0;
     margin-#{$global-left}: $margin;
   }
-
 }
 
 /// Adds basic styles for icons in menus.
@@ -244,8 +229,7 @@ $menu-icons-back-compat: true !default;
     a {
       display: flex;
     }
-  }
-  @else {
+  } @else {
     img,
     i,
     svg {
@@ -270,13 +254,9 @@ $menu-icons-back-compat: true !default;
         svg {
           @if $alignment == left {
             text-align: left;
-          }
-
-          @else if $alignment == right {
+          } @else if $alignment == right {
             text-align: right;
-          }
-
-          @else {
+          } @else {
             text-align: center;
           }
         }
@@ -303,8 +283,7 @@ $menu-icons-back-compat: true !default;
         }
       }
     }
-  }
-  @else if $position == right {
+  } @else if $position == right {
     li a {
       @if $global-flexbox {
         flex-flow: row nowrap;
@@ -320,13 +299,11 @@ $menu-icons-back-compat: true !default;
         }
       }
     }
-  }
-  @else if $position == top {
+  } @else if $position == top {
     li a {
       @if $global-flexbox {
         flex-flow: column nowrap;
-      }
-      @else {
+      } @else {
         text-align: center;
       }
 
@@ -336,21 +313,18 @@ $menu-icons-back-compat: true !default;
         @if not $global-flexbox {
           display: block;
           margin: 0 auto $spacing;
-        }
-        @else {
+        } @else {
           align-self: stretch;
           margin-bottom: $spacing;
           text-align: center;
         }
       }
     }
-  }
-  @else if $position == bottom {
+  } @else if $position == bottom {
     li a {
       @if $global-flexbox {
         flex-flow: column nowrap;
-      }
-      @else {
+      } @else {
         text-align: center;
       }
 
@@ -360,8 +334,7 @@ $menu-icons-back-compat: true !default;
         @if not $global-flexbox {
           display: block;
           margin: $spacing auto 0;
-        }
-        @else {
+        } @else {
           align-self: stretch;
           margin-bottom: $spacing;
           text-align: center;
@@ -381,7 +354,10 @@ $menu-icons-back-compat: true !default;
 
 @mixin menu-state-active {
   background: $menu-item-background-active;
-  color: color-pick-contrast($menu-item-background-active, ($menu-item-color-active, $menu-item-color-alt-active));
+  color: color-pick-contrast(
+    $menu-item-background-active,
+    ($menu-item-color-active, $menu-item-color-alt-active)
+  );
 }
 
 @mixin foundation-menu {
@@ -389,7 +365,8 @@ $menu-icons-back-compat: true !default;
     @include menu-base;
 
     // Default orientation: horizontal
-    &, &.horizontal {
+    &,
+    &.horizontal {
       @include menu-direction(horizontal);
     }
 

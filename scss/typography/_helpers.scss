@@ -156,7 +156,8 @@ $code-block-margin-bottom: 1.5rem !default;
     }
   }
 
-  ul, ol {
+  ul,
+  ol {
     // Use to remove numbers from ordered list & bullets from unordered list
     &.no-bullet {
       margin-#{$global-left}: 0;

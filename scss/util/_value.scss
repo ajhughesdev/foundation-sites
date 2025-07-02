@@ -37,13 +37,37 @@
     @return $val;
   }
   @if $length == 2 {
-    @return map-get((top: nth($val, 1), bottom: nth($val, 1), left: nth($val, 2), right: nth($val, 2), ), $side);
+    @return map-get(
+      (
+        top: nth($val, 1),
+        bottom: nth($val, 1),
+        left: nth($val, 2),
+        right: nth($val, 2),
+      ),
+      $side
+    );
   }
   @if $length == 3 {
-    @return map-get((top: nth($val, 1), left: nth($val, 2), right: nth($val, 2), bottom: nth($val, 3), ), $side);
+    @return map-get(
+      (
+        top: nth($val, 1),
+        left: nth($val, 2),
+        right: nth($val, 2),
+        bottom: nth($val, 3),
+      ),
+      $side
+    );
   }
   @if $length == 4 {
-    @return map-get((top: nth($val, 1), right: nth($val, 2), bottom: nth($val, 3), left: nth($val, 4), ), $side);
+    @return map-get(
+      (
+        top: nth($val, 1),
+        right: nth($val, 2),
+        bottom: nth($val, 3),
+        left: nth($val, 4),
+      ),
+      $side
+    );
   }
 }
 
@@ -111,17 +135,14 @@
 
     @if $keep == 'keys' {
       @return $keys;
-    }
-    @else if $keep == 'values' {
+    } @else if $keep == 'values' {
       @return $values;
-    }
-    @else {
+    } @else {
       @return zip($keys, $values);
     }
   }
 
-  @return if(type-of($map) != 'list', ($value,), $map);
-
+  @return if(type-of($map) != 'list', ($value), $map);
 }
 
 /// Return a join of the two given strings `$str1` and `$str2`.
@@ -132,17 +153,19 @@
 /// @param {String} $delimiter [null] - Delimieter between `$str1` and `$str2`.
 ///
 /// @returns {String} Join of `$str1`, `$delimiter` and `$str2`.
-@function zf-str-join(
-  $str1: null,
-  $str2: null,
-  $delimiter: null
-) {
+@function zf-str-join($str1: null, $str2: null, $delimiter: null) {
   $ret: '';
 
   @if $str1 and str-length($str1) > 0 {
     $ret: $ret + $str1;
 
-    @if $delimiter and str-length($delimiter) > 0 and $str2 and str-length($str2) > 0 {
+    @if $delimiter and
+      str-length($delimiter) >
+      0 and
+      $str2 and
+      str-length($str2) >
+      0
+    {
       $ret: $ret + $delimiter;
     }
   }
@@ -160,15 +183,15 @@
 ///
 /// @returns {List} Found value.
 @function map-safe-get($map, $key) {
-  @if (type-of($map) == 'map' or (type-of($map) == 'list' and length($map) == 0)) {
+  @if (
+    type-of($map) == 'map' or (type-of($map) == 'list' and length($map) == 0)
+  ) {
     @if (map-has-key($map, $key)) {
       @return map-get($map, $key);
-    }
-    @else {
+    } @else {
       @error 'Key: `#{$key}` is not available in `#{$map}`';
     }
-  }
-  @else {
+  } @else {
     @error '`#{$map}` is not a valid map';
   }
 }

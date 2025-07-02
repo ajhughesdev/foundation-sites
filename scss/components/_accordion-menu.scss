@@ -55,7 +55,11 @@ $accordionmenu-arrow-size: 6px !default;
     position: relative;
 
     &::after {
-      @include css-triangle($accordionmenu-arrow-size, $accordionmenu-arrow-color, down);
+      @include css-triangle(
+        $accordionmenu-arrow-size,
+        $accordionmenu-arrow-color,
+        down
+      );
       position: absolute;
       top: 50%;
       margin-top: -1 * ($accordionmenu-arrow-size * 0.5);
@@ -74,7 +78,6 @@ $accordionmenu-arrow-size: 6px !default;
   }
 }
 @mixin foundation-accordion-menu {
-
   .accordion-menu {
     @if $accordionmenu-border {
       border-bottom: $accordionmenu-border;
@@ -154,7 +157,11 @@ $accordionmenu-arrow-size: 6px !default;
 
     // Add the arrow to the toggle
     &::after {
-      @include css-triangle($accordionmenu-arrow-size, $accordionmenu-arrow-color, down);
+      @include css-triangle(
+        $accordionmenu-arrow-size,
+        $accordionmenu-arrow-color,
+        down
+      );
 
       top: 0;
       bottom: 0;

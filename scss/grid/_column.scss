@@ -35,15 +35,12 @@
   @include grid-column-gutter($gutters: $gutters);
   // Position
   @include grid-col-pos(auto);
-
 }
 
 /// Creates a grid column row. This is the equivalent of adding `.row` and `.column` to the same element.
 ///
 /// @param {Mixed} $gutters [$grid-column-gutter] - Width of the gutters on either side of the column row. Refer to the `grid-column-gutter()` function to see possible values.
-@mixin grid-column-row(
-  $gutters: $grid-column-gutter
-) {
+@mixin grid-column-row($gutters: $grid-column-gutter) {
   @include grid-row;
   @include grid-column($gutters: $gutters);
 
@@ -55,25 +52,18 @@
 
 /// Shorthand for `grid-column()`.
 /// @alias grid-column
-@function grid-col(
-  $columns: $grid-column-count
-) {
+@function grid-col($columns: $grid-column-count) {
   @return grid-column($columns);
 }
 
 /// Shorthand for `grid-column()`.
 /// @alias grid-column
-@mixin grid-col(
-  $columns: $grid-column-count,
-  $gutters: $grid-column-gutter
-) {
+@mixin grid-col($columns: $grid-column-count, $gutters: $grid-column-gutter) {
   @include grid-column($columns, $gutters);
 }
 
 /// Shorthand for `grid-column-row()`.
 /// @alias grid-column-row
-@mixin grid-col-row(
-  $gutters: $grid-column-gutter
-) {
+@mixin grid-col-row($gutters: $grid-column-gutter) {
   @include grid-column-row($gutters);
 }

@@ -20,18 +20,23 @@ class Accordion extends Plugin {
    */
   _setup(element, options) {
     this.$element = element;
-    this.options = $.extend({}, Accordion.defaults, this.$element.data(), options);
+    this.options = $.extend(
+      {},
+      Accordion.defaults,
+      this.$element.data(),
+      options
+    );
 
     this.className = 'Accordion'; // ie9 back compat
     this._init();
 
     Keyboard.register('Accordion', {
-      'ENTER': 'toggle',
-      'SPACE': 'toggle',
-      'ARROW_DOWN': 'next',
-      'ARROW_UP': 'previous',
-      'HOME': 'first',
-      'END': 'last',
+      ENTER: 'toggle',
+      SPACE: 'toggle',
+      ARROW_DOWN: 'next',
+      ARROW_UP: 'previous',
+      HOME: 'first',
+      END: 'last',
     });
   }
 
@@ -44,20 +49,29 @@ class Accordion extends Plugin {
 
     this.$tabs = this.$element.children('[data-accordion-item]');
 
-
     this.$tabs.each((idx, el) => {
-      const $el = $(el), $content = $el.children('[data-tab-content]'), id = $content[0].id || GetYoDigits(6, 'accordion'), linkId = (el.id) ? `${el.id}-label` : `${id}-label`;
+      const $el = $(el),
+        $content = $el.children('[data-tab-content]'),
+        id = $content[0].id || GetYoDigits(6, 'accordion'),
+        linkId = el.id ? `${el.id}-label` : `${id}-label`;
 
       $el.find('a:first').attr({
         'aria-controls': id,
-        'id': linkId,
-        'aria-expanded': false
+        id: linkId,
+        'aria-expanded': false,
       });
 
-      $content.attr({'role': 'region', 'aria-labelledby': linkId, 'aria-hidden': true, 'id': id});
+      $content.attr({
+        role: 'region',
+        'aria-labelledby': linkId,
+        'aria-hidden': true,
+        id: id,
+      });
     });
 
-    const $initActive = this.$element.find('.is-active').children('[data-tab-content]');
+    const $initActive = this.$element
+      .find('.is-active')
+      .children('[data-tab-content]');
     if ($initActive.length) {
       // Save up the initial hash to return to it later when going back in history
       this._initialAnchor = $initActive.prev('a').attr('href');
@@ -95,7 +109,10 @@ class Accordion extends Plugin {
         if (this.options.deepLinkSmudge) {
           onLoad($(window), () => {
             const offset = this.$element.offset();
-            $('html, body').animate({ scrollTop: offset.top - this.options.deepLinkSmudgeOffset }, this.options.deepLinkSmudgeDelay);
+            $('html, body').animate(
+              { scrollTop: offset.top - this.options.deepLinkSmudgeOffset },
+              this.options.deepLinkSmudgeDelay
+            );
           });
         }
 
@@ -105,7 +122,7 @@ class Accordion extends Plugin {
          */
         this.$element.trigger('deeplink.zf.accordion', [$link, $anchor]);
       }
-    }
+    };
 
     //use browser to open a tab, if it exists in this tabset
     if (this.options.deepLink) {
@@ -124,48 +141,51 @@ class Accordion extends Plugin {
   _events() {
     const _this = this;
 
-    this.$tabs.each(function() {
+    this.$tabs.each(function () {
       const $elem = $(this);
       const $tabContent = $elem.children('[data-tab-content]');
       if ($tabContent.length) {
-        $elem.children('a').off('click.zf.accordion keydown.zf.accordion')
-               .on('click.zf.accordion', e => {
-          e.preventDefault();
-          _this.toggle($tabContent);
-        }).on('keydown.zf.accordion', e => {
-          Keyboard.handleKey(e, 'Accordion', {
-            toggle: function() {
-              _this.toggle($tabContent);
-            },
-            next: function() {
-              const $a = $elem.next().find('a').focus();
-              if (!_this.options.multiExpand) {
-                $a.trigger('click.zf.accordion')
-              }
-            },
-            previous: function() {
-              const $a = $elem.prev().find('a').focus();
-              if (!_this.options.multiExpand) {
-                $a.trigger('click.zf.accordion')
-              }
-            },
-            first: function() {
-              const $a = _this.$tabs.first().find('.accordion-title').focus();
-              if (!_this.options.multiExpand) {
-                 $a.trigger('click.zf.accordion');
-              }
-            },
-            last: function() {
-              const $a = _this.$tabs.last().find('.accordion-title').focus();
-              if (!_this.options.multiExpand) {
-                 $a.trigger('click.zf.accordion');
-              }
-            },
-            handled: function() {
-              e.preventDefault();
-            }
+        $elem
+          .children('a')
+          .off('click.zf.accordion keydown.zf.accordion')
+          .on('click.zf.accordion', (e) => {
+            e.preventDefault();
+            _this.toggle($tabContent);
+          })
+          .on('keydown.zf.accordion', (e) => {
+            Keyboard.handleKey(e, 'Accordion', {
+              toggle: function () {
+                _this.toggle($tabContent);
+              },
+              next: function () {
+                const $a = $elem.next().find('a').focus();
+                if (!_this.options.multiExpand) {
+                  $a.trigger('click.zf.accordion');
+                }
+              },
+              previous: function () {
+                const $a = $elem.prev().find('a').focus();
+                if (!_this.options.multiExpand) {
+                  $a.trigger('click.zf.accordion');
+                }
+              },
+              first: function () {
+                const $a = _this.$tabs.first().find('.accordion-title').focus();
+                if (!_this.options.multiExpand) {
+                  $a.trigger('click.zf.accordion');
+                }
+              },
+              last: function () {
+                const $a = _this.$tabs.last().find('.accordion-title').focus();
+                if (!_this.options.multiExpand) {
+                  $a.trigger('click.zf.accordion');
+                }
+              },
+              handled: function () {
+                e.preventDefault();
+              },
+            });
           });
-        });
       }
     });
     if (this.options.deepLink) {
@@ -207,15 +227,13 @@ class Accordion extends Plugin {
    * @function
    */
   down($target) {
-    if ($target.closest('[data-accordion]').is('[disabled]'))  {
+    if ($target.closest('[data-accordion]').is('[disabled]')) {
       console.info('Cannot call down on an accordion that is disabled.');
       return;
     }
 
-    if (this.options.multiExpand)
-      this._openTab($target);
-    else
-      this._openSingleTab($target);
+    if (this.options.multiExpand) this._openTab($target);
+    else this._openSingleTab($target);
   }
 
   /**
@@ -238,7 +256,8 @@ class Accordion extends Plugin {
 
     // Don't close the item if there is no other active item (unless with `allowAllClosed`)
     const $othersItems = $targetItem.siblings();
-    if (!this.options.allowAllClosed && !$othersItems.hasClass('is-active')) return;
+    if (!this.options.allowAllClosed && !$othersItems.hasClass('is-active'))
+      return;
 
     this._closeTab($target);
   }
@@ -251,7 +270,9 @@ class Accordion extends Plugin {
    */
   _openSingleTab($target) {
     // Close all the others active tabs.
-    const $activeContents = this.$element.children('.is-active').children('[data-tab-content]');
+    const $activeContents = this.$element
+      .children('.is-active')
+      .children('[data-tab-content]');
     if ($activeContents.length) {
       this._closeTab($activeContents.not($target));
     }
@@ -275,7 +296,7 @@ class Accordion extends Plugin {
     $targetItem.addClass('is-active');
 
     $(`#${targetContentId}`).attr({
-      'aria-expanded': true
+      'aria-expanded': true,
     });
 
     $target.finish().slideDown(this.options.slideSpeed, () => {
@@ -298,11 +319,11 @@ class Accordion extends Plugin {
     const $targetItem = $target.parent();
     const targetContentId = $target.attr('aria-labelledby');
 
-    $target.attr('aria-hidden', true)
+    $target.attr('aria-hidden', true);
     $targetItem.removeClass('is-active');
 
     $(`#${targetContentId}`).attr({
-     'aria-expanded': false
+      'aria-expanded': false,
     });
 
     $target.finish().slideUp(this.options.slideSpeed, () => {
@@ -321,7 +342,9 @@ class Accordion extends Plugin {
    * @private
    */
   _closeAllTabs() {
-    const $activeTabs = this.$element.children('.is-active').children('[data-tab-content]');
+    const $activeTabs = this.$element
+      .children('.is-active')
+      .children('[data-tab-content]');
     if ($activeTabs.length) {
       this._closeTab($activeTabs);
     }
@@ -333,12 +356,15 @@ class Accordion extends Plugin {
    * @function
    */
   _destroy() {
-    this.$element.find('[data-tab-content]').stop(true).slideUp(0).css('display', '');
+    this.$element
+      .find('[data-tab-content]')
+      .stop(true)
+      .slideUp(0)
+      .css('display', '');
     this.$element.find('a').off('.zf.accordion');
     if (this.options.deepLink) {
       $(window).off('hashchange', this._checkDeepLink);
     }
-
   }
 }
 
@@ -399,7 +425,7 @@ Accordion.defaults = {
    * @type {boolean}
    * @default false
    */
-  updateHistory: false
+  updateHistory: false,
 };
 
 export { Accordion };

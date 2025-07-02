@@ -7,21 +7,20 @@ const VERTICAL_ALIGNMENTS = ['top', 'bottom', 'center'];
 const HORIZONTAL_ALIGNMENTS = ['left', 'right', 'center'];
 
 const ALIGNMENTS = {
-  'left': VERTICAL_ALIGNMENTS,
-  'right': VERTICAL_ALIGNMENTS,
-  'top': HORIZONTAL_ALIGNMENTS,
-  'bottom': HORIZONTAL_ALIGNMENTS
-}
+  left: VERTICAL_ALIGNMENTS,
+  right: VERTICAL_ALIGNMENTS,
+  top: HORIZONTAL_ALIGNMENTS,
+  bottom: HORIZONTAL_ALIGNMENTS,
+};
 
 function nextItem(item, array) {
   const currentIdx = array.indexOf(item);
-  if(currentIdx === array.length - 1) {
+  if (currentIdx === array.length - 1) {
     return array[0];
   } else {
     return array[currentIdx + 1];
   }
 }
-
 
 class Positionable extends Plugin {
   /**
@@ -36,18 +35,24 @@ class Positionable extends Plugin {
 
   _init() {
     this.triedPositions = {};
-    this.position  = this.options.position === 'auto' ? this._getDefaultPosition() : this.options.position;
-    this.alignment = this.options.alignment === 'auto' ? this._getDefaultAlignment() : this.options.alignment;
+    this.position =
+      this.options.position === 'auto'
+        ? this._getDefaultPosition()
+        : this.options.position;
+    this.alignment =
+      this.options.alignment === 'auto'
+        ? this._getDefaultAlignment()
+        : this.options.alignment;
     this.originalPosition = this.position;
     this.originalAlignment = this.alignment;
   }
 
-  _getDefaultPosition () {
+  _getDefaultPosition() {
     return 'bottom';
   }
 
   _getDefaultAlignment() {
-    switch(this.position) {
+    switch (this.position) {
       case 'bottom':
       case 'top':
         return Rtl() ? 'right' : 'left';
@@ -64,7 +69,7 @@ class Positionable extends Plugin {
    * @private
    */
   _reposition() {
-    if(this._alignmentsExhausted(this.position)) {
+    if (this._alignmentsExhausted(this.position)) {
       this.position = nextItem(this.position, POSITIONS);
       this.alignment = ALIGNMENTS[this.position][0];
     } else {
@@ -79,27 +84,29 @@ class Positionable extends Plugin {
    * @private
    */
   _realign() {
-    this._addTriedPosition(this.position, this.alignment)
-    this.alignment = nextItem(this.alignment, ALIGNMENTS[this.position])
+    this._addTriedPosition(this.position, this.alignment);
+    this.alignment = nextItem(this.alignment, ALIGNMENTS[this.position]);
   }
 
   _addTriedPosition(position, alignment) {
-    this.triedPositions[position] = this.triedPositions[position] || []
+    this.triedPositions[position] = this.triedPositions[position] || [];
     this.triedPositions[position].push(alignment);
   }
 
   _positionsExhausted() {
     let isExhausted = true;
-    for(let i = 0; i < POSITIONS.length; i++) {
+    for (let i = 0; i < POSITIONS.length; i++) {
       isExhausted = isExhausted && this._alignmentsExhausted(POSITIONS[i]);
     }
     return isExhausted;
   }
 
   _alignmentsExhausted(position) {
-    return this.triedPositions[position] && this.triedPositions[position].length === ALIGNMENTS[position].length;
+    return (
+      this.triedPositions[position] &&
+      this.triedPositions[position].length === ALIGNMENTS[position].length
+    );
   }
-
 
   // When we're trying to center, we don't want to apply offset that's going to
   // take us just off center, so wrap around to return 0 for the appropriate
@@ -116,7 +123,9 @@ class Positionable extends Plugin {
   }
 
   _setPosition($anchor, $element, $parent) {
-    if($anchor.attr('aria-expanded') === 'false'){ return false; }
+    if ($anchor.attr('aria-expanded') === 'false') {
+      return false;
+    }
 
     if (!this.options.allowOverlap) {
       // restore original position & alignment before checking overlap
@@ -124,35 +133,73 @@ class Positionable extends Plugin {
       this.alignment = this.originalAlignment;
     }
 
-    $element.offset(Box.GetExplicitOffsets($element, $anchor, this.position, this.alignment, this._getVOffset(), this._getHOffset()));
+    $element.offset(
+      Box.GetExplicitOffsets(
+        $element,
+        $anchor,
+        this.position,
+        this.alignment,
+        this._getVOffset(),
+        this._getHOffset()
+      )
+    );
 
-    if(!this.options.allowOverlap) {
+    if (!this.options.allowOverlap) {
       let minOverlap = 100000000;
       // default coordinates to how we start, in case we can't figure out better
-      let minCoordinates = {position: this.position, alignment: this.alignment};
-      while(!this._positionsExhausted()) {
-        let overlap = Box.OverlapArea($element, $parent, false, false, this.options.allowBottomOverlap);
-        if(overlap === 0) {
+      let minCoordinates = {
+        position: this.position,
+        alignment: this.alignment,
+      };
+      while (!this._positionsExhausted()) {
+        let overlap = Box.OverlapArea(
+          $element,
+          $parent,
+          false,
+          false,
+          this.options.allowBottomOverlap
+        );
+        if (overlap === 0) {
           return;
         }
 
-        if(overlap < minOverlap) {
+        if (overlap < minOverlap) {
           minOverlap = overlap;
-          minCoordinates = {position: this.position, alignment: this.alignment};
+          minCoordinates = {
+            position: this.position,
+            alignment: this.alignment,
+          };
         }
 
         this._reposition();
 
-        $element.offset(Box.GetExplicitOffsets($element, $anchor, this.position, this.alignment, this._getVOffset(), this._getHOffset()));
+        $element.offset(
+          Box.GetExplicitOffsets(
+            $element,
+            $anchor,
+            this.position,
+            this.alignment,
+            this._getVOffset(),
+            this._getHOffset()
+          )
+        );
       }
       // If we get through the entire loop, there was no non-overlapping
       // position available. Pick the version with least overlap.
       this.position = minCoordinates.position;
       this.alignment = minCoordinates.alignment;
-      $element.offset(Box.GetExplicitOffsets($element, $anchor, this.position, this.alignment, this._getVOffset(), this._getHOffset()));
+      $element.offset(
+        Box.GetExplicitOffsets(
+          $element,
+          $anchor,
+          this.position,
+          this.alignment,
+          this._getVOffset(),
+          this._getHOffset()
+        )
+      );
     }
   }
-
 }
 
 Positionable.defaults = {
@@ -202,6 +249,6 @@ Positionable.defaults = {
    * @default 0
    */
   hOffset: 0,
-}
+};
 
-export {Positionable};
+export { Positionable };
