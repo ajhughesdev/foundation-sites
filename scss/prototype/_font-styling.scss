@@ -24,25 +24,19 @@ $prototype-font-bold: $global-weight-bold !default;
 
 /// Font wide letter spacing!
 /// @param {Number} $letter-spacing [$prototype-wide-letter-spacing] Wide letter spacing for the font
-@mixin font-wide(
-  $letter-spacing: $prototype-wide-letter-spacing
-) {
+@mixin font-wide($letter-spacing: $prototype-wide-letter-spacing) {
   letter-spacing: $letter-spacing;
 }
 
 /// Font Weight Normal, default value coming through `global-weight-normal`
 /// @param {Number} $weight [$prototype-font-normal] Weight of the font (normal)
-@mixin font-normal(
-  $weight: $prototype-font-normal
-) {
+@mixin font-normal($weight: $prototype-font-normal) {
   font-weight: $weight;
 }
 
 /// Font Weight Bold, default value coming through `global-weight-bold`
 /// @param {Number} $weight [$prototype-font-bold] Weight of the font (bold)
-@mixin font-bold(
-  $weight: $prototype-font-bold
-) {
+@mixin font-bold($weight: $prototype-font-bold) {
   font-weight: $weight;
 }
 

@@ -94,9 +94,7 @@ $card-margin-bottom: $global-margin !default;
 }
 
 /// Adds styles for a card section.
-@mixin card-section(
-  $padding: $card-padding
-) {
+@mixin card-section($padding: $card-padding) {
   @if $global-flexbox {
     flex: 1 0 auto;
   }

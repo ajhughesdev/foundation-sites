@@ -10,9 +10,7 @@
 ///
 /// @param {Keyword} $dir - Used direction between "top", "right", "bottom" and "left".
 /// @return {Keyword} Opposite direction of $dir
-@function direction-opposite(
-  $dir
-) {
+@function direction-opposite($dir) {
   $dirs: (top, right, bottom, left);
   $place: index($dirs, $dir);
 
@@ -28,4 +26,3 @@
 
   @return nth($dirs, $opposite-place);
 }
-

@@ -20,9 +20,14 @@ class Equalizer extends Plugin {
    * @param {Object} element - jQuery object to add the trigger to.
    * @param {Object} options - Overrides to the default plugin settings.
    */
-  _setup(element, options){
+  _setup(element, options) {
     this.$element = element;
-    this.options  = $.extend({}, Equalizer.defaults, this.$element.data(), options);
+    this.options = $.extend(
+      {},
+      Equalizer.defaults,
+      this.$element.data(),
+      options
+    );
     this.className = 'Equalizer'; // ie9 back compat
 
     this._init();
@@ -38,30 +43,36 @@ class Equalizer extends Plugin {
 
     MediaQuery._init();
 
-    this.$watched = $watched.length ? $watched : this.$element.find('[data-equalizer-watch]');
-    this.$element.attr('data-resize', (eqId || GetYoDigits(6, 'eq')));
-    this.$element.attr('data-mutate', (eqId || GetYoDigits(6, 'eq')));
+    this.$watched = $watched.length
+      ? $watched
+      : this.$element.find('[data-equalizer-watch]');
+    this.$element.attr('data-resize', eqId || GetYoDigits(6, 'eq'));
+    this.$element.attr('data-mutate', eqId || GetYoDigits(6, 'eq'));
 
     this.hasNested = this.$element.find('[data-equalizer]').length > 0;
-    this.isNested = this.$element.parentsUntil(document.body, '[data-equalizer]').length > 0;
+    this.isNested =
+      this.$element.parentsUntil(document.body, '[data-equalizer]').length > 0;
     this.isOn = false;
     this._bindHandler = {
       onResizeMeBound: this._onResizeMe.bind(this),
-      onPostEqualizedBound: this._onPostEqualized.bind(this)
+      onPostEqualizedBound: this._onPostEqualized.bind(this),
     };
 
     const imgs = this.$element.find('img');
     let tooSmall;
-    if(this.options.equalizeOn){
+    if (this.options.equalizeOn) {
       tooSmall = this._checkMQ();
       $(window).on('changed.zf.mediaquery', this._checkMQ.bind(this));
-    }else{
+    } else {
       this._events();
     }
-    if((typeof tooSmall !== 'undefined' && tooSmall === false) || typeof tooSmall === 'undefined'){
-      if(imgs.length){
+    if (
+      (typeof tooSmall !== 'undefined' && tooSmall === false) ||
+      typeof tooSmall === 'undefined'
+    ) {
+      if (imgs.length) {
         onImagesLoaded(imgs, this._reflow.bind(this));
-      }else{
+      } else {
         this._reflow();
       }
     }
@@ -76,7 +87,7 @@ class Equalizer extends Plugin {
     this.$element.off({
       '.zf.equalizer': this._bindHandler.onPostEqualizedBound,
       'resizeme.zf.trigger': this._bindHandler.onResizeMeBound,
-	  'mutateme.zf.trigger': this._bindHandler.onResizeMeBound
+      'mutateme.zf.trigger': this._bindHandler.onResizeMeBound,
     });
   }
 
@@ -93,7 +104,9 @@ class Equalizer extends Plugin {
    * @private
    */
   _onPostEqualized(e) {
-    if(e.target !== this.$element[0]){ this._reflow(); }
+    if (e.target !== this.$element[0]) {
+      this._reflow();
+    }
   }
 
   /**
@@ -102,11 +115,20 @@ class Equalizer extends Plugin {
    */
   _events() {
     this._pauseEvents();
-    if(this.hasNested){
-      this.$element.on('postequalized.zf.equalizer', this._bindHandler.onPostEqualizedBound);
-    }else{
-      this.$element.on('resizeme.zf.trigger', this._bindHandler.onResizeMeBound);
-	  this.$element.on('mutateme.zf.trigger', this._bindHandler.onResizeMeBound);
+    if (this.hasNested) {
+      this.$element.on(
+        'postequalized.zf.equalizer',
+        this._bindHandler.onPostEqualizedBound
+      );
+    } else {
+      this.$element.on(
+        'resizeme.zf.trigger',
+        this._bindHandler.onResizeMeBound
+      );
+      this.$element.on(
+        'mutateme.zf.trigger',
+        this._bindHandler.onResizeMeBound
+      );
     }
     this.isOn = true;
   }
@@ -117,13 +139,13 @@ class Equalizer extends Plugin {
    */
   _checkMQ() {
     const tooSmall = !MediaQuery.is(this.options.equalizeOn);
-    if(tooSmall){
-      if(this.isOn){
+    if (tooSmall) {
+      if (this.isOn) {
         this._pauseEvents();
         this.$watched.css('height', 'auto');
       }
-    }else{
-      if(!this.isOn){
+    } else {
+      if (!this.isOn) {
         this._events();
       }
     }
@@ -143,15 +165,15 @@ class Equalizer extends Plugin {
    * @private
    */
   _reflow() {
-    if(!this.options.equalizeOnStack){
-      if(this._isStacked()){
+    if (!this.options.equalizeOnStack) {
+      if (this._isStacked()) {
         this.$watched.css('height', 'auto');
         return false;
       }
     }
     if (this.options.equalizeByRow) {
       this.getHeightsByRow(this.applyHeightByRow.bind(this));
-    }else{
+    } else {
       this.getHeights(this.applyHeight.bind(this));
     }
   }
@@ -164,7 +186,10 @@ class Equalizer extends Plugin {
     if (!this.$watched[0] || !this.$watched[1]) {
       return true;
     }
-    return this.$watched[0].getBoundingClientRect().top !== this.$watched[1].getBoundingClientRect().top;
+    return (
+      this.$watched[0].getBoundingClientRect().top !==
+      this.$watched[1].getBoundingClientRect().top
+    );
   }
 
   /**
@@ -174,7 +199,7 @@ class Equalizer extends Plugin {
    */
   getHeights(cb) {
     const heights = [];
-    for(let i = 0, len = this.$watched.length; i < len; i++){
+    for (let i = 0, len = this.$watched.length; i < len; i++) {
       this.$watched[i].style.height = 'auto';
       heights.push(this.$watched[i].offsetHeight);
     }
@@ -187,26 +212,32 @@ class Equalizer extends Plugin {
    * @returns {Array} groups - An array of heights of children within Equalizer container grouped by row with element,height and max as last child
    */
   getHeightsByRow(cb) {
-    let lastElTopOffset = (this.$watched.length ? this.$watched.first().offset().top : 0);
+    let lastElTopOffset = this.$watched.length
+      ? this.$watched.first().offset().top
+      : 0;
     const groups = [];
     let group = 0;
     //group by Row
     groups[group] = [];
-    for(let i = 0, len = this.$watched.length; i < len; i++){
+    for (let i = 0, len = this.$watched.length; i < len; i++) {
       this.$watched[i].style.height = 'auto';
       //maybe could use this.$watched[i].offsetTop
       const elOffsetTop = $(this.$watched[i]).offset().top;
       if (elOffsetTop !== lastElTopOffset) {
         group++;
         groups[group] = [];
-        lastElTopOffset=elOffsetTop;
+        lastElTopOffset = elOffsetTop;
       }
-      groups[group].push([this.$watched[i],this.$watched[i].offsetHeight]);
+      groups[group].push([this.$watched[i], this.$watched[i].offsetHeight]);
     }
 
     for (let j = 0, ln = groups.length; j < ln; j++) {
-      const heights = $(groups[j]).map(function(){ return this[1]; }).get();
-      const max         = Math.max.apply(null, heights);
+      const heights = $(groups[j])
+        .map(function () {
+          return this[1];
+        })
+        .get();
+      const max = Math.max.apply(null, heights);
       groups[j].push(max);
     }
     cb(groups);
@@ -232,7 +263,7 @@ class Equalizer extends Plugin {
      * Fires when the heights have been applied
      * @event Equalizer#postequalized
      */
-     this.$element.trigger('postequalized.zf.equalizer');
+    this.$element.trigger('postequalized.zf.equalizer');
   }
 
   /**
@@ -248,30 +279,31 @@ class Equalizer extends Plugin {
      * Fires before the heights are applied
      */
     this.$element.trigger('preequalized.zf.equalizer');
-    for (let i = 0, len = groups.length; i < len ; i++) {
-      const groupsILength = groups[i].length, max = groups[i][groupsILength - 1];
-      if (groupsILength<=2) {
-        $(groups[i][0][0]).css({'height':'auto'});
+    for (let i = 0, len = groups.length; i < len; i++) {
+      const groupsILength = groups[i].length,
+        max = groups[i][groupsILength - 1];
+      if (groupsILength <= 2) {
+        $(groups[i][0][0]).css({ height: 'auto' });
         continue;
       }
       /**
-        * Fires before the heights per row are applied
-        * @event Equalizer#preequalizedrow
-        */
+       * Fires before the heights per row are applied
+       * @event Equalizer#preequalizedrow
+       */
       this.$element.trigger('preequalizedrow.zf.equalizer');
-      for (let j = 0, lenJ = (groupsILength-1); j < lenJ ; j++) {
-        $(groups[i][j][0]).css({'height':max});
+      for (let j = 0, lenJ = groupsILength - 1; j < lenJ; j++) {
+        $(groups[i][j][0]).css({ height: max });
       }
       /**
-        * Fires when the heights per row have been applied
-        * @event Equalizer#postequalizedrow
-        */
+       * Fires when the heights per row have been applied
+       * @event Equalizer#postequalizedrow
+       */
       this.$element.trigger('postequalizedrow.zf.equalizer');
     }
     /**
      * Fires when the heights have been applied
      */
-     this.$element.trigger('postequalized.zf.equalizer');
+    this.$element.trigger('postequalized.zf.equalizer');
   }
 
   /**
@@ -308,7 +340,7 @@ Equalizer.defaults = {
    * @type {string}
    * @default ''
    */
-  equalizeOn: ''
+  equalizeOn: '',
 };
 
-export {Equalizer};
+export { Equalizer };

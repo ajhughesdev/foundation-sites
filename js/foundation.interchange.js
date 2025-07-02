@@ -21,7 +21,12 @@ class Interchange extends Plugin {
    */
   _setup(element, options) {
     this.$element = element;
-    this.options = $.extend({}, Interchange.defaults, this.$element.data(), options);
+    this.options = $.extend(
+      {},
+      Interchange.defaults,
+      this.$element.data(),
+      options
+    );
     this.rules = [];
     this.currentPath = '';
     this.className = 'Interchange'; // ie9 back compat
@@ -44,7 +49,7 @@ class Interchange extends Plugin {
     const id = this.$element[0].id || GetYoDigits(6, 'interchange');
     this.$element.attr({
       'data-resize': id,
-      'id': id
+      id: id,
     });
 
     this._parseOptions();
@@ -59,7 +64,9 @@ class Interchange extends Plugin {
    * @private
    */
   _events() {
-    this.$element.off('resizeme.zf.trigger').on('resizeme.zf.trigger', () => this._reflow());
+    this.$element
+      .off('resizeme.zf.trigger')
+      .on('resizeme.zf.trigger', () => this._reflow());
   }
 
   /**
@@ -72,7 +79,7 @@ class Interchange extends Plugin {
 
     // Iterate through each rule, but only save the last match
     for (const i in this.rules) {
-      if(this.rules.hasOwnProperty(i)) {
+      if (this.rules.hasOwnProperty(i)) {
         const rule = this.rules[i];
         if (window.matchMedia(rule.query).matches) {
           match = rule;
@@ -93,10 +100,11 @@ class Interchange extends Plugin {
    */
   _parseOptions() {
     const types = ['auto', 'src', 'background', 'html'];
-    if (typeof this.options.type === 'undefined')
-      this.options.type = 'auto';
+    if (typeof this.options.type === 'undefined') this.options.type = 'auto';
     else if (types.indexOf(this.options.type) === -1) {
-      console.warn(`Warning: invalid value "${this.options.type}" for Interchange option "type"`);
+      console.warn(
+        `Warning: invalid value "${this.options.type}" for Interchange option "type"`
+      );
       this.options.type = 'auto';
     }
   }
@@ -127,15 +135,14 @@ class Interchange extends Plugin {
 
     if (this.options.rules) {
       rules = this.options.rules;
-    }
-    else {
+    } else {
       rules = this.$element.data('interchange');
     }
 
-    rules =  typeof rules === 'string' ? rules.match(/\[.*?, .*?\]/g) : rules;
+    rules = typeof rules === 'string' ? rules.match(/\[.*?, .*?\]/g) : rules;
 
     for (const i in rules) {
-      if(rules.hasOwnProperty(i)) {
+      if (rules.hasOwnProperty(i)) {
         const rule = rules[i].slice(1, -1).split(', ');
         const path = rule.slice(0, -1).join('');
         let query = rule[rule.length - 1];
@@ -146,7 +153,7 @@ class Interchange extends Plugin {
 
         rulesList.push({
           path: path,
-          query: query
+          query: query,
         });
       }
     }
@@ -167,18 +174,19 @@ class Interchange extends Plugin {
 
     let type = this.options.type;
     if (type === 'auto') {
-      if (this.$element[0].nodeName === 'IMG')
-        type = 'src';
+      if (this.$element[0].nodeName === 'IMG') type = 'src';
       else if (path.match(/\.(gif|jpe?g|png|svg|tiff)([?#].*)?/i))
         type = 'background';
-      else
-        type = 'html';
+      else type = 'html';
     }
 
     // Replacing images
     if (type === 'src') {
-      this.$element.attr('src', path)
-        .on('load', () => { this.currentPath = path; })
+      this.$element
+        .attr('src', path)
+        .on('load', () => {
+          this.currentPath = path;
+        })
         .trigger(trigger);
     }
     // Replacing background images
@@ -191,9 +199,7 @@ class Interchange extends Plugin {
     // Replacing HTML
     else if (type === 'html') {
       $.get(path, (response) => {
-        this.$element
-          .html(response)
-          .trigger(trigger);
+        this.$element.html(response).trigger(trigger);
         $(response).foundation();
         this.currentPath = path;
       });
@@ -211,7 +217,7 @@ class Interchange extends Plugin {
    * @function
    */
   _destroy() {
-    this.$element.off('resizeme.zf.trigger')
+    this.$element.off('resizeme.zf.trigger');
   }
 }
 
@@ -237,13 +243,14 @@ Interchange.defaults = {
    * @type {string}
    * @default 'auto'
    */
-  type: 'auto'
+  type: 'auto',
 };
 
 Interchange.SPECIAL_QUERIES = {
-  'landscape': 'screen and (orientation: landscape)',
-  'portrait': 'screen and (orientation: portrait)',
-  'retina': 'only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx)'
+  landscape: 'screen and (orientation: landscape)',
+  portrait: 'screen and (orientation: portrait)',
+  retina:
+    'only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx)',
 };
 
-export {Interchange};
+export { Interchange };

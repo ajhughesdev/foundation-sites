@@ -17,7 +17,8 @@
 @mixin grid-column-position($position) {
   // Auto positioning
   @if $position == auto {
-    &, &:last-child:not(:first-child) {
+    &,
+    &:last-child:not(:first-child) {
       float: $global-left;
       clear: none;
     }
@@ -42,13 +43,12 @@
   @else if $position == center {
     margin-left: auto;
     margin-right: auto;
-    &, &:last-child:not(:first-child) {
+    &,
+    &:last-child:not(:first-child) {
       float: none;
       clear: both;
     }
-  }
-
-  @else {
+  } @else {
     @warn 'Wrong syntax for grid-column-position(). Enter a positive or negative number, "center" or "auto".';
   }
 }

@@ -68,7 +68,9 @@ $input-cursor-disabled: not-allowed !default;
 
 /// Properties to transition on text inputs.
 /// @type Transition
-$input-transition: box-shadow 0.5s, border-color 0.25s ease-in-out !default;
+$input-transition:
+  box-shadow 0.5s,
+  border-color 0.25s ease-in-out !default;
 
 /// Enables the up/down buttons that Chrome and Firefox add to `<input type='number'>` elements.
 /// @type Boolean
@@ -83,7 +85,10 @@ $input-radius: $global-radius !default;
 $form-button-radius: $global-radius !default;
 
 @mixin form-element {
-  $height: ($input-font-size * unitless-calc($input-line-height)) + (get-side($input-padding, 'top') + get-side($input-padding, 'bottom')) - rem-calc(1);
+  $height: ($input-font-size * unitless-calc($input-line-height)) +
+    (
+      get-side($input-padding, 'top') + get-side($input-padding, 'bottom')
+    ) - rem-calc(1);
 
   display: block;
   box-sizing: border-box;
@@ -155,7 +160,8 @@ $form-button-radius: $global-radius !default;
   }
 
   // Reset Normalize setting content-box to search elements
-  input[type='search'] { // sass-lint:disable-line no-qualifying-elements
+  input[type='search'] {
+    // sass-lint:disable-line no-qualifying-elements
     box-sizing: border-box;
   }
 

@@ -12,22 +12,22 @@ $-zf-size: null;
 /// A list of named breakpoints. You can use these with the `breakpoint()` mixin to quickly create media queries.
 /// @type Map
 $breakpoints: (
-  "small": 0,
-  "medium": 640px,
-  "large": 1024px,
-  "xlarge": 1200px,
-  "xxlarge": 1440px,
+  'small': 0,
+  'medium': 640px,
+  'large': 1024px,
+  'xlarge': 1200px,
+  'xxlarge': 1440px,
 ) !default;
 
 /// A list of named HiDPI breakpoints. You can use these with the `breakpoint()` mixin to quickly create media queries for resolutions.
 /// Values must represent the device pixels / web pixels ration and be unitless or in DPPX.
 /// @type Map
 $breakpoints-hidpi: (
-  "hidpi-1": 1,
-  "hidpi-1-5": 1.5,
-  "hidpi-2": 2,
-  "retina": 2,
-  "hidpi-3": 3
+  'hidpi-1': 1,
+  'hidpi-1-5': 1.5,
+  'hidpi-2': 2,
+  'retina': 2,
+  'hidpi-3': 3,
 ) !default;
 
 /// The largest named breakpoint in which to include print as a media type
@@ -40,8 +40,7 @@ $-zf-breakpoints-keys: map-to-list($breakpoints, 'keys');
 
 @if nth(map-values($breakpoints), 1) != 0 {
   @error 'The first key in the $breakpoints map must have a value of "0".';
-}
-@else {
+} @else {
   $-zf-zero-breakpoint: nth(map-keys($breakpoints), 1);
 }
 
@@ -83,14 +82,12 @@ $breakpoint-classes: (small medium large) !default;
       $name: $bp;
       $bp: map-get($breakpoints, $name);
       $bp-next: -zf-map-next($breakpoints, $name);
-    }
-    @else if map-has-key($breakpoints-hidpi, $bp) {
+    } @else if map-has-key($breakpoints-hidpi, $bp) {
       $name: $bp;
       $bp: map-get($breakpoints-hidpi, $name);
       $bp-next: -zf-map-next-number($breakpoints-hidpi, $bp);
       $hidpi: true;
-    }
-    @else {
+    } @else {
       $bp: 0;
       @warn 'breakpoint(): "#{$val}" is not defined in your `$breakpoints` or `$breakpoints-hidpi` setting.';
     }
@@ -116,7 +113,11 @@ $breakpoint-classes: (small medium large) !default;
       // Max value is 0.2px under the next breakpoint (0.02 / 16 = 0.00125).
       // Use a precision under 1px to support browser zoom, but not to low to avoid rounding.
       // See https://github.com/foundation/foundation-sites/issues/11313
-      $bp-max: if($hidpi, $bp-next - divide(1, $std-web-dpi), -zf-bp-to-em($bp-next) - 0.00125);
+      $bp-max: if(
+        $hidpi,
+        $bp-next - divide(1, $std-web-dpi),
+        -zf-bp-to-em($bp-next) - 0.00125
+      );
     }
   }
 
@@ -127,11 +128,16 @@ $breakpoint-classes: (small medium large) !default;
     $bp-min-dpi: if($bp-min, $bp-min * $std-web-dpi * 1dpi, $bp-min);
     $bp-max-dpi: if($bp-max, $bp-max * $std-web-dpi * 1dpi, $bp-max);
     @return zf-str-join(
-      -zf-bp-join($bp-min, $bp-max, '-webkit-min-device-pixel-ratio', '-webkit-max-device-pixel-ratio'),
+      -zf-bp-join(
+          $bp-min,
+          $bp-max,
+          '-webkit-min-device-pixel-ratio',
+          '-webkit-max-device-pixel-ratio'
+        ),
       -zf-bp-join($bp-min-dpi, $bp-max-dpi, 'min-resolution', 'max-resolution'),
-      ', ');
-  }
-  @else {
+      ', '
+    );
+  } @else {
     @return -zf-bp-join($bp-min, $bp-max);
   }
 }
@@ -164,7 +170,10 @@ $breakpoint-classes: (small medium large) !default;
     @if global-variable-exists(-zf-size) {
       $old-zf-size: $-zf-size;
     }
-    $-zf-size: nth($value, 1) !global; // get the first value to account for `only` and `down` keywords
+    $-zf-size: nth(
+      $value,
+      1
+    ) !global; // get the first value to account for `only` and `down` keywords
 
     // If $str is still an empty string, no media query is needed
     @if $str == '' {
@@ -180,8 +189,7 @@ $breakpoint-classes: (small medium large) !default;
         @media print, screen and #{$str} {
           @content;
         }
-      }
-      @else {
+      } @else {
         @media screen and #{$str} {
           @content;
         }
@@ -216,7 +224,6 @@ $breakpoint-classes: (small medium large) !default;
 ///
 /// @returns {Mixed} The value for the key after `$key`, if `$key` was found. If `$key` was not found, or `$key` was the last value in the map, returns `null`.
 @function -zf-map-next($map, $key) {
-
   // Store the keys of the map as a list
   $values: map-keys($map);
 
@@ -235,7 +242,6 @@ $breakpoint-classes: (small medium large) !default;
   @else {
     @return map-get($map, nth($values, $i));
   }
-
 }
 
 /// Find the next number in a map.
@@ -246,11 +252,15 @@ $breakpoint-classes: (small medium large) !default;
 ///
 /// @returns {Mixed} The number following `$number`, if `$number` was found. If `$number` was not found, or `$number` was the biggest number in the map, returns `null`.
 @function -zf-map-next-number($map, $number) {
-
   $next-number: null;
 
   @each $k, $v in $map {
-    @if type-of($v) == 'number' and $v > $number and ($next-number == null or $v < $next-number) {
+    @if type-of($v) ==
+      'number' and
+      $v >
+      $number and
+      ($next-number == null or $v < $next-number)
+    {
       $next-number: $v;
     }
   }
@@ -321,7 +331,6 @@ $breakpoint-classes: (small medium large) !default;
     @return $map;
   }
 
-
   // Check if the breakpoint name exists globally
   @if not map-has-key($breakpoints, $value) {
     @if type-of($value) == 'number' {
@@ -368,11 +377,13 @@ $breakpoint-classes: (small medium large) !default;
 @function -zf-current-breakpoint($value: null, $default: null) {
   @if ($value != null) {
     @return $value;
-  }
-  @else if (variable-exists(-zf-size) and type-of($-zf-size) != 'number') and $-zf-size != null {
+  } @else if
+    (variable-exists(-zf-size) and type-of($-zf-size) != 'number') and
+    $-zf-size !=
+    null
+  {
     @return $-zf-size;
-  }
-  @else {
+  } @else {
     @return $default;
   }
 }
@@ -396,7 +407,8 @@ $breakpoint-classes: (small medium large) !default;
   @return zf-str-join(
     if($min and $min > 0, '(#{$min-name}: #{$min})', null),
     if($max and $max > 0, '(#{$max-name}: #{$max})', null),
-    ' and ');
+    ' and '
+  );
 }
 
 $small-up: '';

@@ -69,19 +69,28 @@ $dropdown-menu-item-background-active: transparent !default;
   }
 
   &.opens-left > a::after {
-    @include css-triangle($dropdownmenu-arrow-size, $dropdownmenu-arrow-color, left);
+    @include css-triangle(
+      $dropdownmenu-arrow-size,
+      $dropdownmenu-arrow-color,
+      left
+    );
     right: auto;
     left: 5px;
   }
 
   &.opens-right > a::after {
-    @include css-triangle($dropdownmenu-arrow-size, $dropdownmenu-arrow-color, right);
+    @include css-triangle(
+      $dropdownmenu-arrow-size,
+      $dropdownmenu-arrow-color,
+      right
+    );
   }
 }
 
 @mixin dropdown-menu-direction($dir: horizontal) {
   @if $dir == horizontal {
-    > li.opens-left { // sass-lint:disable-line no-qualifying-elements
+    > li.opens-left {
+      // sass-lint:disable-line no-qualifying-elements
       > .is-dropdown-submenu {
         top: 100%;
         right: 0;
@@ -89,7 +98,8 @@ $dropdown-menu-item-background-active: transparent !default;
       }
     }
 
-    > li.opens-right { // sass-lint:disable-line no-qualifying-elements
+    > li.opens-right {
+      // sass-lint:disable-line no-qualifying-elements
       > .is-dropdown-submenu {
         top: 100%;
         right: auto;
@@ -98,20 +108,25 @@ $dropdown-menu-item-background-active: transparent !default;
     }
 
     @if $dropdownmenu-arrows {
-      > li.is-dropdown-submenu-parent > a { // sass-lint:disable-line no-qualifying-elements
+      > li.is-dropdown-submenu-parent > a {
+        // sass-lint:disable-line no-qualifying-elements
         position: relative;
         padding-#{$global-right}: $dropdownmenu-arrow-padding;
       }
 
-      > li.is-dropdown-submenu-parent > a::after { // sass-lint:disable-line no-qualifying-elements
-        @include css-triangle($dropdownmenu-arrow-size, $dropdownmenu-arrow-color, down);
+      > li.is-dropdown-submenu-parent > a::after {
+        // sass-lint:disable-line no-qualifying-elements
+        @include css-triangle(
+          $dropdownmenu-arrow-size,
+          $dropdownmenu-arrow-color,
+          down
+        );
         #{$global-right}: 5px;
         #{$global-left}: auto;
         margin-top: -1 * ($dropdownmenu-arrow-size * 0.5);
       }
     }
-  }
-  @else if $dir == vertical {
+  } @else if $dir == vertical {
     > li {
       .is-dropdown-submenu {
         top: 0;
@@ -136,8 +151,7 @@ $dropdown-menu-item-background-active: transparent !default;
         @include zf-dropdown-left-right-arrows;
       }
     }
-  }
-  @else {
+  } @else {
     @warn 'The direction used for dropdown-menu-direction() must be horizontal or vertical.';
   }
 }
@@ -217,12 +231,10 @@ $dropdown-menu-item-background-active: transparent !default;
     }
 
     &.opens-inner > .is-dropdown-submenu {
-
       top: 100%;
       @if $global-text-direction == 'rtl' {
         right: auto;
-      }
-      @else {
+      } @else {
         left: auto;
       }
     }

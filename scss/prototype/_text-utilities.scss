@@ -25,12 +25,10 @@ $prototype-text-overflow: ellipsis !default;
 
 /// Truncating the text, elipsis by default.
 /// @param {String} $overflow [$prototype-text-overflow] Text Truncate
-@mixin text-truncate(
-  $overflow: $prototype-text-overflow
-) {
+@mixin text-truncate($overflow: $prototype-text-overflow) {
   max-width: 100% !important;
   overflow: hidden !important;
-  text-overflow: $overflow; 
+  text-overflow: $overflow;
   white-space: nowrap !important;
 }
 

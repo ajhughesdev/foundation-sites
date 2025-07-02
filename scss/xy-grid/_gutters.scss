@@ -30,16 +30,15 @@
 
       // Loop through each gutter position
       @each $value in $gutter-position {
-        #{$gutter-type}-#{$value}: unquote("#{$operator}#{$gutter}");
+        #{$gutter-type}-#{$value}: unquote('#{$operator}#{$gutter}');
       }
     }
-  }
-  @else if (type-of($gutters) == 'number') {
+  } @else if (type-of($gutters) == 'number') {
     $gutter: rem-calc($gutters) * 0.5;
 
     // Loop through each gutter position
     @each $value in $gutter-position {
-      #{$gutter-type}-#{$value}: unquote("#{$operator}#{$gutter}");
+      #{$gutter-type}-#{$value}: unquote('#{$operator}#{$gutter}');
     }
   }
 }

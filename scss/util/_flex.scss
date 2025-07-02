@@ -10,7 +10,6 @@
   @return $-zf-flex-justify;
 }
 
-
 $-zf-flex-align: (
   'top': flex-start,
   'bottom': flex-end,
@@ -38,8 +37,7 @@ $-zf-flex-direction: (
   @if $x {
     @if map-has-key($-zf-flex-justify, $x) {
       $x: map-get($-zf-flex-justify, $x);
-    }
-    @else {
+    } @else {
       @warn 'flex-grid-row-align(): #{$x} is not a valid value for horizontal alignment. Use left, right, center, justify, or spaced.';
     }
   }
@@ -47,8 +45,7 @@ $-zf-flex-direction: (
   @if $y {
     @if map-has-key($-zf-flex-align, $y) {
       $y: map-get($-zf-flex-align, $y);
-    }
-    @else {
+    } @else {
       @warn 'flex-grid-row-align(): #{$y} is not a valid value for vertical alignment. Use top, bottom, middle, or stretch.';
     }
   }
@@ -64,8 +61,7 @@ $-zf-flex-direction: (
   @if $y {
     @if map-has-key($-zf-flex-align, $y) {
       $y: map-get($-zf-flex-align, $y);
-    }
-    @else {
+    } @else {
       @warn 'flex-grid-column-align(): #{$y} is not a valid value for alignment. Use top, bottom, middle, or stretch.';
     }
   }

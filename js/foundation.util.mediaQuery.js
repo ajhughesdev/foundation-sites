@@ -13,58 +13,62 @@ import $ from 'jquery';
 //     'only screen and (min-resolution: 2dppx)'
 //   };
 
-
 // matchMedia() polyfill - Test a CSS media type/query in JS.
 // Authors & copyright © 2012: Scott Jehl, Paul Irish, Nicholas Zakas, David Knight. MIT license
 /* eslint-disable */
-window.matchMedia || (window.matchMedia = (() => {
-  "use strict";
+window.matchMedia ||
+  (window.matchMedia = (() => {
+    'use strict';
 
-  // For browsers that support matchMedium api such as IE 9 and webkit
-  let styleMedia = (window.styleMedia || window.media);
+    // For browsers that support matchMedium api such as IE 9 and webkit
+    let styleMedia = window.styleMedia || window.media;
 
-  // For those that don't support matchMedium
-  if (!styleMedia) {
-    const style   = document.createElement('style');
-    const script      = document.getElementsByTagName('script')[0];
-    let info        = null;
+    // For those that don't support matchMedium
+    if (!styleMedia) {
+      const style = document.createElement('style');
+      const script = document.getElementsByTagName('script')[0];
+      let info = null;
 
-    style.type  = 'text/css';
-    style.id    = 'matchmediajs-test';
+      style.type = 'text/css';
+      style.id = 'matchmediajs-test';
 
-    if (!script) {
-      document.head.appendChild(style);
-    } else {
-      script.parentNode.insertBefore(style, script);
+      if (!script) {
+        document.head.appendChild(style);
+      } else {
+        script.parentNode.insertBefore(style, script);
+      }
+
+      // 'style.currentStyle' is used by IE <= 8 and 'window.getComputedStyle' for all other browsers
+      info =
+        ('getComputedStyle' in window &&
+          window.getComputedStyle(style, null)) ||
+        style.currentStyle;
+
+      styleMedia = {
+        matchMedium: function (media) {
+          const text =
+            '@media ' + media + '{ #matchmediajs-test { width: 1px; } }';
+
+          // 'style.styleSheet' is used by IE <= 8 and 'style.textContent' for all other browsers
+          if (style.styleSheet) {
+            style.styleSheet.cssText = text;
+          } else {
+            style.textContent = text;
+          }
+
+          // Test if media query is true or false
+          return info.width === '1px';
+        },
+      };
     }
 
-    // 'style.currentStyle' is used by IE <= 8 and 'window.getComputedStyle' for all other browsers
-    info = ('getComputedStyle' in window) && window.getComputedStyle(style, null) || style.currentStyle;
-
-    styleMedia = {
-      matchMedium: function (media) {
-        const text = '@media ' + media + '{ #matchmediajs-test { width: 1px; } }';
-
-        // 'style.styleSheet' is used by IE <= 8 and 'style.textContent' for all other browsers
-        if (style.styleSheet) {
-          style.styleSheet.cssText = text;
-        } else {
-          style.textContent = text;
-        }
-
-        // Test if media query is true or false
-        return info.width === '1px';
-      }
+    return (media) => {
+      return {
+        matches: styleMedia.matchMedium(media || 'all'),
+        media: media || 'all',
+      };
     };
-  }
-
-  return media => {
-    return {
-      matches: styleMedia.matchMedium(media || 'all'),
-      media: media || 'all'
-    };
-  };
-})());
+  })());
 /* eslint-enable */
 
 const MediaQuery = {
@@ -78,7 +82,6 @@ const MediaQuery = {
    * @private
    */
   _init() {
-
     // make sure the initialization is only done once when calling _init() several times
     if (this.isInitialized === true) {
       return this;
@@ -88,8 +91,10 @@ const MediaQuery = {
 
     const self = this;
     const $meta = $('meta.foundation-mq');
-    if(!$meta.length){
-      $('<meta class="foundation-mq" name="foundation-mq" content>').appendTo(document.head);
+    if (!$meta.length) {
+      $('<meta class="foundation-mq" name="foundation-mq" content>').appendTo(
+        document.head
+      );
     }
 
     const extractedStyles = $('.foundation-mq').css('font-family');
@@ -100,10 +105,10 @@ const MediaQuery = {
     self.queries = []; // reset
 
     for (const key in namedQueries) {
-      if(namedQueries.hasOwnProperty(key)) {
+      if (namedQueries.hasOwnProperty(key)) {
         self.queries.push({
           name: key,
-          value: `only screen and (min-width: ${namedQueries[key]})`
+          value: `only screen and (min-width: ${namedQueries[key]})`,
         });
       }
     }
@@ -178,7 +183,10 @@ const MediaQuery = {
    * @returns {Boolean} `true` if the breakpoint matches, `false` if it does not.
    */
   is(size) {
-    const parts = size.trim().split(' ').filter(p => !!p.length);
+    const parts = size
+      .trim()
+      .split(' ')
+      .filter((p) => !!p.length);
     const [bpSize, bpModifier = ''] = parts;
 
     // Only the breakpont
@@ -208,7 +216,7 @@ const MediaQuery = {
    */
   get(size) {
     for (const i in this.queries) {
-      if(this.queries.hasOwnProperty(i)) {
+      if (this.queries.hasOwnProperty(i)) {
         const query = this.queries[i];
         if (size === query.name) return query.value;
       }
@@ -224,7 +232,9 @@ const MediaQuery = {
    * @returns {String|null} - The name of the following breakpoint, or `null` if the passed breakpoint was the last one.
    */
   next(size) {
-    const queryIndex = this.queries.findIndex((q) => this._getQueryName(q) === size);
+    const queryIndex = this.queries.findIndex(
+      (q) => this._getQueryName(q) === size
+    );
     if (queryIndex === -1) {
       throw new Error(`
         Unknown breakpoint "${size}" passed to MediaQuery.next().
@@ -244,10 +254,8 @@ const MediaQuery = {
    * @returns {String} Name of the breakpoint.
    */
   _getQueryName(value) {
-    if (typeof value === 'string')
-      return value;
-    if (typeof value === 'object')
-      return value.name;
+    if (typeof value === 'string') return value;
+    if (typeof value === 'object') return value.name;
     throw new TypeError(`
       Invalid value passed to MediaQuery._getQueryName().
       Expected a breakpoint name (String) or a breakpoint query (Object), got "${value}" (${typeof value})
@@ -281,7 +289,8 @@ const MediaQuery = {
    */
   _watcher() {
     $(window).on('resize.zf.trigger', () => {
-      const newSize = this._getCurrentSize(), currentSize = this.current;
+      const newSize = this._getCurrentSize(),
+        currentSize = this.current;
 
       if (newSize !== currentSize) {
         // Change the current media query
@@ -291,10 +300,8 @@ const MediaQuery = {
         $(window).trigger('changed.zf.mediaquery', [newSize, currentSize]);
       }
     });
-  }
+  },
 };
-
-
 
 // Thank you: https://github.com/sindresorhus/query-string
 function parseStyleToObject(str) {
@@ -333,4 +340,4 @@ function parseStyleToObject(str) {
   return styleObject;
 }
 
-export {MediaQuery};
+export { MediaQuery };

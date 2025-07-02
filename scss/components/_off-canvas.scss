@@ -71,22 +71,33 @@ $maincontent-class: 'off-canvas-content' !default;
 
 /// Adds baseline styles for off-canvas. This CSS is required to make the other pieces work.
 @mixin off-canvas-basics {
-
   /// Transform deprecated size settings into map & show warning
   @if variable-exists(offcanvas-size) {
-    $offcanvas-sizes: (small: $offcanvas-size, medium: $offcanvas-size) !global;
+    $offcanvas-sizes: (
+      small: $offcanvas-size,
+      medium: $offcanvas-size,
+    ) !global;
     @warn '$offcanvas-size is deprecated and not used anymore! Please update your settings and use the map $offcanvas-sizes instead';
   }
   @if variable-exists(offcanvas-vertical-size) {
-    $offcanvas-vertical-sizes: (small: $offcanvas-vertical-size, medium: $offcanvas-vertical-size) !global;
+    $offcanvas-vertical-sizes: (
+      small: $offcanvas-vertical-size,
+      medium: $offcanvas-vertical-size,
+    ) !global;
     @warn '$offcanvas-vertical-size is deprecated and not used anymore! Please update your settings and use the map $offcanvas-vertical-sizes instead';
   }
 
   // Checks the z-indexes and increase them due to backwards compatibility.
   // This is necessary because the overlay's z-index is new since v6.4 and may be identical to the user custom settings of the push z-index.
-  @if $offcanvas-push-zindex <= $offcanvas-overlay-zindex { $offcanvas-push-zindex: $offcanvas-overlay-zindex + 1 !global; }
-  @if $offcanvas-overlap-zindex <= $offcanvas-push-zindex { $offcanvas-overlap-zindex: $offcanvas-push-zindex + 1 !global; }
-  @if $offcanvas-reveal-zindex <= $offcanvas-overlay-zindex { $offcanvas-reveal-zindex: $offcanvas-overlay-zindex + 1 !global; }
+  @if $offcanvas-push-zindex <= $offcanvas-overlay-zindex {
+    $offcanvas-push-zindex: $offcanvas-overlay-zindex + 1 !global;
+  }
+  @if $offcanvas-overlap-zindex <= $offcanvas-push-zindex {
+    $offcanvas-overlap-zindex: $offcanvas-push-zindex + 1 !global;
+  }
+  @if $offcanvas-reveal-zindex <= $offcanvas-overlay-zindex {
+    $offcanvas-reveal-zindex: $offcanvas-overlay-zindex + 1 !global;
+  }
 
   // Hides overflow on body when an off-canvas panel is open.
   .is-off-canvas-open {
@@ -103,7 +114,9 @@ $maincontent-class: 'off-canvas-content' !default;
     width: 100%;
     height: 100%;
 
-    transition: opacity $offcanvas-transition-length $offcanvas-transition-timing, visibility $offcanvas-transition-length $offcanvas-transition-timing;
+    transition:
+      opacity $offcanvas-transition-length $offcanvas-transition-timing,
+      visibility $offcanvas-transition-length $offcanvas-transition-timing;
 
     background: $offcanvas-exit-background;
 
@@ -151,8 +164,7 @@ $maincontent-class: 'off-canvas-content' !default;
 
   @if $fixed == true {
     position: fixed;
-  }
-  @else {
+  } @else {
     position: absolute;
   }
 
@@ -187,7 +199,11 @@ $maincontent-class: 'off-canvas-content' !default;
 @mixin off-canvas-position(
   $position: left,
   $orientation: horizontal,
-  $sizes: if($orientation == horizontal, $offcanvas-sizes, $offcanvas-vertical-sizes)
+  $sizes: if(
+      $orientation == horizontal,
+      $offcanvas-sizes,
+      $offcanvas-vertical-sizes
+    )
 ) {
   @if $position == left {
     top: 0;
@@ -205,7 +221,6 @@ $maincontent-class: 'off-canvas-content' !default;
 
     // Sets the position for nested off-canvas element
     @at-root .#{$maincontent-class} .off-canvas.position-#{$position} {
-
       @each $name, $size in $sizes {
         @include breakpoint($name) {
           transform: translateX(-$size);
@@ -226,8 +241,7 @@ $maincontent-class: 'off-canvas-content' !default;
         }
       }
     }
-  }
-  @else if $position == right {
+  } @else if $position == right {
     top: 0;
     right: 0;
     height: 100%;
@@ -243,7 +257,6 @@ $maincontent-class: 'off-canvas-content' !default;
 
     // Sets the position for nested off-canvas element
     @at-root .#{$maincontent-class} .off-canvas.position-#{$position} {
-
       @each $name, $size in $sizes {
         @include breakpoint($name) {
           transform: translateX($size);
@@ -264,8 +277,7 @@ $maincontent-class: 'off-canvas-content' !default;
         }
       }
     }
-  }
-  @else if $position == top {
+  } @else if $position == top {
     top: 0;
     left: 0;
     width: 100%;
@@ -301,8 +313,7 @@ $maincontent-class: 'off-canvas-content' !default;
         }
       }
     }
-  }
-  @else if $position == bottom {
+  } @else if $position == bottom {
     bottom: 0;
     left: 0;
     width: 100%;
@@ -345,20 +356,32 @@ $maincontent-class: 'off-canvas-content' !default;
   @if $offcanvas-inner-shadow-size {
     &.is-transition-push {
       @if $position == left {
-        @include inner-side-shadow(right, $offcanvas-inner-shadow-size, $offcanvas-inner-shadow-color);
-      }
-      @else if $position == right {
-        @include inner-side-shadow(left, $offcanvas-inner-shadow-size, $offcanvas-inner-shadow-color);
-      }
-      @else if $position == top {
-        @include inner-side-shadow(bottom, $offcanvas-inner-shadow-size, $offcanvas-inner-shadow-color);
-      }
-      @else if $position == bottom {
-        @include inner-side-shadow(top, $offcanvas-inner-shadow-size, $offcanvas-inner-shadow-color);
+        @include inner-side-shadow(
+          right,
+          $offcanvas-inner-shadow-size,
+          $offcanvas-inner-shadow-color
+        );
+      } @else if $position == right {
+        @include inner-side-shadow(
+          left,
+          $offcanvas-inner-shadow-size,
+          $offcanvas-inner-shadow-color
+        );
+      } @else if $position == top {
+        @include inner-side-shadow(
+          bottom,
+          $offcanvas-inner-shadow-size,
+          $offcanvas-inner-shadow-color
+        );
+      } @else if $position == bottom {
+        @include inner-side-shadow(
+          top,
+          $offcanvas-inner-shadow-size,
+          $offcanvas-inner-shadow-color
+        );
       }
     }
   }
-
 }
 
 /// Sets the styles for the content container.
@@ -369,7 +392,8 @@ $maincontent-class: 'off-canvas-content' !default;
   // Bind to has-transition-X class to prevent transition for transform:none
   &.has-transition-overlap,
   &.has-transition-push {
-    transition: transform $offcanvas-transition-length $offcanvas-transition-timing;
+    transition: transform $offcanvas-transition-length
+      $offcanvas-transition-timing;
   }
 
   // Transform scope until the element is closed (makes sure transitionend gets triggered)
@@ -467,10 +491,18 @@ $maincontent-class: 'off-canvas-content' !default;
   }
 
   // Off-canvas position classes
-  .position-left    { @include off-canvas-position(left,   horizontal); }
-  .position-right   { @include off-canvas-position(right,  horizontal); }
-  .position-top     { @include off-canvas-position(top,    vertical); }
-  .position-bottom  { @include off-canvas-position(bottom, vertical); }
+  .position-left {
+    @include off-canvas-position(left, horizontal);
+  }
+  .position-right {
+    @include off-canvas-position(right, horizontal);
+  }
+  .position-top {
+    @include off-canvas-position(top, vertical);
+  }
+  .position-bottom {
+    @include off-canvas-position(bottom, vertical);
+  }
 
   .off-canvas-content {
     @include off-canvas-content;
@@ -481,19 +513,39 @@ $maincontent-class: 'off-canvas-content' !default;
     @if $name != $-zf-zero-breakpoint {
       @include breakpoint($name) {
         .position-left.reveal-for-#{$name} {
-          @include off-canvas-reveal(left, $offcanvas-reveal-zindex, $maincontent-class, $name);
+          @include off-canvas-reveal(
+            left,
+            $offcanvas-reveal-zindex,
+            $maincontent-class,
+            $name
+          );
         }
 
         .position-right.reveal-for-#{$name} {
-          @include off-canvas-reveal(right, $offcanvas-reveal-zindex, $maincontent-class, $name);
+          @include off-canvas-reveal(
+            right,
+            $offcanvas-reveal-zindex,
+            $maincontent-class,
+            $name
+          );
         }
 
         .position-top.reveal-for-#{$name} {
-          @include off-canvas-reveal(top, $offcanvas-reveal-zindex, $maincontent-class, $name);
+          @include off-canvas-reveal(
+            top,
+            $offcanvas-reveal-zindex,
+            $maincontent-class,
+            $name
+          );
         }
 
         .position-bottom.reveal-for-#{$name} {
-          @include off-canvas-reveal(bottom, $offcanvas-reveal-zindex, $maincontent-class, $name);
+          @include off-canvas-reveal(
+            bottom,
+            $offcanvas-reveal-zindex,
+            $maincontent-class,
+            $name
+          );
         }
       }
     }
@@ -510,4 +562,3 @@ $maincontent-class: 'off-canvas-content' !default;
     }
   }
 }
-

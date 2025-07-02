@@ -40,7 +40,10 @@ class Toggler extends Plugin {
    */
   _init() {
     // Collect triggers to set ARIA attributes to
-    const id = this.$element[0].id, $triggers = $(`[data-open~="${id}"], [data-close~="${id}"], [data-toggle~="${id}"]`);
+    const id = this.$element[0].id,
+      $triggers = $(
+        `[data-open~="${id}"], [data-close~="${id}"], [data-toggle~="${id}"]`
+      );
 
     let input;
     // Parse animation classes if they were set
@@ -57,7 +60,9 @@ class Toggler extends Plugin {
     else {
       input = this.options.toggler;
       if (typeof input !== 'string' || !input.length) {
-        throw new Error(`The 'toggler' option containing the target class is required, got "${input}"`);
+        throw new Error(
+          `The 'toggler' option containing the target class is required, got "${input}"`
+        );
       }
       // Allow for a . at the beginning of the string
       this.className = input[0] === '.' ? input.slice(1) : input;
@@ -72,7 +77,8 @@ class Toggler extends Plugin {
       const controls = $trigger.attr('aria-controls') || '';
 
       const containsId = new RegExp(`\\b${RegExpEscape(id)}\\b`).test(controls);
-      if (!containsId) $trigger.attr('aria-controls', controls ? `${controls} ${id}` : id);
+      if (!containsId)
+        $trigger.attr('aria-controls', controls ? `${controls} ${id}` : id);
     });
   }
 
@@ -82,7 +88,9 @@ class Toggler extends Plugin {
    * @private
    */
   _events() {
-    this.$element.off('toggle.zf.trigger').on('toggle.zf.trigger', this.toggle.bind(this));
+    this.$element
+      .off('toggle.zf.trigger')
+      .on('toggle.zf.trigger', this.toggle.bind(this));
   }
 
   /**
@@ -92,7 +100,7 @@ class Toggler extends Plugin {
    * @fires Toggler#off
    */
   toggle() {
-    this[ this.options.animate ? '_toggleAnimate' : '_toggleClass']();
+    this[this.options.animate ? '_toggleAnimate' : '_toggleClass']();
   }
 
   _toggleClass() {
@@ -105,8 +113,7 @@ class Toggler extends Plugin {
        * @event Toggler#on
        */
       this.$element.trigger('on.zf.toggler');
-    }
-    else {
+    } else {
       /**
        * Fires if the target element does not have the class after a toggle.
        * @event Toggler#off
@@ -122,14 +129,13 @@ class Toggler extends Plugin {
     const _this = this;
 
     if (this.$element.is(':hidden')) {
-      Motion.animateIn(this.$element, this.animationIn, function() {
+      Motion.animateIn(this.$element, this.animationIn, function () {
         _this._updateARIA(true);
         this.trigger('on.zf.toggler');
         this.find('[data-mutate]').trigger('mutateme.zf.trigger');
       });
-    }
-    else {
-      Motion.animateOut(this.$element, this.animationOut, function() {
+    } else {
+      Motion.animateOut(this.$element, this.animationOut, function () {
         _this._updateARIA(false);
         this.trigger('off.zf.toggler');
         this.find('[data-mutate]').trigger('mutateme.zf.trigger');
@@ -139,10 +145,9 @@ class Toggler extends Plugin {
 
   _updateARIA(isOn) {
     const id = this.$element[0].id;
-    $(`[data-open="${id}"], [data-close="${id}"], [data-toggle="${id}"]`)
-      .attr({
-        'aria-expanded': isOn ? true : false
-      });
+    $(`[data-open="${id}"], [data-close="${id}"], [data-toggle="${id}"]`).attr({
+      'aria-expanded': isOn ? true : false,
+    });
   }
 
   /**
@@ -167,7 +172,7 @@ Toggler.defaults = {
    * @type {boolean}
    * @default false
    */
-  animate: false
+  animate: false,
 };
 
-export {Toggler};
+export { Toggler };

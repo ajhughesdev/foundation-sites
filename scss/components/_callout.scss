@@ -71,7 +71,10 @@ $callout-link-tint: 30% !default;
   $background: scale-color($color, $lightness: $callout-background-fade);
 
   background-color: $background;
-  color: color-pick-contrast($background, ($callout-font-color, $callout-font-color-alt));
+  color: color-pick-contrast(
+    $background,
+    ($callout-font-color, $callout-font-color-alt)
+  );
 }
 
 @mixin callout-size($padding) {
@@ -80,7 +83,6 @@ $callout-link-tint: 30% !default;
   padding-bottom: $padding;
   padding-left: $padding;
 }
-
 
 /// Adds styles for a callout.
 /// @param {Color} $color [$callout-background] - Color to use.
@@ -94,7 +96,7 @@ $callout-link-tint: 30% !default;
     @include callout;
 
     @each $name, $color in $foundation-palette {
-      &.#{"" + $name} {
+      &.#{'' + $name} {
         @include callout-style($color);
       }
     }

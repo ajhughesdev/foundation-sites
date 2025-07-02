@@ -12,11 +12,7 @@ $prototype-list-breakpoints: $global-prototype-breakpoints !default;
 
 /// Map containing all the `style-type-unordered` classes
 /// @type Map
-$prototype-style-type-unordered: (
-  disc,
-  circle,
-  square
-) !default;
+$prototype-style-type-unordered: (disc, circle, square) !default;
 
 /// Map containing all the `style-type-ordered` classes
 /// @type Map
@@ -29,7 +25,6 @@ $prototype-style-type-ordered: (
   upper-latin,
   upper-roman
 ) !default;
-
 
 /// Style type for unordered Lists, by default coming through a map `$prototype-style-type-unordered`
 /// @param {String} $style-type-unordered [] Style type for unordered Lists

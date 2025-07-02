@@ -8,11 +8,11 @@
 /// @group table
 ////
 
-@use "sass:color";
+@use 'sass:color';
 
 /// Default color for table background.
 /// @type Color
-$table-background: $white  !default;
+$table-background: $white !default;
 
 /// Default scale for darkening the striped table rows and the table border.
 /// @type Number
@@ -32,11 +32,17 @@ $table-hover-scale: 2% !default;
 
 /// Default color of standard rows on hover.
 /// @type List
-$table-row-hover: color.adjust($table-background, $lightness: -$table-hover-scale) !default;
+$table-row-hover: color.adjust(
+  $table-background,
+  $lightness: -$table-hover-scale
+) !default;
 
 /// Default color of striped rows on hover.
 /// @type List
-$table-row-stripe-hover: color.adjust($table-background, $lightness: -($table-color-scale + $table-hover-scale)) !default;
+$table-row-stripe-hover: color.adjust(
+  $table-background,
+  $lightness: -($table-color-scale + $table-hover-scale)
+) !default;
 
 /// If `true`, tables are striped by default and an .unstriped class is created. If `false`, a .striped class is created.
 /// @type Boolean
@@ -44,7 +50,10 @@ $table-is-striped: true !default;
 
 /// Default background color for striped rows.
 /// @type Color
-$table-striped-background: smart-scale($table-background, $table-color-scale) !default;
+$table-striped-background: smart-scale(
+  $table-background,
+  $table-color-scale
+) !default;
 
 /// Default value for showing the stripe on rows of the tables, excluding the header and footer. If even, the even rows will have a background color. If odd, the odd rows will have a background color. If empty, or any other value, the table rows will have no striping.
 /// @type Keyword
@@ -52,19 +61,31 @@ $table-stripe: even !default;
 
 /// Default color for header background.
 /// @type Color
-$table-head-background: smart-scale($table-background, $table-color-scale * 0.5) !default;
+$table-head-background: smart-scale(
+  $table-background,
+  $table-color-scale * 0.5
+) !default;
 
 /// Default color of header rows on hover.
 /// @type List
-$table-head-row-hover: color.adjust($table-head-background, $lightness: -$table-hover-scale) !default;
+$table-head-row-hover: color.adjust(
+  $table-head-background,
+  $lightness: -$table-hover-scale
+) !default;
 
 /// Default color for footer background.
 /// @type Color
-$table-foot-background: smart-scale($table-background, $table-color-scale) !default;
+$table-foot-background: smart-scale(
+  $table-background,
+  $table-color-scale
+) !default;
 
 /// Default color of footer rows on hover.
 /// @type List
-$table-foot-row-hover: color.adjust($table-foot-background, $lightness: -$table-hover-scale) !default;
+$table-foot-row-hover: color.adjust(
+  $table-foot-background,
+  $lightness: -$table-hover-scale
+) !default;
 
 /// Default font color for header.
 /// @type Color
@@ -108,7 +129,10 @@ $table-stack-breakpoint: medium !default;
   }
 }
 
-@mixin -zf-table-children-styles($stripe: $table-stripe, $is-striped: $table-is-striped) {
+@mixin -zf-table-children-styles(
+  $stripe: $table-stripe,
+  $is-striped: $table-is-striped
+) {
   thead,
   tbody,
   tfoot {
@@ -190,10 +214,7 @@ $table-stack-breakpoint: medium !default;
 /// Adds the general styles for tables.
 /// @param {Keyword} $stripe [$table-stripe] - Uses keywords even, odd, or none to darken rows of the table. The default value is even.
 /// @param {Boolean} $nest [false] - Needed if you only want to apply this to a specific table.
-@mixin table(
-  $stripe: $table-stripe,
-  $nest: false
-) {
+@mixin table($stripe: $table-stripe, $nest: false) {
   border-collapse: collapse;
   width: 100%;
   margin-bottom: $global-margin;
@@ -201,8 +222,7 @@ $table-stack-breakpoint: medium !default;
 
   @if $nest {
     @include -zf-table-children-styles($stripe);
-  }
-  @else {
+  } @else {
     @at-root {
       @include -zf-table-children-styles($stripe);
     }
@@ -241,7 +261,7 @@ $table-stack-breakpoint: medium !default;
 
   @if $table-is-striped == true {
     // Darkens the even striped table rows.
-    @if($table-stripe == even) {
+    @if ($table-stripe == even) {
       &:not(.unstriped) tr:nth-of-type(even):hover {
         background-color: $table-row-stripe-hover;
       }
@@ -253,11 +273,9 @@ $table-stack-breakpoint: medium !default;
         background-color: $table-row-stripe-hover;
       }
     }
-  }
-
-  @else if $table-is-striped == false {
+  } @else if $table-is-striped == false {
     // Darkens the even striped table rows.
-    @if($table-stripe == even) {
+    @if ($table-stripe == even) {
       &.striped tr:nth-of-type(even):hover {
         background-color: $table-row-stripe-hover;
       }
@@ -281,8 +299,7 @@ $table-stack-breakpoint: medium !default;
         display: block;
       }
     }
-  }
-  @else {
+  } @else {
     thead {
       display: none;
     }
@@ -324,6 +341,5 @@ $table-stack-breakpoint: medium !default;
 
   .table-scroll {
     overflow-x: auto;
-
   }
 }

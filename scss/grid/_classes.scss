@@ -138,7 +138,9 @@
 
     // Responsive collapsing
     .#{$-zf-size}-#{$collapse} {
-      > .#{$column} { @include grid-col-collapse; }
+      > .#{$column} {
+        @include grid-col-collapse;
+      }
 
       .#{$row} {
         margin-right: 0;
@@ -152,7 +154,9 @@
     }
 
     .#{$-zf-size}-#{$uncollapse} {
-      > .#{$column} { @include grid-col-gutter($-zf-size); }
+      > .#{$column} {
+        @include grid-col-gutter($-zf-size);
+      }
     }
 
     // Positioning
@@ -166,7 +170,7 @@
     $-gutter-unpos-selector: (
       if($uncenter, '.#{$-zf-size}-#{$uncenter}', null),
       if($push, '.#{$-zf-size}-#{$push}-0', null),
-      if($pull, '.#{$-zf-size}-#{$pull}-0', null),
+      if($pull, '.#{$-zf-size}-#{$pull}-0', null)
     );
     @if ($uncenter or $push or $pull) {
       #{$-gutter-unpos-selector} {

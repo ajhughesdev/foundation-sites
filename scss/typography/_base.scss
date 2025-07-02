@@ -36,7 +36,8 @@ $header-font-style: normal !default;
 
 /// Font stack used for elements that use monospaced type, such as code samples
 /// @type String | List
-$font-family-monospace: Consolas, 'Liberation Mono', Courier, monospace !default;
+$font-family-monospace:
+  Consolas, 'Liberation Mono', Courier, monospace !default;
 
 /// Color of headers.
 /// @type Color
@@ -54,20 +55,44 @@ $header-margin-bottom: 0.5rem !default;
 /// @type Map
 $header-styles: (
   small: (
-    'h1': ('font-size': 24),
-    'h2': ('font-size': 20),
-    'h3': ('font-size': 19),
-    'h4': ('font-size': 18),
-    'h5': ('font-size': 17),
-    'h6': ('font-size': 16),
+    'h1': (
+      'font-size': 24,
+    ),
+    'h2': (
+      'font-size': 20,
+    ),
+    'h3': (
+      'font-size': 19,
+    ),
+    'h4': (
+      'font-size': 18,
+    ),
+    'h5': (
+      'font-size': 17,
+    ),
+    'h6': (
+      'font-size': 16,
+    ),
   ),
   medium: (
-    'h1': ('font-size': 48),
-    'h2': ('font-size': 40),
-    'h3': ('font-size': 31),
-    'h4': ('font-size': 25),
-    'h5': ('font-size': 20),
-    'h6': ('font-size': 16),
+    'h1': (
+      'font-size': 48,
+    ),
+    'h2': (
+      'font-size': 40,
+    ),
+    'h3': (
+      'font-size': 31,
+    ),
+    'h4': (
+      'font-size': 25,
+    ),
+    'h5': (
+      'font-size': 20,
+    ),
+    'h6': (
+      'font-size': 16,
+    ),
   ),
 ) !default;
 
@@ -79,9 +104,21 @@ $header-styles: (
   @each $size, $headers in $header-sizes {
     $header-map: ();
     @each $header, $font-size in $headers {
-      $header-map: map-merge($header-map, ($header: ('font-size': $font-size)));
+      $header-map: map-merge(
+        $header-map,
+        (
+          $header: (
+              'font-size': $font-size,
+            ),
+        )
+      );
     }
-    $header-styles: map-merge($header-styles, ($size: $header-map));
+    $header-styles: map-merge(
+      $header-styles,
+      (
+        $size: $header-map,
+      )
+    );
   }
   @return $header-styles;
 }
@@ -278,12 +315,18 @@ $abbr-underline: 1px dotted $black !default;
   }
 
   // Headings
-  h1, .h1,
-  h2, .h2,
-  h3, .h3,
-  h4, .h4,
-  h5, .h5,
-  h6, .h6 {
+  h1,
+  .h1,
+  h2,
+  .h2,
+  h3,
+  .h3,
+  h4,
+  .h4,
+  h5,
+  .h5,
+  h6,
+  .h6 {
     font-family: $header-font-family;
     font-style: $header-font-style;
     font-weight: $header-font-weight;
@@ -301,8 +344,8 @@ $abbr-underline: 1px dotted $black !default;
     @include breakpoint($size) {
       @each $header, $header-defs in $headers {
         $font-size-temp: 1rem;
-        #{$header}, .#{$header} {
-
+        #{$header},
+        .#{$header} {
           @if map-has-key($header-defs, font-size) {
             $font-size-temp: rem-calc(map-get($header-defs, font-size));
             font-size: $font-size-temp;
@@ -313,9 +356,15 @@ $abbr-underline: 1px dotted $black !default;
             font-size: $font-size-temp;
           }
           @if map-has-key($header-defs, line-height) {
-            line-height: unitless-calc(map-get($header-defs, line-height), $font-size-temp);
+            line-height: unitless-calc(
+              map-get($header-defs, line-height),
+              $font-size-temp
+            );
           } @else if map-has-key($header-defs, lh) {
-            line-height: unitless-calc(map-get($header-defs, lh), $font-size-temp);
+            line-height: unitless-calc(
+              map-get($header-defs, lh),
+              $font-size-temp
+            );
           } @else if $size == $-zf-zero-breakpoint {
             line-height: unitless-calc($header-lineheight, $font-size-temp);
           }
@@ -400,7 +449,8 @@ $abbr-underline: 1px dotted $black !default;
   }
 
   // Nested unordered/ordered lists
-  ul, ol {
+  ul,
+  ol {
     & & {
       margin-#{$global-left}: $list-nested-side-margin;
       margin-bottom: 0;
@@ -423,7 +473,8 @@ $abbr-underline: 1px dotted $black !default;
     padding: $blockquote-padding;
     border-#{$global-left}: $blockquote-border;
 
-    &, p {
+    &,
+    p {
       line-height: $paragraph-lineheight;
       color: $blockquote-color;
     }
@@ -439,7 +490,8 @@ $abbr-underline: 1px dotted $black !default;
   }
 
   // Abbreviations
-  abbr, abbr[title] {
+  abbr,
+  abbr[title] {
     border-bottom: $abbr-underline;
     cursor: help;
     text-decoration: none;

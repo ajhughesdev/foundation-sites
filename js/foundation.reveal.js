@@ -5,7 +5,7 @@ import { Keyboard } from './foundation.util.keyboard';
 import { MediaQuery } from './foundation.util.mediaQuery';
 import { Motion } from './foundation.util.motion';
 import { Triggers } from './foundation.util.triggers';
-import { Touch } from './foundation.util.touch'
+import { Touch } from './foundation.util.touch';
 
 /**
  * Reveal module.
@@ -36,7 +36,7 @@ class Reveal extends Plugin {
     Triggers.init($);
 
     Keyboard.register('Reveal', {
-      'ESCAPE': 'close',
+      ESCAPE: 'close',
     });
   }
 
@@ -49,11 +49,13 @@ class Reveal extends Plugin {
     this.id = this.$element.attr('id');
     this.isActive = false;
 
-    this.$anchor = $(`[data-open="${this.id}"]`).length ? $(`[data-open="${this.id}"]`) : $(`[data-toggle="${this.id}"]`);
+    this.$anchor = $(`[data-open="${this.id}"]`).length
+      ? $(`[data-open="${this.id}"]`)
+      : $(`[data-toggle="${this.id}"]`);
     this.$anchor.attr({
       'aria-controls': this.id,
       'aria-haspopup': 'dialog',
-      'tabindex': 0
+      tabindex: 0,
     });
 
     if (this.options.fullScreen || this.$element.hasClass('full')) {
@@ -65,20 +67,20 @@ class Reveal extends Plugin {
     }
 
     this.$element.attr({
-        'role': 'dialog',
-        'aria-hidden': true,
-        'data-yeti-box': this.id,
-        'data-resize': this.id
+      role: 'dialog',
+      'aria-hidden': true,
+      'data-yeti-box': this.id,
+      'data-resize': this.id,
     });
 
-    if(this.$overlay) {
+    if (this.$overlay) {
       this.$element.detach().appendTo(this.$overlay);
     } else {
       this.$element.detach().appendTo($(this.options.appendTo));
       this.$element.addClass('without-overlay');
     }
     this._events();
-    if (this.options.deepLink && window.location.hash === ( `#${this.id}`)) {
+    if (this.options.deepLink && window.location.hash === `#${this.id}`) {
       this.onLoadListener = onLoad($(window), () => this.open());
     }
   }
@@ -108,7 +110,8 @@ class Reveal extends Plugin {
     const outerWidth = $(window).width();
     const height = this.$element.outerHeight();
     const outerHeight = $(window).height();
-    let left, top = null;
+    let left,
+      top = null;
     if (this.options.hOffset === 'auto') {
       left = parseInt((outerWidth - width) / 2, 10);
     } else {
@@ -125,16 +128,15 @@ class Reveal extends Plugin {
     }
 
     if (top !== null) {
-      this.$element.css({top: top + 'px'});
+      this.$element.css({ top: top + 'px' });
     }
 
     // only worry about left if we don't have an overlay or we have a horizontal offset,
     // otherwise we're perfectly in the middle
-    if (!this.$overlay || (this.options.hOffset !== 'auto')) {
-      this.$element.css({left: left + 'px'});
-      this.$element.css({margin: '0px'});
+    if (!this.$overlay || this.options.hOffset !== 'auto') {
+      this.$element.css({ left: left + 'px' });
+      this.$element.css({ margin: '0px' });
     }
-
   }
 
   /**
@@ -147,29 +149,39 @@ class Reveal extends Plugin {
     this.$element.on({
       'open.zf.trigger': this.open.bind(this),
       'close.zf.trigger': (event, $element) => {
-        if ((event.target === _this.$element[0]) ||
-            ($(event.target).parents('[data-closable]')[0] === $element)) { // only close reveal when it's explicitly called
+        if (
+          event.target === _this.$element[0] ||
+          $(event.target).parents('[data-closable]')[0] === $element
+        ) {
+          // only close reveal when it's explicitly called
           return this.close.apply(this);
         }
       },
       'toggle.zf.trigger': this.toggle.bind(this),
-      'resizeme.zf.trigger': function() {
+      'resizeme.zf.trigger': function () {
         _this._updatePosition();
-      }
+      },
     });
 
     if (this.options.closeOnClick && this.options.overlay) {
-      this.$overlay.off('.zf.reveal').on('click.zf.dropdown tap.zf.dropdown', e => {
-        if (e.target === _this.$element[0] ||
-          $.contains(_this.$element[0], e.target) ||
-            !$.contains(document, e.target)) {
-              return;
-        }
-        _this.close();
-      });
+      this.$overlay
+        .off('.zf.reveal')
+        .on('click.zf.dropdown tap.zf.dropdown', (e) => {
+          if (
+            e.target === _this.$element[0] ||
+            $.contains(_this.$element[0], e.target) ||
+            !$.contains(document, e.target)
+          ) {
+            return;
+          }
+          _this.close();
+        });
     }
     if (this.options.deepLink) {
-      $(window).on(`hashchange.zf.reveal:${this.id}`, this._handleState.bind(this));
+      $(window).on(
+        `hashchange.zf.reveal:${this.id}`,
+        this._handleState.bind(this)
+      );
     }
   }
 
@@ -178,39 +190,39 @@ class Reveal extends Plugin {
    * @private
    */
   _handleState() {
-    if(window.location.hash === ( '#' + this.id) && !this.isActive){ this.open(); }
-    else{ this.close(); }
+    if (window.location.hash === '#' + this.id && !this.isActive) {
+      this.open();
+    } else {
+      this.close();
+    }
   }
 
   /**
-  * Disables the scroll when Reveal is shown to prevent the background from shifting
-  * @param {number} scrollTop - Scroll to visually apply, window current scroll by default
-  */
+   * Disables the scroll when Reveal is shown to prevent the background from shifting
+   * @param {number} scrollTop - Scroll to visually apply, window current scroll by default
+   */
   _disableScroll(scrollTop) {
     scrollTop = scrollTop || $(window).scrollTop();
     this._scrollTop = scrollTop;
     if ($(document).height() > $(window).height()) {
-      $("html")
-        .css("top", -scrollTop);
+      $('html').css('top', -scrollTop);
     }
   }
 
   /**
-  * Reenables the scroll when Reveal closes
-  * @param {number} scrollTop - Scroll to restore, html "top" property by default (as set by `_disableScroll`)
-  */
+   * Reenables the scroll when Reveal closes
+   * @param {number} scrollTop - Scroll to restore, html "top" property by default (as set by `_disableScroll`)
+   */
   _enableScroll(scrollTop) {
     if (typeof scrollTop !== 'number') {
-      scrollTop = this._scrollTop || parseInt($("html").css("top"), 10);
+      scrollTop = this._scrollTop || parseInt($('html').css('top'), 10);
     }
     if ($(document).height() > $(window).height()) {
-      $("html")
-        .css("top", "");
+      $('html').css('top', '');
       $(window).scrollTop(-scrollTop);
     }
     this._scrollTop = null;
   }
-
 
   /**
    * Opens the modal controlled by `this.$anchor`, and closes all others by default.
@@ -222,7 +234,6 @@ class Reveal extends Plugin {
     // either update or replace browser history
     const hash = `#${this.id}`;
     if (this.options.deepLink && window.location.hash !== hash) {
-
       if (window.history.pushState) {
         if (this.options.updateHistory) {
           window.history.pushState({}, '', hash);
@@ -235,34 +246,30 @@ class Reveal extends Plugin {
     }
 
     // Remember anchor that opened it to set focus back later, have general anchors as fallback
-    this.$activeAnchor = $(document.activeElement).is(this.$anchor) ? $(document.activeElement) : this.$anchor;
+    this.$activeAnchor = $(document.activeElement).is(this.$anchor)
+      ? $(document.activeElement)
+      : this.$anchor;
 
     this.isActive = true;
 
     // Make elements invisible, but remove display: none so we can get size and positioning
-    this.$element
-        .css({ 'visibility': 'hidden' })
-        .show()
-        .scrollTop(0);
+    this.$element.css({ visibility: 'hidden' }).show().scrollTop(0);
     if (this.options.overlay) {
-      this.$overlay.css({'visibility': 'hidden'}).show();
+      this.$overlay.css({ visibility: 'hidden' }).show();
     }
 
     this._updatePosition();
 
-    this.$element
-      .hide()
-      .css({ 'visibility': '' });
+    this.$element.hide().css({ visibility: '' });
 
-    if(this.$overlay) {
-      this.$overlay.css({'visibility': ''}).hide();
-      if(this.$element.hasClass('fast')) {
+    if (this.$overlay) {
+      this.$overlay.css({ visibility: '' }).hide();
+      if (this.$element.hasClass('fast')) {
         this.$overlay.addClass('fast');
       } else if (this.$element.hasClass('slow')) {
         this.$overlay.addClass('slow');
       }
     }
-
 
     if (!this.options.multipleOpened) {
       /**
@@ -281,11 +288,11 @@ class Reveal extends Plugin {
 
     // Motion UI method of reveal
     if (this.options.animationIn) {
-      function afterAnimation(){
+      function afterAnimation() {
         _this.$element
           .attr({
             'aria-hidden': false,
-            'tabindex': -1
+            tabindex: -1,
           })
           .focus();
         _this._addGlobalClasses();
@@ -295,7 +302,8 @@ class Reveal extends Plugin {
         Motion.animateIn(this.$overlay, 'fade-in');
       }
       Motion.animateIn(this.$element, this.options.animationIn, () => {
-        if(this.$element) { // protect against object having been removed
+        if (this.$element) {
+          // protect against object having been removed
           this.focusableElements = Keyboard.findFocusable(this.$element);
           afterAnimation();
         }
@@ -313,7 +321,7 @@ class Reveal extends Plugin {
     this.$element
       .attr({
         'aria-hidden': false,
-        'tabindex': -1
+        tabindex: -1,
       })
       .focus();
     Keyboard.trapFocus(this.$element);
@@ -342,10 +350,15 @@ class Reveal extends Plugin {
    */
   _addGlobalClasses() {
     const updateScrollbarClass = () => {
-      $('html').toggleClass('zf-has-scroll', !!($(document).height() > $(window).height()));
+      $('html').toggleClass(
+        'zf-has-scroll',
+        !!($(document).height() > $(window).height())
+      );
     };
 
-    this.$element.on('resizeme.zf.trigger.revealScrollbarListener', () => updateScrollbarClass());
+    this.$element.on('resizeme.zf.trigger.revealScrollbarListener', () =>
+      updateScrollbarClass()
+    );
     updateScrollbarClass();
     $('html').addClass('is-reveal-open');
   }
@@ -366,26 +379,36 @@ class Reveal extends Plugin {
    */
   _addGlobalListeners() {
     const _this = this;
-    if(!this.$element) { return; } // If we're in the middle of cleanup, don't freak out
+    if (!this.$element) {
+      return;
+    } // If we're in the middle of cleanup, don't freak out
     this.focusableElements = Keyboard.findFocusable(this.$element);
 
-    if (!this.options.overlay && this.options.closeOnClick && !this.options.fullScreen) {
-      $('body').on('click.zf.dropdown tap.zf.dropdown', e => {
-        if (e.target === _this.$element[0] ||
+    if (
+      !this.options.overlay &&
+      this.options.closeOnClick &&
+      !this.options.fullScreen
+    ) {
+      $('body').on('click.zf.dropdown tap.zf.dropdown', (e) => {
+        if (
+          e.target === _this.$element[0] ||
           $.contains(_this.$element[0], e.target) ||
-            !$.contains(document, e.target)) { return; }
+          !$.contains(document, e.target)
+        ) {
+          return;
+        }
         _this.close();
       });
     }
 
     if (this.options.closeOnEsc) {
-      $(window).on('keydown.zf.reveal', e => {
+      $(window).on('keydown.zf.reveal', (e) => {
         Keyboard.handleKey(e, 'Reveal', {
-          close: function() {
+          close: function () {
             if (_this.options.closeOnEsc) {
               _this.close();
             }
-          }
+          },
         });
       });
     }
@@ -416,8 +439,7 @@ class Reveal extends Plugin {
 
       if (this.options.overlay) {
         this.$overlay.hide(0, finishUp);
-      }
-      else {
+      } else {
         finishUp();
       }
     }
@@ -434,8 +456,7 @@ class Reveal extends Plugin {
     this.$element.off('keydown.zf.reveal');
 
     function finishUp() {
-
-      if ($('.reveal:visible').length  === 0) {
+      if ($('.reveal:visible').length === 0) {
         _this._removeGlobalClasses(); // also remove .is-reveal-open from the html element when there is no opened reveal
       }
 
@@ -443,21 +464,21 @@ class Reveal extends Plugin {
 
       _this.$element.attr('aria-hidden', true);
 
-      if ($('.reveal:visible').length  === 0) {
+      if ($('.reveal:visible').length === 0) {
         _this._enableScroll();
       }
 
       /**
-      * Fires when the modal is done closing.
-      * @event Reveal#closed
-      */
+       * Fires when the modal is done closing.
+       * @event Reveal#closed
+       */
       _this.$element.trigger('closed.zf.reveal');
     }
 
     /**
-    * Resets the modal content
-    * This prevents a running video to keep going in the background
-    */
+     * Resets the modal content
+     * This prevents a running video to keep going in the background
+     */
     if (this.options.resetOnClose) {
       this.$element.html(this.$element.html());
     }
@@ -467,7 +488,8 @@ class Reveal extends Plugin {
     if (_this.options.deepLink && window.location.hash === `#${this.id}`) {
       // Remove the history hash
       if (window.history.replaceState) {
-        const urlWithoutHash = window.location.pathname + window.location.search;
+        const urlWithoutHash =
+          window.location.pathname + window.location.search;
         if (this.options.updateHistory) {
           window.history.pushState({}, '', urlWithoutHash); // remove the hash
         } else {
@@ -491,7 +513,7 @@ class Reveal extends Plugin {
     } else {
       this.open();
     }
-  };
+  }
 
   /**
    * Destroys an instance of a modal.
@@ -504,13 +526,13 @@ class Reveal extends Plugin {
     }
     this.$element.hide().off();
     this.$anchor.off('.zf');
-    $(window).off(`.zf.reveal:${this.id}`)
+    $(window).off(`.zf.reveal:${this.id}`);
     if (this.onLoadListener) $(window).off(this.onLoadListener);
 
-    if ($('.reveal:visible').length  === 0) {
+    if ($('.reveal:visible').length === 0) {
       this._removeGlobalClasses(); // also remove .is-reveal-open from the html element when there is no opened reveal
     }
-  };
+  }
 }
 
 Reveal.defaults = {
@@ -612,20 +634,20 @@ Reveal.defaults = {
    * @default false
    */
   updateHistory: false,
-    /**
+  /**
    * Allows the modal to append to custom div.
    * @option
    * @type {string}
    * @default "body"
    */
-  appendTo: "body",
+  appendTo: 'body',
   /**
    * Allows adding additional class names to the reveal overlay.
    * @option
    * @type {string}
    * @default ''
    */
-  additionalOverlayClasses: ''
+  additionalOverlayClasses: '',
 };
 
-export {Reveal};
+export { Reveal };

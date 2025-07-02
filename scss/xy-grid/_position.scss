@@ -20,7 +20,10 @@
   $gutter-type: margin,
   $breakpoint: null
 ) {
-  $breakpoint: -zf-current-breakpoint($breakpoint, $default: $-zf-zero-breakpoint);
+  $breakpoint: -zf-current-breakpoint(
+    $breakpoint,
+    $default: $-zf-zero-breakpoint
+  );
   $size: xy-cell-size($n);
 
   $offset: $size;
@@ -50,7 +53,10 @@
   $breakpoint: null,
   $vertical: false
 ) {
-  $breakpoint: -zf-current-breakpoint($breakpoint, $default: $-zf-zero-breakpoint);
+  $breakpoint: -zf-current-breakpoint(
+    $breakpoint,
+    $default: $-zf-zero-breakpoint
+  );
   $direction: if($vertical, 'top', $global-left);
 
   @include -zf-each-breakpoint-in($breakpoint, $media-queries: 'for-lists') {

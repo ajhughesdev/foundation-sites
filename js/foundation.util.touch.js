@@ -7,7 +7,12 @@ import $ from 'jquery';
 
 const Touch = {};
 
-let startPosX, startTime, elapsedTime, startEvent, isMoving = false, didMoved = false;
+let startPosX,
+  startTime,
+  elapsedTime,
+  startEvent,
+  isMoving = false,
+  didMoved = false;
 
 function onTouchEnd(e) {
   this.removeEventListener('touchmove', onTouchMove);
@@ -25,9 +30,11 @@ function onTouchEnd(e) {
 }
 
 function onTouchMove(e) {
-  if (true === $.spotSwipe.preventDefault) { e.preventDefault(); }
+  if (true === $.spotSwipe.preventDefault) {
+    e.preventDefault();
+  }
 
-  if(isMoving) {
+  if (isMoving) {
     const x = e.touches[0].pageX;
     // var y = e.touches[0].pageY;
     const dx = startPosX - x;
@@ -35,13 +42,16 @@ function onTouchMove(e) {
     let dir;
     didMoved = true;
     elapsedTime = new Date().getTime() - startTime;
-    if(Math.abs(dx) >= $.spotSwipe.moveThreshold && elapsedTime <= $.spotSwipe.timeThreshold) {
+    if (
+      Math.abs(dx) >= $.spotSwipe.moveThreshold &&
+      elapsedTime <= $.spotSwipe.timeThreshold
+    ) {
       dir = dx > 0 ? 'left' : 'right';
     }
     // else if(Math.abs(dy) >= $.spotSwipe.moveThreshold && elapsedTime <= $.spotSwipe.timeThreshold) {
     //   dir = dy > 0 ? 'down' : 'up';
     // }
-    if(dir) {
+    if (dir) {
       e.preventDefault();
       onTouchEnd.apply(this, arguments);
       $(this)
@@ -49,24 +59,25 @@ function onTouchMove(e) {
         .trigger($.Event(`swipe${dir}`, Object.assign({}, e)));
     }
   }
-
 }
 
 function onTouchStart(e) {
-
   if (e.touches.length === 1) {
     startPosX = e.touches[0].pageX;
     startEvent = e;
     isMoving = true;
     didMoved = false;
     startTime = new Date().getTime();
-    this.addEventListener('touchmove', onTouchMove, { passive : true === $.spotSwipe.preventDefault });
+    this.addEventListener('touchmove', onTouchMove, {
+      passive: true === $.spotSwipe.preventDefault,
+    });
     this.addEventListener('touchend', onTouchEnd, false);
   }
 }
 
 function init() {
-  this.addEventListener && this.addEventListener('touchstart', onTouchStart, { passive : true });
+  this.addEventListener &&
+    this.addEventListener('touchstart', onTouchStart, { passive: true });
 }
 
 // function teardown() {
@@ -88,9 +99,11 @@ class SpotSwipe {
     $.event.special.tap = { setup: init };
 
     $.each(['left', 'up', 'down', 'right'], function () {
-      $.event.special[`swipe${this}`] = { setup: function(){
-        $(this).on('swipe', $.noop);
-      } };
+      $.event.special[`swipe${this}`] = {
+        setup: function () {
+          $(this).on('swipe', $.noop);
+        },
+      };
     });
   }
 }
@@ -110,40 +123,56 @@ Touch.setupSpotSwipe = () => {
  * Method for adding pseudo drag events to elements *
  ***************************************************/
 Touch.setupTouchHandler = () => {
-  $.fn.addTouch = function(){
+  $.fn.addTouch = function () {
     this.each((i, el) => {
-      $(el).bind('touchstart touchmove touchend touchcancel', event => {
+      $(el).bind('touchstart touchmove touchend touchcancel', (event) => {
         //we pass the original event object because the jQuery event
         //object is normalized to w3c specs and does not provide the TouchList
         handleTouch(event);
       });
     });
 
-    const handleTouch = event => {
+    const handleTouch = (event) => {
       const touches = event.changedTouches;
       const first = touches[0];
 
       const eventTypes = {
         touchstart: 'mousedown',
         touchmove: 'mousemove',
-        touchend: 'mouseup'
+        touchend: 'mouseup',
       };
 
       const type = eventTypes[event.type];
       let simulatedEvent;
 
-      if('MouseEvent' in window && typeof window.MouseEvent === 'function') {
+      if ('MouseEvent' in window && typeof window.MouseEvent === 'function') {
         simulatedEvent = new window.MouseEvent(type, {
-          'bubbles': true,
-          'cancelable': true,
-          'screenX': first.screenX,
-          'screenY': first.screenY,
-          'clientX': first.clientX,
-          'clientY': first.clientY
+          bubbles: true,
+          cancelable: true,
+          screenX: first.screenX,
+          screenY: first.screenY,
+          clientX: first.clientX,
+          clientY: first.clientY,
         });
       } else {
         simulatedEvent = document.createEvent('MouseEvent');
-        simulatedEvent.initMouseEvent(type, true, true, window, 1, first.screenX, first.screenY, first.clientX, first.clientY, false, false, false, false, 0/*left*/, null);
+        simulatedEvent.initMouseEvent(
+          type,
+          true,
+          true,
+          window,
+          1,
+          first.screenX,
+          first.screenY,
+          first.clientX,
+          first.clientY,
+          false,
+          false,
+          false,
+          false,
+          0 /*left*/,
+          null
+        );
       }
       first.target.dispatchEvent(simulatedEvent);
     };
@@ -151,10 +180,10 @@ Touch.setupTouchHandler = () => {
 };
 
 Touch.init = () => {
-  if(typeof($.spotSwipe) === 'undefined') {
+  if (typeof $.spotSwipe === 'undefined') {
     Touch.setupSpotSwipe($);
     Touch.setupTouchHandler($);
   }
 };
 
-export {Touch};
+export { Touch };

@@ -38,7 +38,6 @@ $reveal-zindex: 1005 !default;
 /// @type Color
 $reveal-overlay-background: rgba($black, 0.45) !default;
 
-
 // Placeholder selector for medium-and-up modals
 // Prevents duplicate CSS when defining multiple Reveal sizes
 // This should be in the same breakpoint then `@mixin reveal-modal-width`
@@ -49,7 +48,6 @@ $reveal-overlay-background: rgba($black, 0.45) !default;
     margin: 0 auto;
   }
 }
-
 
 /// Adds styles for a modal overlay.
 /// @param {Color} $background [$reveal-overlay-background] - Background color of the overlay.
@@ -130,7 +128,6 @@ $reveal-overlay-background: rgba($black, 0.45) !default;
 }
 
 @mixin foundation-reveal {
-
   /// Disables the scroll when Reveal is shown to prevent the background from shifting
   html.is-reveal-open {
     position: fixed;
@@ -142,7 +139,8 @@ $reveal-overlay-background: rgba($black, 0.45) !default;
       -webkit-overflow-scrolling: touch;
     }
 
-    body { // sass-lint:disable-line no-qualifying-elements
+    body {
+      // sass-lint:disable-line no-qualifying-elements
       overflow-y: hidden;
     }
   }
@@ -170,9 +168,15 @@ $reveal-overlay-background: rgba($black, 0.45) !default;
     }
 
     // Sizing classes
-    &.tiny  { @include reveal-modal-width(30%); }
-    &.small { @include reveal-modal-width(50%); }
-    &.large { @include reveal-modal-width(90%); }
+    &.tiny {
+      @include reveal-modal-width(30%);
+    }
+    &.small {
+      @include reveal-modal-width(50%);
+    }
+    &.large {
+      @include reveal-modal-width(90%);
+    }
 
     // Full-screen mode
     &.full {

@@ -57,5 +57,7 @@ jobs:
         run: yarn
       - name: patch packages
         run: yarn patch-package
+      - name: check formatting
+        run: yarn format:check
       - name: run tests
         run: yarn test

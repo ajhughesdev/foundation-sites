@@ -36,7 +36,7 @@ $prototype-separator-margin-top: $global-margin !default;
 /// @param {Number} $width [$prototype-separator-width] - Height
 /// @param {Color} $background [$prototype-separator-background] - Background
 /// @param {Number} $top [$prototype-separator-margin-top] - Margin Top
-@mixin separator (
+@mixin separator(
   $align: $prototype-separator-align,
   $height: $prototype-separator-height,
   $width: $prototype-separator-width,

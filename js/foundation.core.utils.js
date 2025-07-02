@@ -2,9 +2,9 @@ import $ from 'jquery';
 
 // Core Foundation Utilities, utilized in a number of places.
 
-  /**
-   * Returns a boolean for RTL support
-   */
+/**
+ * Returns a boolean for RTL support
+ */
 function rtl() {
   return $('html').attr('dir') === 'rtl';
 }
@@ -17,7 +17,7 @@ function rtl() {
  * @default {String} '' - if no plugin name is provided, nothing is appended to the uid.
  * @returns {String} - unique id
  */
-function GetYoDigits(length = 6, namespace){
+function GetYoDigits(length = 6, namespace) {
   let str = '';
   const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
   const charsLength = chars.length;
@@ -35,22 +35,22 @@ function GetYoDigits(length = 6, namespace){
  * @param {String} str - string to escape.
  * @returns {String} - escaped string
  */
-function RegExpEscape(str){
+function RegExpEscape(str) {
   return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
 
-function transitionend($elem){
+function transitionend($elem) {
   const transitions = {
-    'transition': 'transitionend',
-    'WebkitTransition': 'webkitTransitionEnd',
-    'MozTransition': 'transitionend',
-    'OTransition': 'otransitionend'
+    transition: 'transitionend',
+    WebkitTransition: 'webkitTransitionEnd',
+    MozTransition: 'transitionend',
+    OTransition: 'otransitionend',
   };
   const elem = document.createElement('div');
   let end;
 
-  for (let transition in transitions){
-    if (typeof elem.style[transition] !== 'undefined'){
+  for (let transition in transitions) {
+    if (typeof elem.style[transition] !== 'undefined') {
       end = transitions[transition];
     }
   }
@@ -84,10 +84,8 @@ function onLoad($elem, handler) {
   if ($elem) {
     if (handler) $elem.one(eventType, handler);
 
-    if (didLoad)
-      setTimeout(cb);
-    else
-      $(window).one('load', cb);
+    if (didLoad) setTimeout(cb);
+    else $(window).one('load', cb);
   }
 
   return eventType;
@@ -111,7 +109,10 @@ function onLoad($elem, handler) {
  * - {Boolean} [false] ignoreReappear - also ignore when the mouse reappeared outside of the element it left.
  * @returns {Function} - filtered handler to use to listen on the `mouseleave` event.
  */
-function ignoreMousedisappear(handler, { ignoreLeaveWindow = false, ignoreReappear = false } = {}) {
+function ignoreMousedisappear(
+  handler,
+  { ignoreLeaveWindow = false, ignoreReappear = false } = {}
+) {
   return function leaveEventHandler(eLeave, ...rest) {
     const callback = handler.bind(this, eLeave, ...rest);
 
@@ -138,10 +139,15 @@ function ignoreMousedisappear(handler, { ignoreLeaveWindow = false, ignoreReappe
           }
         });
       }
-
     }, 0);
   };
 }
 
-
-export { rtl, GetYoDigits, RegExpEscape, transitionend, onLoad, ignoreMousedisappear };
+export {
+  rtl,
+  GetYoDigits,
+  RegExpEscape,
+  transitionend,
+  onLoad,
+  ignoreMousedisappear,
+};

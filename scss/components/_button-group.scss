@@ -45,8 +45,7 @@ $buttongroup-radius-on-each: true !default;
     &::after {
       display: none; // Disable clearfix
     }
-  }
-  @else {
+  } @else {
     font-size: 0;
   }
 
@@ -117,8 +116,7 @@ $buttongroup-radius-on-each: true !default;
   #{$selector} {
     @if $global-flexbox {
       flex: 1 1 0px; // sass-lint:disable-line zero-unit
-    }
-    @else {
+    } @else {
       // One child
       &:first-child {
         &:last-child {
@@ -129,7 +127,8 @@ $buttongroup-radius-on-each: true !default;
       // Two or more childreen
       @for $i from 2 through $buttongroup-expand-max {
         &:first-child:nth-last-child(#{$i}) {
-          &, &:first-child:nth-last-child(#{$i}) ~ #{$selector} {
+          &,
+          &:first-child:nth-last-child(#{$i}) ~ #{$selector} {
             display: inline-block;
             width: calc(#{percentage(divide(1, $i))} - #{$spacing});
             margin-#{$global-right}: $spacing;
@@ -146,9 +145,7 @@ $buttongroup-radius-on-each: true !default;
 
 /// Stacks the buttons in a button group.
 /// @param {String} $selector [$buttongroup-child-selector] - Selector for the buttons inside the button group.
-@mixin button-group-stack(
-  $selector: $buttongroup-child-selector
-) {
+@mixin button-group-stack($selector: $buttongroup-child-selector) {
   @if $global-flexbox {
     flex-wrap: wrap;
   }
@@ -156,8 +153,7 @@ $buttongroup-radius-on-each: true !default;
   #{$selector} {
     @if $global-flexbox {
       flex: 0 0 100%;
-    }
-    @else {
+    } @else {
       width: 100%;
     }
 
@@ -183,14 +179,11 @@ $buttongroup-radius-on-each: true !default;
 
 /// Un-stacks the buttons in a button group.
 /// @param {String} $selector [$buttongroup-child-selector] - Selector for the buttons inside the button group.
-@mixin button-group-unstack(
-  $selector: $buttongroup-child-selector
-) {
+@mixin button-group-unstack($selector: $buttongroup-child-selector) {
   #{$selector} {
     @if $global-flexbox {
       flex: 0 0 auto;
-    }
-    @else {
+    } @else {
       width: auto;
     }
     margin-bottom: 0;
@@ -208,7 +201,6 @@ $buttongroup-radius-on-each: true !default;
         border-bottom-#{$global-left}-radius: 0;
       }
     }
-
   }
 }
 
@@ -234,7 +226,7 @@ $buttongroup-radius-on-each: true !default;
 
       &#{$base-selector} {
         // Do not generate button base styles for the default filling
-        @if($button-fill != $filling) {
+        @if ($button-fill != $filling) {
           #{$buttongroup-child-selector} {
             @include button-fill($filling);
             @include button-fill-style($filling);
@@ -242,20 +234,19 @@ $buttongroup-radius-on-each: true !default;
         }
 
         @each $name, $color in $button-palette {
-          @if($button-fill != $filling) {
+          @if ($button-fill != $filling) {
             $individual-selector: ' #{$buttongroup-child-selector}.#{"" + $name}';
-            &.#{"" + $name} #{$buttongroup-child-selector}, &#{$individual-selector} {
+            &.#{'' + $name} #{$buttongroup-child-selector},
+            &#{$individual-selector} {
               @include button-fill-style($filling, $color, auto, auto);
             }
-          }
-          @else {
-            &.#{"" + $name} #{$buttongroup-child-selector} {
+          } @else {
+            &.#{'' + $name} #{$buttongroup-child-selector} {
               @include button-fill-style($filling, $color, auto, auto);
             }
           }
         }
       }
-
     }
 
     &.no-gaps {

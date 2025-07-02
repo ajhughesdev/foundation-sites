@@ -11,20 +11,19 @@ import { AccordionMenu } from './foundation.accordionMenu';
 let MenuPlugins = {
   dropdown: {
     cssClass: 'dropdown',
-    plugin: DropdownMenu
+    plugin: DropdownMenu,
   },
- drilldown: {
+  drilldown: {
     cssClass: 'drilldown',
-    plugin: Drilldown
+    plugin: Drilldown,
   },
   accordion: {
     cssClass: 'accordion-menu',
-    plugin: AccordionMenu
-  }
+    plugin: AccordionMenu,
+  },
 };
 
-  // import "foundation.util.triggers.js";
-
+// import "foundation.util.triggers.js";
 
 /**
  * ResponsiveMenu module.
@@ -59,7 +58,6 @@ class ResponsiveMenu extends Plugin {
    * @private
    */
   _init() {
-
     MediaQuery._init();
     // The first time an Interchange plugin is initialized, this.rules is converted from a string of "classes" to an object of rules
     if (typeof this.rules === 'string') {
@@ -86,7 +84,10 @@ class ResponsiveMenu extends Plugin {
       this._checkMediaQueries();
     }
     // Add data-mutate since children may need it.
-    this.$element.attr('data-mutate', (this.$element.attr('data-mutate') || GetYoDigits(6, 'responsive-menu')));
+    this.$element.attr(
+      'data-mutate',
+      this.$element.attr('data-mutate') || GetYoDigits(6, 'responsive-menu')
+    );
   }
 
   /**
@@ -114,7 +115,7 @@ class ResponsiveMenu extends Plugin {
     let matchedMq;
     const _this = this;
     // Iterate through each rule and find the last matching rule
-    $.each(this.rules, key => {
+    $.each(this.rules, (key) => {
       if (MediaQuery.atLeast(key)) {
         matchedMq = key;
       }
@@ -151,4 +152,4 @@ class ResponsiveMenu extends Plugin {
 
 ResponsiveMenu.defaults = {};
 
-export {ResponsiveMenu};
+export { ResponsiveMenu };

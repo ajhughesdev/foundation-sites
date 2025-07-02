@@ -54,7 +54,6 @@ $closebutton-color: $dark-gray !default;
 /// @type Color
 $closebutton-color-hover: $black !default;
 
-
 /// Get the size and position for a close button. If the input value is a number, the number is returned. If the input value is a config map and the map has the key `$size`, the value is returned.
 ///
 /// @param {Number|Map} $value - A number or map that represents the size or position value(s) of the close button.

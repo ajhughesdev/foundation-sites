@@ -81,7 +81,11 @@ $breadcrumbs-item-separator-color: $medium-gray !default;
 
     @if $breadcrumbs-item-separator {
       // Need to escape the backslash
-      $separator: if($global-text-direction == 'ltr', $breadcrumbs-item-separator-item, $breadcrumbs-item-separator-item-rtl);
+      $separator: if(
+        $global-text-direction == 'ltr',
+        $breadcrumbs-item-separator-item,
+        $breadcrumbs-item-separator-item-rtl
+      );
 
       &:not(:last-child) {
         &::after {
@@ -92,8 +96,7 @@ $breadcrumbs-item-separator-color: $medium-gray !default;
           color: $breadcrumbs-item-separator-color;
         }
       }
-    }
-    @else {
+    } @else {
       margin-#{$global-right}: $breadcrumbs-item-margin;
     }
   }

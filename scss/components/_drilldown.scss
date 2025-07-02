@@ -47,7 +47,11 @@ $drilldown-arrow-size: 6px !default;
     position: relative;
 
     &::after {
-      @include css-triangle($drilldown-arrow-size, $drilldown-arrow-color, $global-right);
+      @include css-triangle(
+        $drilldown-arrow-size,
+        $drilldown-arrow-color,
+        $global-right
+      );
       position: absolute;
       top: 50%;
       margin-top: -1 * $drilldown-arrow-size;
@@ -56,17 +60,24 @@ $drilldown-arrow-size: 6px !default;
   }
 
   &.align-left .is-drilldown-submenu-parent > a::after {
-    @include css-triangle($dropdownmenu-arrow-size, $dropdownmenu-arrow-color, right);
+    @include css-triangle(
+      $dropdownmenu-arrow-size,
+      $dropdownmenu-arrow-color,
+      right
+    );
     right: 1rem;
     left: auto;
   }
 
   &.align-right .is-drilldown-submenu-parent > a::after {
-    @include css-triangle($dropdownmenu-arrow-size, $dropdownmenu-arrow-color, left);
+    @include css-triangle(
+      $dropdownmenu-arrow-size,
+      $dropdownmenu-arrow-color,
+      left
+    );
     right: auto;
     left: 1rem;
   }
-
 }
 
 @mixin foundation-drilldown-menu {
@@ -130,7 +141,11 @@ $drilldown-arrow-size: 6px !default;
       @include zf-drilldown-left-right-arrows;
 
       .js-drilldown-back > a::before {
-        @include css-triangle($drilldown-arrow-size, $drilldown-arrow-color, $global-left);
+        @include css-triangle(
+          $drilldown-arrow-size,
+          $drilldown-arrow-color,
+          $global-left
+        );
         display: inline-block;
         vertical-align: middle;
         margin-#{$global-right}: 0.75rem; // Creates space between the arrow and the text
