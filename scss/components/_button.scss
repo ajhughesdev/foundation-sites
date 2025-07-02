@@ -93,7 +93,12 @@ $button-transition: background-color 0.25s ease-out, color 0.25s ease-out !defau
 /// @type Boolean
 $button-responsive-expanded: false !default;
 
-// TODO: Document button-base() mixin
+/// Applies the base styling shared by all Foundation buttons.
+///
+/// Include this mixin at the start of a custom button declaration to
+/// receive consistent margin, padding, typography and interaction states.
+/// It relies on global button variables such as `$button-padding` and
+/// `$button-margin` which can be customized before importing Foundation.
 @mixin button-base {
   display: inline-block;
   vertical-align: middle;

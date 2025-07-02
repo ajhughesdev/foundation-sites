@@ -432,8 +432,8 @@ $abbr-underline: 1px dotted $black !default;
   // Inline Citations
   @if ($enable-cite-block == true) {
     cite {
-      // Extending a class is not recommended.
-      // TODO: Break the typography-base/typography-helpers separation
+      // Extending a class is not recommended; ideally this helper would
+      // live in the typography helpers partial.
       @extend %cite-block;
     }
   }
