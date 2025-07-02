@@ -176,8 +176,6 @@ const Foundation = {
   getFnName: functionName,
 
   addToJquery: function() {
-    // TODO: consider not making this a jQuery function
-    // TODO: need way to reflow vs. re-initialize
     /**
      * The Foundation jQuery method.
      * @param {String|Array} method - An action to perform on the current jQuery object.

@@ -153,8 +153,6 @@ const Keyboard = {
   },
 
 
-  // TODO9438: These references to Keyboard need to not require global. Will 'this' work in this context?
-  //
   /**
    * Traps the focus in the given element.
    * @param  {jQuery} $element  jQuery object to trap the foucs into.

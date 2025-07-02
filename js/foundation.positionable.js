@@ -103,7 +103,7 @@ class Positionable extends Plugin {
 
   // When we're trying to center, we don't want to apply offset that's going to
   // take us just off center, so wrap around to return 0 for the appropriate
-  // offset in those alignments.  TODO: Figure out if we want to make this
+  // offset in those alignments.
   // configurable behavior... it feels more intuitive, especially for tooltips, but
   // it's possible someone might actually want to start from center and then nudge
   // slightly off.

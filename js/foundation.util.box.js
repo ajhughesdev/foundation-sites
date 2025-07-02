@@ -61,7 +61,6 @@ function OverlapArea(element, parent, lrOnly, tbOnly, ignoreBottom) {
  * @function
  * @param {jQuery || HTML} element - jQuery object or DOM element for which to get the dimensions. Can be any element other that document or window.
  * @returns {Object} - nested object of integer pixel values
- * TODO - if element is window, return only those values.
  */
 function GetDimensions(elem){
   elem = elem.length ? elem[0] : elem;
@@ -110,7 +109,6 @@ function GetDimensions(elem){
  * @param {Number} vOffset - integer pixel value of desired vertical separation between anchor and element.
  * @param {Number} hOffset - integer pixel value of desired horizontal separation between anchor and element.
  * @param {Boolean} isOverflow - if a collision event is detected, sets to true to default the element to full width - any desired offset.
- * TODO alter/rewrite to work with `em` values as well/instead of pixels
  */
 function GetExplicitOffsets(element, anchor, position, alignment, vOffset, hOffset, isOverflow) {
   const $eleDims = GetDimensions(element), $anchorDims = anchor ? GetDimensions(anchor) : null;
