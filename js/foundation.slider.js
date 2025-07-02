@@ -234,7 +234,6 @@ class Slider extends Plugin {
 
     this._setValues($hndl, location);
 
-    // TODO update to calculate based on values set to respective inputs??
     if (isDbl) {
       const isLeftHndl = this.handles.index($hndl) === 0;
 
@@ -355,7 +354,6 @@ class Slider extends Plugin {
    * @param {Object} e - the `event` object passed from the listener.
    * @param {jQuery} $handle - the current handle to calculate for, if selected.
    * @param {Number} val - floating point number for the new value of the slider.
-   * TODO clean this up, there's a lot of repeated code between this and the _setHandlePos fn.
    */
   _handleEvent(e, $handle, val) {
     let value;

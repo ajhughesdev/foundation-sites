@@ -53,7 +53,6 @@ class Orbit extends Plugin {
   * @private
   */
   _init() {
-    // @TODO: consider discussion on PR #9278 about DOM pollution by changeSlide
     this._reset();
 
     this.$wrapper = this.$element.find(`.${this.options.containerClass}`);

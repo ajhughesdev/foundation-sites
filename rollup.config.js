@@ -16,7 +16,6 @@ module.exports = [
   // UMD
   // Compatible with most environments and tools (AMD, CJS, ESM...),
   // > Generated with Webpack. See the "javascript:foundation" gulp task.
-  // > TODO: factorize the assets generation.
 
   // CommonJS
   // For older bundlers like Browserify or Webpack 1.
