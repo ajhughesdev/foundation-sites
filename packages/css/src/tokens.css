@@ -92,6 +92,18 @@
   --f-tabs-tab-padding: var(--f-space-2) var(--f-space-3);
   --f-tabs-tab-radius: var(--f-radius-2);
   --f-tabs-panel-padding: var(--f-space-4);
+
+  /* Accordion */
+  --f-accordion-border: var(--f-color-border);
+  --f-accordion-radius: var(--f-radius-2);
+  --f-accordion-gap: var(--f-space-2);
+  --f-accordion-summary-padding: var(--f-space-3) var(--f-space-4);
+  --f-accordion-panel-padding: var(--f-space-4);
+  --f-accordion-summary-bg: var(--f-color-surface-elevated);
+  --f-accordion-panel-bg: var(--f-color-surface-elevated);
+  --f-accordion-summary-color: var(--f-color-text);
+  --f-accordion-summary-color-active: var(--f-color-text);
+  --f-accordion-icon-size: 0.75rem;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Foundation 7 — Accordion (Draft)</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="../../css/src/foundation.css" />
+    <style>
+      body {
+        padding: 24px;
+      }
+
+      .demo-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-block: 12px 24px;
+      }
+
+      .demo-toolbar select {
+        padding: 6px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--f-color-border);
+        background: var(--f-color-surface-elevated);
+        color: var(--f-color-text);
+      }
+
+      .demo-stack {
+        display: grid;
+        gap: 24px;
+        max-inline-size: 56rem;
+      }
+
+      .demo-card {
+        padding: 18px;
+        border: 1px solid var(--f-color-border);
+        border-radius: 14px;
+        background: var(--f-color-surface-elevated);
+        box-shadow: var(--f-shadow-1);
+      }
+
+      .demo-card h2 {
+        margin-block-start: 0;
+      }
+
+      .demo-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-block: 12px 0;
+      }
+
+      .demo-actions button {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--f-color-border);
+        background: var(--f-color-surface);
+        color: var(--f-color-text);
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Accordion (Draft)</h1>
+    <p>
+      Build first: <code>yarn f7:core:build</code>, then open this file in a browser.
+    </p>
+
+    <div class="demo-toolbar">
+      <label for="theme">Theme</label>
+      <select id="theme">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+
+    <div class="demo-stack">
+      <section class="demo-card">
+        <h2>Default (single-open)</h2>
+        <p>Uses native <code>&lt;details&gt;</code> + closes other items when one opens.</p>
+
+        <div data-accordion>
+          <details data-accordion-item open>
+            <summary>Getting started</summary>
+            <div data-accordion-panel>
+              <p>This is the first panel.</p>
+            </div>
+          </details>
+          <details data-accordion-item>
+            <summary>Accessibility</summary>
+            <div data-accordion-panel>
+              <p>
+                ArrowUp/ArrowDown/Home/End move focus between summaries.
+              </p>
+            </div>
+          </details>
+          <details data-accordion-item>
+            <summary>Customization</summary>
+            <div data-accordion-panel>
+              <p>Style via tokens + layers.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2>Multi-expand</h2>
+        <p>Allows multiple items to be open at the same time.</p>
+
+        <div data-accordion data-accordion-multi>
+          <details data-accordion-item open>
+            <summary>Item A</summary>
+            <div data-accordion-panel>
+              <p>Panel A</p>
+            </div>
+          </details>
+          <details data-accordion-item open>
+            <summary>Item B</summary>
+            <div data-accordion-panel>
+              <p>Panel B</p>
+            </div>
+          </details>
+          <details data-accordion-item>
+            <summary>Item C</summary>
+            <div data-accordion-panel>
+              <p>Panel C</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2>Required open</h2>
+        <p>Prevents closing the last open item.</p>
+
+        <div data-accordion data-accordion-allow-all-closed="false">
+          <details data-accordion-item open>
+            <summary>Required A</summary>
+            <div data-accordion-panel>
+              <p>Try closing me — I’ll re-open if I’d be the last open item.</p>
+            </div>
+          </details>
+          <details data-accordion-item>
+            <summary>Required B</summary>
+            <div data-accordion-panel>
+              <p>Second panel.</p>
+            </div>
+          </details>
+        </div>
+
+        <div class="demo-actions">
+          <button type="button" id="open-required-b">Open “Required B” programmatically</button>
+        </div>
+      </section>
+    </div>
+
+    <script type="module">
+      import { accordion, createFoundation } from "../dist/index.js";
+
+      const app = createFoundation({ plugins: [accordion()] });
+      app.init(document);
+
+      const storageKey = "foundation7-demo-theme";
+      const themeSelect = document.getElementById("theme");
+
+      const applyTheme = (value) => {
+        if (value === "system") {
+          document.documentElement.removeAttribute("data-theme");
+        } else {
+          document.documentElement.setAttribute("data-theme", value);
+        }
+      };
+
+      if (themeSelect instanceof HTMLSelectElement) {
+        const stored = localStorage.getItem(storageKey) || "system";
+        themeSelect.value = stored;
+        applyTheme(stored);
+
+        themeSelect.addEventListener("change", () => {
+          localStorage.setItem(storageKey, themeSelect.value);
+          applyTheme(themeSelect.value);
+        });
+      }
+
+      const required = document.querySelector('[data-accordion][data-accordion-allow-all-closed="false"]');
+      const openRequiredB = document.getElementById("open-required-b");
+      if (required instanceof HTMLElement && openRequiredB instanceof HTMLButtonElement) {
+        openRequiredB.addEventListener("click", () => {
+          required.dispatchEvent(
+            new CustomEvent("foundation:accordion:open", { bubbles: true, detail: { index: 1 } }),
+          );
+        });
+      }
+    </script>
+  </body>
+</html>
+

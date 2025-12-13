@@ -1,7 +1,8 @@
 // TODO: Extract Reveal into its own package (packages/reveal) and keep @foundation/core runtime-only.
-// TODO: Add Playwright + axe smoke tests for Reveal (open/close, ESC/backdrop, focus return), Dropdown, Tooltip, Tabs (a11y + keyboard regressions).
+// DONE: Add Playwright + axe smoke tests for Reveal, Dropdown, Tooltip, Tabs, Accordion (a11y + keyboard regressions).
+// DONE: Wire `yarn f7:test` into CI as a separate job.
 // TODO: add focus-trapping/inert for modal dialogs 
-// TODO: Accordion component (simple + a11y)
+// DONE: Accordion component (simple + a11y)
 // TODO: OffCanvas component
 // TODO: Dev workflow: add a tiny dev server (e.g. Vite) so examples run with hot reload (no manual `yarn f7:core:build` loop).
 // TODO: Toast/Notification component

@@ -1,0 +1,65 @@
+/*
+  Accordion (draft)
+
+  Built on native <details>/<summary>.
+*/
+
+:where(.f-accordion) {
+  display: grid;
+  gap: var(--f-accordion-gap, var(--f-space-2));
+}
+
+:where(details.f-accordion-item) {
+  border: 1px solid var(--f-accordion-border);
+  border-radius: var(--f-accordion-radius);
+  background: var(--f-accordion-panel-bg);
+  overflow: hidden;
+}
+
+:where(summary.f-accordion-summary) {
+  display: flex;
+  align-items: center;
+  gap: var(--f-space-2);
+
+  padding: var(--f-accordion-summary-padding);
+  background: var(--f-accordion-summary-bg);
+  color: var(--f-accordion-summary-color);
+
+  cursor: pointer;
+  user-select: none;
+}
+
+:where(summary.f-accordion-summary::-webkit-details-marker) {
+  display: none;
+}
+
+:where(summary.f-accordion-summary)::marker {
+  content: "";
+}
+
+:where(summary.f-accordion-summary)::after {
+  content: "";
+  margin-inline-start: auto;
+  inline-size: var(--f-accordion-icon-size);
+  block-size: var(--f-accordion-icon-size);
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transform-origin: 50% 50%;
+}
+
+:where(details.f-accordion-item[open] > summary.f-accordion-summary) {
+  color: var(--f-accordion-summary-color-active);
+}
+
+:where(details.f-accordion-item[open] > summary.f-accordion-summary)::after {
+  transform: rotate(-135deg);
+}
+
+:where(.f-accordion-panel) {
+  padding: var(--f-accordion-panel-padding);
+  background: var(--f-accordion-panel-bg);
+  color: var(--f-color-text);
+  border-top: 1px solid var(--f-accordion-border);
+}
+

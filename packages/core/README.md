@@ -100,3 +100,25 @@ Options (attributes):
 - `data-tabs-activation="auto|manual"`
 - `data-tabs-orientation="horizontal|vertical"`
 - `data-tabs-update-hash` (optional deep-linking)
+
+### Accordion (draft)
+
+Markup:
+
+```html
+<div data-accordion>
+  <details data-accordion-item open>
+    <summary>First</summary>
+    <div data-accordion-panel>Panel</div>
+  </details>
+  <details data-accordion-item>
+    <summary>Second</summary>
+    <div data-accordion-panel>Panel</div>
+  </details>
+</div>
+```
+
+Options (attributes):
+
+- `data-accordion-multi` (allow multiple open)
+- `data-accordion-allow-all-closed="false"` (require one open)

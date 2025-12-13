@@ -4,6 +4,7 @@ export { reveal } from './plugins/reveal.js';
 export { dropdown } from './plugins/dropdown.js';
 export { tooltip } from './plugins/tooltip.js';
 export { tabs } from './plugins/tabs.js';
+export { accordion } from './plugins/accordion.js';
 export type {
   Cleanup,
   FoundationApp,
@@ -28,3 +29,10 @@ export type {
   TabsOrientation,
   TabsSelectDetail,
 } from './plugins/tabs.js';
+export type {
+  AccordionClosedDetail,
+  AccordionCommandDetail,
+  AccordionInstance,
+  AccordionOpenedDetail,
+  AccordionOptions,
+} from './plugins/accordion.js';
