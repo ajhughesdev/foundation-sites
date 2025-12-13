@@ -20,6 +20,13 @@ jobs:
         run: yarn
       - name: patch packages
         run: yarn patch-package
+      - name: cache Playwright browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-ms-playwright-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-ms-playwright-
       - name: install Playwright browsers
         run: yarn playwright install --with-deps chromium
       - name: run Foundation 7 tests

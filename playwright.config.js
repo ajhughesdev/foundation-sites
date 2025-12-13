@@ -6,9 +6,12 @@ const baseURL = process.env.F7_TEST_BASE_URL || `http://${host}:${port}`;
 
 module.exports = defineConfig({
   testDir: './packages/core/playwright',
+  fullyParallel: true,
   timeout: 30_000,
   expect: { timeout: 7_500 },
   retries: process.env.CI ? 1 : 0,
+  forbidOnly: Boolean(process.env.CI),
+  workers: process.env.CI ? 2 : undefined,
   reporter: [['list']],
   use: {
     baseURL,
@@ -31,4 +34,3 @@ module.exports = defineConfig({
     },
   ],
 });
-

@@ -8,7 +8,7 @@
 // DONE: Dev workflow: `yarn f7:dev` runs tsc watch + Vite for hot reload.
 // DONE: Toast/Notification component (draft + example + tests)
 // DONE: CSS expansion: initial layout utilities + button/form defaults + richer base typography.
-// TODO: Add Playwright caching/parallel tweaks for faster CI.
+// DONE: Add Playwright caching/parallel tweaks for faster CI.
 // TODO: Focus-trapping/inert for non-<dialog> modals (extract a small focusTrap util and apply it to the Reveal fallback + tighten Playwright coverage).
 // TODO: Start the CSS expansion: baseline button/input styles + a couple layout primitives (container/stack/grid) so the examples stop hand-rolling UI scaffolding.
 // TODO: After the component APIs feel stable, extract Reveal (and later others) into their own packages (packages/reveal, etc.) to keep @foundation/core runtime-only.
