@@ -15,14 +15,14 @@ test.describe('OffCanvas', () => {
     const panel = page.locator('#demo-offcanvas-left');
     const closeButton = panel.locator('#demo-offcanvas-left-close');
     const lastFocusable = panel.getByRole('button', { name: 'Secondary action' });
-    const toolbar = page.locator('.demo-toolbar');
+    const shell = page.locator('#demo-shell');
 
     const rootOverflowBefore = await page.evaluate(() => document.documentElement.style.overflow);
 
     await opener.click();
     await expect(panel).toHaveAttribute('data-offcanvas-opened', '');
     await expect(closeButton).toBeFocused();
-    await expect(toolbar).toHaveJSProperty('inert', true);
+    await expect(shell).toHaveJSProperty('inert', true);
 
     await expect
       .poll(async () => page.evaluate(() => document.documentElement.style.overflow))
@@ -37,7 +37,7 @@ test.describe('OffCanvas', () => {
     await page.keyboard.press('Escape');
     await expect(panel).not.toHaveAttribute('data-offcanvas-opened', '');
     await expect(opener).toBeFocused();
-    await expect(toolbar).toHaveJSProperty('inert', false);
+    await expect(shell).toHaveJSProperty('inert', false);
 
     await expect
       .poll(async () => page.evaluate(() => document.documentElement.style.overflow))

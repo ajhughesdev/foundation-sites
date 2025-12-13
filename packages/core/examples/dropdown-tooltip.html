@@ -6,141 +6,74 @@
     <title>Foundation 7 — Dropdown + Tooltip (Draft)</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="../../css/src/foundation.css" />
-    <style>
-      body {
-        padding: 24px;
-      }
-
-      .demo-toolbar {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-block: 12px 24px;
-      }
-
-      .demo-toolbar select {
-        padding: 6px 10px;
-        border-radius: 10px;
-        border: 1px solid var(--f-color-border);
-        background: var(--f-color-surface-elevated);
-        color: var(--f-color-text);
-      }
-
-      .demo-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-block: 12px 24px;
-      }
-
-      .demo-actions button,
-      .demo-actions a {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 14px;
-        border-radius: 10px;
-        border: 1px solid var(--f-color-border);
-        background: var(--f-color-surface-elevated);
-        color: var(--f-color-text);
-        box-shadow: var(--f-shadow-1);
-        cursor: pointer;
-        text-decoration: none;
-      }
-
-      .demo-actions button:hover,
-      .demo-actions a:hover {
-        border-color: color-mix(in srgb, var(--f-color-primary), var(--f-color-border) 60%);
-      }
-
-      .demo-panel {
-        display: grid;
-        gap: 10px;
-      }
-
-      .demo-panel p {
-        margin: 0;
-      }
-
-      .demo-panel .demo-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .demo-panel .demo-row a {
-        color: var(--f-color-primary);
-      }
-
-      .demo-divider {
-        border: 0;
-        border-top: 1px solid var(--f-color-border);
-        margin: 24px 0;
-      }
-    </style>
   </head>
   <body>
-    <h1>Dropdown + Tooltip (Draft)</h1>
-    <p>
-      Build first: <code>yarn f7:core:build</code>, then open this file in a browser.
-    </p>
-
-    <div class="demo-toolbar">
-      <label for="theme">Theme</label>
-      <select id="theme">
-        <option value="system">System</option>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-    </div>
-
-    <h2>Dropdown</h2>
-    <div class="demo-actions">
-      <button data-dropdown-toggle="demo-dropdown-1">Toggle dropdown</button>
-      <button data-dropdown-toggle="demo-dropdown-2">Toggle aligned dropdown</button>
-    </div>
-
-    <div id="demo-dropdown-1" data-dropdown hidden>
-      <div class="demo-panel">
-        <p>This dropdown is positioned via JS and styled via layered CSS.</p>
-        <div class="demo-row">
-          <a href="#" data-tooltip="Tooltips work on links too.">Action link</a>
-          <button type="button" data-dropdown-close>Close</button>
-        </div>
-      </div>
-    </div>
-
     <div
-      id="demo-dropdown-2"
-      data-dropdown
-      data-dropdown-placement="bottom-end"
-      data-dropdown-match-trigger-width
-      hidden
+      class="f-container f-stack"
+      style="--f-container-max: 56rem; --f-stack-gap: var(--f-space-5); padding-block: var(--f-space-5)"
     >
-      <div class="demo-panel">
-        <p>
-          Placement: <code>bottom-end</code> + match trigger width.
-        </p>
-        <div class="demo-row">
-          <button type="button" data-dropdown-close>Close</button>
+      <h1>Dropdown + Tooltip (Draft)</h1>
+      <p>
+        Build first: <code>yarn f7:core:build</code>, then open this file in a browser.
+      </p>
+
+      <div class="demo-toolbar f-cluster" style="--f-cluster-gap: var(--f-space-3)">
+        <label for="theme">Theme</label>
+        <select id="theme">
+          <option value="system">System</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div>
+
+      <h2>Dropdown</h2>
+      <div class="demo-actions f-cluster" style="--f-cluster-gap: var(--f-space-3)">
+        <button type="button" data-dropdown-toggle="demo-dropdown-1">Toggle dropdown</button>
+        <button type="button" data-dropdown-toggle="demo-dropdown-2">Toggle aligned dropdown</button>
+      </div>
+
+      <div id="demo-dropdown-1" data-dropdown hidden>
+        <div class="f-stack" style="--f-stack-gap: var(--f-space-2)">
+          <p>This dropdown is positioned via JS and styled via layered CSS.</p>
+          <div class="f-cluster" style="--f-cluster-gap: var(--f-space-2)">
+            <a href="#" data-tooltip="Tooltips work on links too.">Action link</a>
+            <button type="button" data-dropdown-close>Close</button>
+          </div>
         </div>
       </div>
+
+      <div
+        id="demo-dropdown-2"
+        data-dropdown
+        data-dropdown-placement="bottom-end"
+        data-dropdown-match-trigger-width
+        hidden
+      >
+        <div class="f-stack" style="--f-stack-gap: var(--f-space-2)">
+          <p>
+            Placement: <code>bottom-end</code> + match trigger width.
+          </p>
+          <div class="f-cluster" style="--f-cluster-gap: var(--f-space-2)">
+            <button type="button" data-dropdown-close>Close</button>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <h2>Tooltip</h2>
+      <div class="demo-actions f-cluster" style="--f-cluster-gap: var(--f-space-3)">
+        <button type="button" data-tooltip title="Tooltip from title attribute">Hover/focus me</button>
+        <button type="button" data-tooltip="Tooltip text can live in data-tooltip">Data tooltip</button>
+        <button type="button" data-tooltip="#demo-tooltip-rich">Rich tooltip</button>
+        <button type="button" data-tooltip title="Right side tooltip" data-tooltip-placement="right">Right</button>
+        <button type="button" data-tooltip title="Bottom tooltip" data-tooltip-placement="bottom">Bottom</button>
+      </div>
+
+      <template id="demo-tooltip-rich">
+        <strong>Rich</strong> tooltip content from a <code>&lt;template&gt;</code>.
+      </template>
     </div>
-
-    <hr class="demo-divider" />
-
-    <h2>Tooltip</h2>
-    <div class="demo-actions">
-      <button data-tooltip title="Tooltip from title attribute">Hover/focus me</button>
-      <button data-tooltip="Tooltip text can live in data-tooltip">Data tooltip</button>
-      <button data-tooltip="#demo-tooltip-rich">Rich tooltip</button>
-      <button data-tooltip title="Right side tooltip" data-tooltip-placement="right">Right</button>
-      <button data-tooltip title="Bottom tooltip" data-tooltip-placement="bottom">Bottom</button>
-    </div>
-
-    <template id="demo-tooltip-rich">
-      <strong>Rich</strong> tooltip content from a <code>&lt;template&gt;</code>.
-    </template>
 
     <script type="module">
       import { createFoundation, dropdown, tooltip } from "../dist/index.js";

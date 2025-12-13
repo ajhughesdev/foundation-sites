@@ -6,144 +6,92 @@
     <title>Foundation 7 — Toast (Draft)</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="../../css/src/foundation.css" />
-    <style>
-      body {
-        padding: 24px;
-      }
-
-      .demo-toolbar {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 12px;
-        margin-block: 12px 24px;
-      }
-
-      .demo-toolbar select,
-      .demo-toolbar input {
-        padding: 6px 10px;
-        border-radius: 10px;
-        border: 1px solid var(--f-color-border);
-        background: var(--f-color-surface-elevated);
-        color: var(--f-color-text);
-      }
-
-      .demo-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-block: 12px 24px;
-      }
-
-      .demo-actions button {
-        padding: 10px 14px;
-        border-radius: 10px;
-        border: 1px solid var(--f-color-border);
-        background: var(--f-color-surface-elevated);
-        color: var(--f-color-text);
-        box-shadow: var(--f-shadow-1);
-        cursor: pointer;
-      }
-
-      .demo-actions button:hover {
-        border-color: color-mix(in srgb, var(--f-color-primary), var(--f-color-border) 60%);
-      }
-
-      .demo-panel {
-        max-inline-size: 52rem;
-        display: grid;
-        gap: 12px;
-      }
-
-      .demo-panel p {
-        margin: 0;
-      }
-
-      .demo-panel code {
-        white-space: nowrap;
-      }
-    </style>
   </head>
   <body>
-    <h1>Toast / Notification (Draft)</h1>
-    <p>
-      Build first: <code>yarn f7:core:build</code>, then open this file in a browser.
-    </p>
-
-    <div class="demo-toolbar">
-      <label for="theme">Theme</label>
-      <select id="theme">
-        <option value="system">System</option>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-
-      <label for="position">Toast position</label>
-      <select id="position">
-        <option value="bottom-end">Bottom end</option>
-        <option value="bottom-start">Bottom start</option>
-        <option value="top-end">Top end</option>
-        <option value="top-start">Top start</option>
-      </select>
-    </div>
-
-    <div class="demo-panel">
+    <div
+      class="f-container f-stack"
+      style="--f-container-max: 52rem; --f-stack-gap: var(--f-space-5); padding-block: var(--f-space-5)"
+    >
+      <h1>Toast / Notification (Draft)</h1>
       <p>
-        Toasts are announced via <code>role="status"</code> (polite) by default. The <code>danger</code> variant uses
-        <code>role="alert"</code>.
+        Build first: <code>yarn f7:core:build</code>, then open this file in a browser.
       </p>
-      <p>
-        They don’t steal focus, but include a dismiss button.
-      </p>
-    </div>
 
-    <div class="demo-actions">
-      <button
-        type="button"
-        data-toast-show="demo-toasts"
-        data-toast-variant="info"
-        data-toast-message="Info: This is a notification."
-      >
-        Show info toast
-      </button>
-      <button
-        type="button"
-        data-toast-show="demo-toasts"
-        data-toast-variant="success"
-        data-toast-message="Success: Saved!"
-      >
-        Show success toast
-      </button>
-      <button
-        type="button"
-        data-toast-show="demo-toasts"
-        data-toast-variant="warning"
-        data-toast-message="Warning: Check your input."
-      >
-        Show warning toast
-      </button>
-      <button
-        type="button"
-        data-toast-show="demo-toasts"
-        data-toast-variant="danger"
-        data-toast-message="Danger: Something went wrong."
-      >
-        Show danger toast
-      </button>
-      <button
-        type="button"
-        id="show-auto-dismiss"
-        data-toast-show="demo-toasts"
-        data-toast-variant="info"
-        data-toast-timeout="350"
-        data-toast-message="This toast auto-dismisses quickly (demo timeout)."
-      >
-        Show quick auto-dismiss
-      </button>
-      <button type="button" id="clear-toasts">Clear toasts</button>
-    </div>
+      <div class="demo-toolbar f-cluster" style="--f-cluster-gap: var(--f-space-3)">
+        <label for="theme">Theme</label>
+        <select id="theme">
+          <option value="system">System</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
 
-    <div id="demo-toasts" data-toast data-toast-position="bottom-end"></div>
+        <label for="position">Toast position</label>
+        <select id="position">
+          <option value="bottom-end">Bottom end</option>
+          <option value="bottom-start">Bottom start</option>
+          <option value="top-end">Top end</option>
+          <option value="top-start">Top start</option>
+        </select>
+      </div>
+
+      <div class="f-stack" style="--f-stack-gap: var(--f-space-2)">
+        <p>
+          Toasts are announced via <code>role="status"</code> (polite) by default. The <code>danger</code> variant uses
+          <code>role="alert"</code>.
+        </p>
+        <p>
+          They don’t steal focus, but include a dismiss button.
+        </p>
+      </div>
+
+      <div class="demo-actions f-cluster" style="--f-cluster-gap: var(--f-space-3)">
+        <button
+          type="button"
+          data-toast-show="demo-toasts"
+          data-toast-variant="info"
+          data-toast-message="Info: This is a notification."
+        >
+          Show info toast
+        </button>
+        <button
+          type="button"
+          data-toast-show="demo-toasts"
+          data-toast-variant="success"
+          data-toast-message="Success: Saved!"
+        >
+          Show success toast
+        </button>
+        <button
+          type="button"
+          data-toast-show="demo-toasts"
+          data-toast-variant="warning"
+          data-toast-message="Warning: Check your input."
+        >
+          Show warning toast
+        </button>
+        <button
+          type="button"
+          data-toast-show="demo-toasts"
+          data-toast-variant="danger"
+          data-toast-message="Danger: Something went wrong."
+        >
+          Show danger toast
+        </button>
+        <button
+          type="button"
+          id="show-auto-dismiss"
+          data-toast-show="demo-toasts"
+          data-toast-variant="info"
+          data-toast-timeout="350"
+          data-toast-message="This toast auto-dismisses quickly (demo timeout)."
+        >
+          Show quick auto-dismiss
+        </button>
+        <button type="button" id="clear-toasts">Clear toasts</button>
+      </div>
+
+      <div id="demo-toasts" data-toast data-toast-position="bottom-end"></div>
+    </div>
 
     <script type="module">
       import { createFoundation, toast } from "../dist/index.js";
@@ -192,4 +140,3 @@
     </script>
   </body>
 </html>
-
