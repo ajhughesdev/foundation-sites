@@ -1,5 +1,14 @@
 import { definePlugin } from '../types.js';
 import type { FoundationPlugin, FoundationPluginInstance, PluginContext } from '../types.js';
+import {
+  ensureId,
+  focusFirstFocusable,
+  focusFirstMatch,
+  getEventTargetElement,
+  getStringAttribute,
+  isHtmlElement,
+  parseBooleanAttribute,
+} from '../utils/dom.js';
 
 export type RevealOptions = {
   modal?: boolean;
@@ -27,6 +36,10 @@ export type RevealInstance = FoundationPluginInstance & {
   close(): void;
   toggle(opener?: HTMLElement | null): void;
 };
+
+const OPENED_ATTR = 'data-reveal-opened';
+const REVEAL_CLASS = 'f-reveal';
+const BACKDROP_CLASS = 'f-reveal-backdrop';
 
 let scrollLockCount = 0;
 let previousRootOverflow: string | null = null;
@@ -60,53 +73,6 @@ function unlockScroll(): void {
   previousRootPaddingRight = null;
 }
 
-function ensureId(element: Element, prefix: string): string {
-  if (element.id) return element.id;
-
-  const fallback = () =>
-    `${prefix}-${Math.random().toString(36).slice(2, 10)}${Math.random().toString(36).slice(2, 10)}`;
-  const id = 'randomUUID' in crypto ? `${prefix}-${crypto.randomUUID()}` : fallback();
-  element.id = id;
-  return id;
-}
-
-function parseBooleanAttribute(element: Element, attr: string, defaultValue: boolean): boolean {
-  if (!element.hasAttribute(attr)) return defaultValue;
-  const raw = element.getAttribute(attr);
-  if (raw === null || raw === '') return true;
-  const normalized = raw.trim().toLowerCase();
-  if (normalized === 'false' || normalized === '0' || normalized === 'no' || normalized === 'off') return false;
-  return true;
-}
-
-function getStringAttribute(element: Element, attr: string): string | undefined {
-  const value = element.getAttribute(attr);
-  return value && value.trim().length ? value.trim() : undefined;
-}
-
-function isHtmlElement(value: unknown): value is HTMLElement {
-  return value instanceof HTMLElement;
-}
-
-function focusFirstMatch(root: Element, selector: string): boolean {
-  const el = root.querySelector(selector);
-  if (!isHtmlElement(el)) return false;
-  el.focus();
-  return true;
-}
-
-function focusFirstFocusable(root: Element): void {
-  const selector =
-    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-  if (focusFirstMatch(root, selector)) return;
-  if (root instanceof HTMLElement) root.focus();
-}
-
-function getEventTargetElement(event: Event): Element | null {
-  const target = event.target;
-  return target instanceof Element ? target : null;
-}
-
 export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
   return definePlugin({
     name: 'reveal',
@@ -130,7 +96,7 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
       const dialog = element instanceof HTMLDialogElement ? element : null;
 
       let opener: HTMLElement | null = null;
-      let isOpen = dialog ? dialog.open : element.hasAttribute('data-reveal-open');
+      let isOpen = dialog ? dialog.open : element.hasAttribute(OPENED_ATTR);
       let backdrop: HTMLElement | null = null;
 
       if (isOpen && options.lockScroll && options.modal) {
@@ -138,12 +104,51 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
       }
 
       if (dialog) {
-        dialog.setAttribute('aria-modal', 'true');
+        element.classList.add(REVEAL_CLASS);
+        if (options.modal) dialog.setAttribute('aria-modal', 'true');
+        else dialog.removeAttribute('aria-modal');
       } else {
+        element.classList.add(REVEAL_CLASS);
         if (!element.hasAttribute('role')) element.setAttribute('role', 'dialog');
-        element.setAttribute('aria-modal', 'true');
+        if (options.modal) element.setAttribute('aria-modal', 'true');
+        else element.removeAttribute('aria-modal');
         element.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+
+        if (element instanceof HTMLElement && !element.hasAttribute('tabindex')) {
+          element.tabIndex = -1;
+        }
+
+        if (isOpen) {
+          element.setAttribute(OPENED_ATTR, '');
+          element.removeAttribute('hidden');
+        } else {
+          element.removeAttribute(OPENED_ATTR);
+          element.setAttribute('hidden', '');
+        }
       }
+
+      if (dialog) {
+        if (isOpen) element.setAttribute(OPENED_ATTR, '');
+        else element.removeAttribute(OPENED_ATTR);
+      }
+
+      const createBackdrop = () => {
+        if (!options.modal) return;
+        if (dialog) return;
+        if (backdrop) return;
+
+        backdrop = document.createElement('div');
+        backdrop.className = BACKDROP_CLASS;
+        backdrop.setAttribute('data-reveal-backdrop-for', id);
+        document.body.append(backdrop);
+
+        if (options.closeOnBackdrop) {
+          backdrop.addEventListener('click', (event) => {
+            if (event.target !== backdrop) return;
+            close();
+          });
+        }
+      };
 
       const emitOpened = () => {
         context.emit(element, 'foundation:reveal:opened', { id, opener, element } satisfies RevealOpenedDetail);
@@ -162,10 +167,11 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
           backdrop = null;
         }
 
+        element.removeAttribute(OPENED_ATTR);
+
         if (!dialog) {
-          element.removeAttribute('data-reveal-open');
           element.setAttribute('aria-hidden', 'true');
-          if (element instanceof HTMLElement) element.style.display = 'none';
+          element.setAttribute('hidden', '');
         }
 
         if (options.lockScroll && options.modal) {
@@ -206,25 +212,12 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
             }
           }
         } else {
-          element.setAttribute('data-reveal-open', '');
+          element.setAttribute(OPENED_ATTR, '');
           element.setAttribute('aria-hidden', 'false');
-          if (element instanceof HTMLElement) element.style.display = '';
+          element.removeAttribute('hidden');
 
-          backdrop = document.createElement('div');
-          backdrop.setAttribute('data-reveal-backdrop-for', id);
-          backdrop.style.position = 'fixed';
-          backdrop.style.inset = '0';
-          backdrop.style.background = 'rgba(0,0,0,0.5)';
-          backdrop.style.zIndex = '1000';
-          document.body.append(backdrop);
-          backdrop.addEventListener('click', () => close());
-
-          if (element instanceof HTMLElement) {
-            element.style.position = element.style.position || 'fixed';
-            element.style.zIndex = '1001';
-            element.style.left = element.style.left || '50%';
-            element.style.top = element.style.top || '50%';
-            element.style.transform = element.style.transform || 'translate(-50%, -50%)';
+          if (options.modal) {
+            createBackdrop();
           }
 
           didOpen = true;
@@ -234,6 +227,8 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
           opener = null;
           return;
         }
+
+        element.setAttribute(OPENED_ATTR, '');
 
         isOpen = true;
         if (options.lockScroll && options.modal) {
@@ -351,13 +346,10 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
             e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom;
           if (clickedOutside) close();
         });
-      } else {
-        context.on(element, 'click', (event) => {
-          if (!options.closeOnBackdrop) return;
-          if (!isOpen) return;
-          if (event.target !== element) return;
-          close();
-        });
+      }
+
+      if (!dialog && isOpen && options.modal) {
+        createBackdrop();
       }
 
       return {

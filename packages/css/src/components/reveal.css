@@ -1,8 +1,7 @@
 /*
   Reveal (draft)
 
-  Works best with <dialog>. The JS plugin can also mount on non-dialog elements,
-  but those rely on inline styles for now.
+  Supports <dialog> and non-dialog fallbacks.
 */
 
 dialog[data-reveal] {
@@ -14,6 +13,8 @@ dialog[data-reveal] {
   box-shadow: var(--f-reveal-shadow);
 
   inline-size: min(var(--f-reveal-width), calc(100vw - (2 * var(--f-space-4))));
+  max-block-size: calc(100vh - (2 * var(--f-space-4)));
+  overflow: auto;
 }
 
 dialog[data-reveal]::backdrop {
@@ -24,3 +25,32 @@ dialog[data-reveal] > :where(h1, h2, h3) {
   margin-block-start: 0;
 }
 
+.f-reveal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--f-z-overlay);
+  background: var(--f-color-backdrop);
+}
+
+:where([data-reveal].f-reveal):not(dialog) {
+  position: fixed;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  transform: translate(-50%, -50%);
+  z-index: var(--f-z-dialog);
+
+  border: 0;
+  padding: var(--f-reveal-padding);
+  border-radius: var(--f-reveal-radius);
+  background: var(--f-color-surface-elevated);
+  color: var(--f-color-text);
+  box-shadow: var(--f-reveal-shadow);
+
+  inline-size: min(var(--f-reveal-width), calc(100vw - (2 * var(--f-space-4))));
+  max-block-size: calc(100vh - (2 * var(--f-space-4)));
+  overflow: auto;
+}
+
+:where([data-reveal].f-reveal):not(dialog):not([data-reveal-opened]) {
+  display: none;
+}

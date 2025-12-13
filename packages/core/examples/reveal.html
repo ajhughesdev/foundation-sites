@@ -1,35 +1,108 @@
 <!doctype html>
 <html lang="en">
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Foundation 7 — Reveal (Draft)</title>
+  <link rel="icon" href="data:," />
     <link rel="stylesheet" href="../../css/src/foundation.css" />
     <style>
       body {
         padding: 24px;
       }
+
+    .demo-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-block: 12px 24px;
+    }
+
+    .demo-toolbar select {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--f-color-border);
+      background: var(--f-color-surface-elevated);
+      color: var(--f-color-text);
+    }
+
+    .demo-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-block: 12px 24px;
+    }
+
+    .demo-actions button {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--f-color-border);
+      background: var(--f-color-surface-elevated);
+      color: var(--f-color-text);
+      box-shadow: var(--f-shadow-1);
+      cursor: pointer;
+    }
+
+    .demo-actions button:hover {
+      border-color: color-mix(in srgb, var(--f-color-primary), var(--f-color-border) 60%);
+    }
     </style>
   </head>
+
   <body>
     <h1>Reveal (Draft)</h1>
-    <p>
-      Build first: <code>yarn f7:core:build</code>, then open this file in a browser.
-    </p>
-
-    <button data-reveal-open="demo-dialog">Open dialog</button>
-
+  <p> Build first: <code>yarn f7:core:build</code>, then open this file in a browser. </p>
+  <div class="demo-toolbar">
+    <label for="theme">Theme</label>
+    <select id="theme">
+      <option value="system">System</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+  </div>
+  <div class="demo-actions">
+    <button data-reveal-open="demo-dialog">Open &lt;dialog&gt; reveal</button>
+    <button data-reveal-open="demo-fallback">Open fallback reveal</button>
+  </div>
     <dialog id="demo-dialog" data-reveal>
       <h2>Hi</h2>
       <p>This is a draft Foundation 7 Reveal using <code>&lt;dialog&gt;</code>.</p>
       <p><button data-reveal-close>Close</button></p>
     </dialog>
-
+  <div id="demo-fallback" data-reveal hidden>
+    <h2>Fallback reveal</h2>
+    <p>This is a non-<code>&lt;dialog&gt;</code> fallback (positioned via CSS, backed by a JS-created backdrop).</p>
+    <p><button data-reveal-close>Close</button></p>
+  </div>
     <script type="module">
       import { createFoundation, reveal } from "../dist/index.js";
 
       const app = createFoundation({ plugins: [reveal()] });
       app.init(document);
+
+    const storageKey = "foundation7-demo-theme";
+    const themeSelect = document.getElementById("theme");
+
+    const applyTheme = (value) => {
+      if (value === "system") {
+        document.documentElement.removeAttribute("data-theme");
+      } else {
+        document.documentElement.setAttribute("data-theme", value);
+      }
+    };
+
+    if (themeSelect instanceof HTMLSelectElement) {
+      const stored = localStorage.getItem(storageKey) || "system";
+      themeSelect.value = stored;
+      applyTheme(stored);
+
+      themeSelect.addEventListener("change", () => {
+        localStorage.setItem(storageKey, themeSelect.value);
+        applyTheme(themeSelect.value);
+      });
+    }
     </script>
   </body>
+
 </html>

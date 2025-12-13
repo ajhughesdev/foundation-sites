@@ -30,5 +30,19 @@ Or pick-and-choose:
 ```css
 @import "@foundation/css/tokens.css";
 @import "@foundation/css/components/reveal.css";
+
+
+```
+## Theming (draft)
+
+Tokens follow the system theme by default (`prefers-color-scheme`). To override:
+
+```html
+<html data-theme="dark">
 ```
 
+You can also scope a theme to a subtree:
+
+```html
+<section data-theme="dark">...</section>
+```
