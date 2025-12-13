@@ -1,0 +1,20 @@
+{
+  "name": "@foundation/css",
+  "version": "0.0.0",
+  "description": "Foundation 7 CSS (tokens + cascade layers).",
+  "private": true,
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    "./foundation.css": "./src/foundation.css",
+    "./tokens.css": "./src/tokens.css",
+    "./base.css": "./src/base/base.css",
+    "./components/reveal.css": "./src/components/reveal.css",
+    "./utilities.css": "./src/utilities/utilities.css"
+  },
+  "files": [
+    "src"
+  ]
+}
+
