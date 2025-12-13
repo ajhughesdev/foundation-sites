@@ -37,8 +37,6 @@ export type RevealInstance = FoundationPluginInstance & {
   toggle(opener?: HTMLElement | null): void;
 };
 
-// TODO: add focus-trapping/inert for modal dialogs 
-
 const OPENED_ATTR = 'data-reveal-opened';
 const REVEAL_CLASS = 'f-reveal';
 const BACKDROP_CLASS = 'f-reveal-backdrop';
