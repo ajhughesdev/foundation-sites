@@ -169,6 +169,7 @@ Options (attributes):
 - `data-offcanvas-return-focus="true|false"`
 - `data-offcanvas-initial-focus="selector"`
 - `data-offcanvas-trap-focus="true|false"`
+- `data-offcanvas-inert-background="true|false"` (non-`<dialog>` modal only)
 
 ### Toast / Notification (draft)
 

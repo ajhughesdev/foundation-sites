@@ -10,6 +10,7 @@ import {
   parseBooleanAttribute,
 } from '../utils/dom.js';
 import { createFocusTrap } from '../utils/focusTrap.js';
+import { createInertOutside } from '../utils/inert.js';
 import { lockScroll, unlockScroll } from '../utils/scrollLock.js';
 
 export type OffCanvasOptions = {
@@ -20,6 +21,7 @@ export type OffCanvasOptions = {
   returnFocus?: boolean;
   initialFocus?: string;
   trapFocus?: boolean;
+  inertBackground?: boolean;
 };
 
 export type OffCanvasOpenedDetail = {
@@ -68,6 +70,11 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
         returnFocus: parseBooleanAttribute(element, 'data-offcanvas-return-focus', defaultOptions.returnFocus ?? true),
         initialFocus: getStringAttribute(element, 'data-offcanvas-initial-focus') ?? (defaultOptions.initialFocus ?? ''),
         trapFocus: parseBooleanAttribute(element, 'data-offcanvas-trap-focus', defaultOptions.trapFocus ?? true),
+        inertBackground: parseBooleanAttribute(
+          element,
+          'data-offcanvas-inert-background',
+          defaultOptions.inertBackground ?? true
+        ),
       };
 
       const dialog = element instanceof HTMLDialogElement ? element : null;
@@ -157,6 +164,8 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
         if (!isOpen) return;
         isOpen = false;
 
+        inertOutside.deactivate();
+
         if (backdrop) {
           backdrop.remove();
           backdrop = null;
@@ -197,6 +206,11 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
         isActive: () => isOpen && !dialog && options.modal && options.trapFocus,
         allowOutside: (target) => Boolean(backdrop && backdrop.contains(target)),
         focusFallback: focusInitial,
+      });
+
+      const inertOutside = createInertOutside({
+        root: element,
+        allowElement: (candidate) => Boolean(backdrop && candidate === backdrop),
       });
 
       const open = (nextOpener: HTMLElement | null = null) => {
@@ -240,6 +254,10 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
           lockScroll();
         }
 
+        if (!dialog && options.modal && options.inertBackground) {
+          inertOutside.activate();
+        }
+
         if (opener && openerHasExpandedState) setExpanded(opener, true, id);
 
         queueMicrotask(() => {
@@ -275,6 +293,9 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
       if (isOpen) {
         applyOpenedState();
         if (options.modal) createBackdrop();
+        if (!dialog && options.modal && options.inertBackground) {
+          inertOutside.activate();
+        }
       } else {
         applyClosedState();
       }

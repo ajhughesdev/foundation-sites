@@ -2,7 +2,7 @@
 // DONE: Add Playwright + axe smoke tests for Reveal, Dropdown, Tooltip, Tabs, Accordion (a11y + keyboard regressions).
 // DONE: Wire `yarn f7:test` into CI as a separate job.
 // DONE: Add focus trap for non-<dialog> modals (Reveal fallback).
-// DONE: Inert page content behind non-<dialog> modals (Reveal fallback).
+// DONE: Inert page content behind non-<dialog> modals (Reveal fallback + OffCanvas).
 // DONE: Accordion component (simple + a11y)
 // DONE: OffCanvas component (draft + example + tests)
 // DONE: Dev workflow: `yarn f7:dev` runs tsc watch + Vite for hot reload.
