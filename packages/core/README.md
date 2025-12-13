@@ -49,6 +49,17 @@ Programmatic control:
 document.getElementById('my-dialog')?.dispatchEvent(new CustomEvent('foundation:reveal:open', { bubbles: true }));
 ```
 
+Options (attributes):
+
+- `data-reveal-modal="true|false"`
+- `data-reveal-close-on-backdrop="true|false"`
+- `data-reveal-close-on-esc="true|false"`
+- `data-reveal-lock-scroll="true|false"`
+- `data-reveal-return-focus="true|false"`
+- `data-reveal-initial-focus="selector"`
+- `data-reveal-trap-focus="true|false"` (non-`<dialog>` modal only)
+- `data-reveal-inert-background="true|false"` (non-`<dialog>` modal only)
+
 ### Dropdown (draft)
 
 Markup:

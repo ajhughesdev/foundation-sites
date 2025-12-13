@@ -10,6 +10,7 @@ import {
   parseBooleanAttribute,
 } from '../utils/dom.js';
 import { createFocusTrap } from '../utils/focusTrap.js';
+import { createInertOutside } from '../utils/inert.js';
 import { lockScroll, unlockScroll } from '../utils/scrollLock.js';
 
 export type RevealOptions = {
@@ -20,6 +21,7 @@ export type RevealOptions = {
   returnFocus?: boolean;
   initialFocus?: string;
   trapFocus?: boolean;
+  inertBackground?: boolean;
 };
 
 export type RevealOpenedDetail = {
@@ -63,6 +65,11 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
         returnFocus: parseBooleanAttribute(element, 'data-reveal-return-focus', defaultOptions.returnFocus ?? true),
         initialFocus: getStringAttribute(element, 'data-reveal-initial-focus') ?? (defaultOptions.initialFocus ?? ''),
         trapFocus: parseBooleanAttribute(element, 'data-reveal-trap-focus', defaultOptions.trapFocus ?? true),
+        inertBackground: parseBooleanAttribute(
+          element,
+          'data-reveal-inert-background',
+          defaultOptions.inertBackground ?? true
+        ),
       };
 
       const dialog = element instanceof HTMLDialogElement ? element : null;
@@ -81,6 +88,11 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
         isActive: () => isOpen && !dialog && options.modal && options.trapFocus,
         allowOutside: (target) => Boolean(backdrop && backdrop.contains(target)),
         focusFallback: focusInitial,
+      });
+
+      const inertOutside = createInertOutside({
+        root: element,
+        allowElement: (candidate) => Boolean(backdrop && candidate === backdrop),
       });
 
       if (isOpen && options.lockScroll && options.modal) {
@@ -145,6 +157,8 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
       const finalizeClose = () => {
         if (!isOpen) return;
         isOpen = false;
+
+        inertOutside.deactivate();
 
         if (backdrop) {
           backdrop.remove();
@@ -217,6 +231,10 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
         isOpen = true;
         if (options.lockScroll && options.modal) {
           lockScroll();
+        }
+
+        if (!dialog && options.modal && options.inertBackground) {
+          inertOutside.activate();
         }
 
         queueMicrotask(() => {
@@ -338,6 +356,9 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
 
       if (!dialog && isOpen && options.modal) {
         createBackdrop();
+        if (options.inertBackground) {
+          inertOutside.activate();
+        }
       }
 
       return {

@@ -32,11 +32,13 @@ test.describe('Reveal', () => {
     const opener = page.locator('[data-reveal-open="demo-fallback"]');
     const reveal = page.locator('#demo-fallback');
     const closeButton = reveal.locator('[data-reveal-close]').first();
+    const toolbar = page.locator('.demo-toolbar');
 
     await opener.click();
     await expect(reveal).toHaveAttribute('data-reveal-opened', '');
     await expect(reveal).toBeVisible();
     await expect(closeButton).toBeFocused();
+    await expect(toolbar).toHaveJSProperty('inert', true);
 
     await page.keyboard.press('Tab');
     await expect(closeButton).toBeFocused();
@@ -47,6 +49,7 @@ test.describe('Reveal', () => {
     await page.keyboard.press('Escape');
     await expect(reveal).not.toHaveAttribute('data-reveal-opened', '');
     await expect(reveal).not.toBeVisible();
+    await expect(toolbar).toHaveJSProperty('inert', false);
     await expect(opener).toBeFocused();
   });
 });

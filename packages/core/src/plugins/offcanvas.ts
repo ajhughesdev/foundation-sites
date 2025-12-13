@@ -5,11 +5,11 @@ import {
   focusFirstFocusable,
   focusFirstMatch,
   getEventTargetElement,
-  getFocusableElements,
   getStringAttribute,
   isHtmlElement,
   parseBooleanAttribute,
 } from '../utils/dom.js';
+import { createFocusTrap } from '../utils/focusTrap.js';
 import { lockScroll, unlockScroll } from '../utils/scrollLock.js';
 
 export type OffCanvasOptions = {
@@ -192,6 +192,13 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
         focusFirstFocusable(element);
       };
 
+      const focusTrap = createFocusTrap({
+        root: element,
+        isActive: () => isOpen && !dialog && options.modal && options.trapFocus,
+        allowOutside: (target) => Boolean(backdrop && backdrop.contains(target)),
+        focusFallback: focusInitial,
+      });
+
       const open = (nextOpener: HTMLElement | null = null) => {
         if (isOpen) return;
 
@@ -261,41 +268,6 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
         else open(nextOpener);
       };
 
-      const trapTabKey = (event: KeyboardEvent) => {
-        if (!isOpen) return;
-        if (dialog) return;
-        if (!options.modal) return;
-        if (!options.trapFocus) return;
-
-        if (event.key !== 'Tab') return;
-
-        const focusables = getFocusableElements(element);
-        if (focusables.length === 0) {
-          event.preventDefault();
-          if (element instanceof HTMLElement) element.focus();
-          return;
-        }
-
-        const active = document.activeElement;
-        const activeEl = active instanceof HTMLElement ? active : null;
-
-        const currentIndex = activeEl ? focusables.indexOf(activeEl) : -1;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-
-        if (event.shiftKey) {
-          if (!activeEl || currentIndex === -1 || activeEl === first) {
-            event.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (!activeEl || currentIndex === -1 || activeEl === last) {
-            event.preventDefault();
-            first.focus();
-          }
-        }
-      };
-
       if (isOpen && options.lockScroll && options.modal) {
         lockScroll();
       }
@@ -327,7 +299,7 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
         if (!isOpen) return;
 
         const e = event as KeyboardEvent;
-        trapTabKey(e);
+        focusTrap.handleKeydown(e);
 
         if (!options.closeOnEsc) return;
         if (e.key !== 'Escape') return;
@@ -336,19 +308,7 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
       });
 
       context.on(document, 'focusin', (event) => {
-        if (!isOpen) return;
-        if (dialog) return;
-        if (!options.modal) return;
-        if (!options.trapFocus) return;
-
-        const target = getEventTargetElement(event);
-        if (!target) return;
-        if (element.contains(target)) return;
-        if (backdrop && backdrop.contains(target)) return;
-
-        queueMicrotask(() => {
-          focusInitial();
-        });
+        focusTrap.handleFocusin(event as FocusEvent);
       });
 
       context.on(document, 'click', (event) => {
@@ -422,4 +382,3 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
     },
   });
 }
-
