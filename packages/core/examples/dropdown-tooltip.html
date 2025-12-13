@@ -133,9 +133,14 @@
     <div class="demo-actions">
       <button data-tooltip title="Tooltip from title attribute">Hover/focus me</button>
       <button data-tooltip="Tooltip text can live in data-tooltip">Data tooltip</button>
+      <button data-tooltip="#demo-tooltip-rich">Rich tooltip</button>
       <button data-tooltip title="Right side tooltip" data-tooltip-placement="right">Right</button>
       <button data-tooltip title="Bottom tooltip" data-tooltip-placement="bottom">Bottom</button>
     </div>
+
+    <template id="demo-tooltip-rich">
+      <strong>Rich</strong> tooltip content from a <code>&lt;template&gt;</code>.
+    </template>
 
     <script type="module">
       import { createFoundation, dropdown, tooltip } from "../dist/index.js";
@@ -164,7 +169,10 @@
           applyTheme(themeSelect.value);
         });
       }
+
+      document.querySelectorAll('a[href="#"]').forEach((link) => {
+        link.addEventListener("click", (event) => event.preventDefault());
+      });
     </script>
   </body>
 </html>
-

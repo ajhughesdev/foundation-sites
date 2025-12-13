@@ -8,6 +8,7 @@ import {
 } from '../utils/dom.js';
 import { computeFloatingPosition } from '../utils/floating.js';
 import type { FloatingPlacement } from '../utils/floating.js';
+import { createRafScheduler } from '../utils/schedule.js';
 
 export type TooltipOptions = {
   placement?: FloatingPlacement;
@@ -15,6 +16,8 @@ export type TooltipOptions = {
   viewportPadding?: number;
   flip?: boolean;
   closeOnEsc?: boolean;
+  showDelay?: number;
+  hideDelay?: number;
 };
 
 export type TooltipInstance = FoundationPluginInstance & {
@@ -32,19 +35,32 @@ function normalizeToken(value: string): string {
   return value.trim().toLowerCase();
 }
 
-function getTooltipText(trigger: Element): string | null {
+type TooltipContent =
+  | { type: 'text'; text: string }
+  | { type: 'template'; template: HTMLTemplateElement }
+  | { type: 'element'; element: Element };
+
+function getTooltipContent(trigger: Element): TooltipContent | null {
   const explicit = getStringAttribute(trigger, 'data-tooltip-text');
-  if (explicit) return explicit;
+  if (explicit) return { type: 'text', text: explicit };
 
   const fromDataTooltip = getStringAttribute(trigger, 'data-tooltip');
   if (fromDataTooltip) {
     const normalized = normalizeToken(fromDataTooltip);
     const booleanish = normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'on';
-    if (!booleanish) return fromDataTooltip;
+    if (!booleanish) {
+      if (fromDataTooltip.startsWith('#')) {
+        const referenced = document.querySelector(fromDataTooltip);
+        if (referenced instanceof HTMLTemplateElement) return { type: 'template', template: referenced };
+        if (referenced instanceof Element) return { type: 'element', element: referenced };
+      }
+
+      return { type: 'text', text: fromDataTooltip };
+    }
   }
 
   const title = getStringAttribute(trigger, 'title');
-  return title ?? null;
+  return title ? { type: 'text', text: title } : null;
 }
 
 function addDescribedBy(el: Element, id: string): void {
@@ -68,8 +84,8 @@ export function tooltip(defaultOptions: TooltipOptions = {}): FoundationPlugin {
     name: 'tooltip',
     selector: '[data-tooltip]',
     mount(element: Element, context: PluginContext): TooltipInstance {
-      const text = getTooltipText(element);
-      if (!text) {
+      const content = getTooltipContent(element);
+      if (!content) {
         return {
           show() {},
           hide() {},
@@ -85,12 +101,21 @@ export function tooltip(defaultOptions: TooltipOptions = {}): FoundationPlugin {
         viewportPadding: parseNumberAttribute(element, 'data-tooltip-viewport-padding', defaultOptions.viewportPadding ?? 8),
         flip: parseBooleanAttribute(element, 'data-tooltip-flip', defaultOptions.flip ?? true),
         closeOnEsc: parseBooleanAttribute(element, 'data-tooltip-close-on-esc', defaultOptions.closeOnEsc ?? true),
+        showDelay: parseNumberAttribute(element, 'data-tooltip-show-delay', defaultOptions.showDelay ?? 150),
+        hideDelay: parseNumberAttribute(element, 'data-tooltip-hide-delay', defaultOptions.hideDelay ?? 100),
       };
 
       const tooltipEl = document.createElement('div');
       tooltipEl.className = TOOLTIP_CLASS;
       tooltipEl.setAttribute('role', 'tooltip');
-      tooltipEl.textContent = text;
+      if (content.type === 'text') {
+        tooltipEl.textContent = content.text;
+      } else if (content.type === 'template') {
+        tooltipEl.replaceChildren(content.template.content.cloneNode(true));
+      } else {
+        const nodes = Array.from(content.element.childNodes).map((node) => node.cloneNode(true));
+        tooltipEl.replaceChildren(...nodes);
+      }
       tooltipEl.setAttribute('hidden', '');
 
       const tooltipId = ensureId(tooltipEl, 'f7-tooltip');
@@ -102,8 +127,10 @@ export function tooltip(defaultOptions: TooltipOptions = {}): FoundationPlugin {
       document.body.append(tooltipEl);
 
       let isOpen = false;
+      let showTimer: number | null = null;
+      let hideTimer: number | null = null;
 
-      const reposition = () => {
+      const repositionNow = () => {
         if (!isOpen) return;
 
         const anchorRect = element.getBoundingClientRect();
@@ -123,7 +150,21 @@ export function tooltip(defaultOptions: TooltipOptions = {}): FoundationPlugin {
         tooltipEl.removeAttribute(MEASURING_ATTR);
       };
 
-      const show = () => {
+      const repositionScheduler = createRafScheduler(repositionNow);
+      const reposition = () => repositionNow();
+
+      const clearTimers = () => {
+        if (showTimer !== null) {
+          window.clearTimeout(showTimer);
+          showTimer = null;
+        }
+        if (hideTimer !== null) {
+          window.clearTimeout(hideTimer);
+          hideTimer = null;
+        }
+      };
+
+      const showNow = () => {
         if (isOpen) return;
         isOpen = true;
 
@@ -131,17 +172,65 @@ export function tooltip(defaultOptions: TooltipOptions = {}): FoundationPlugin {
         tooltipEl.setAttribute(OPENED_ATTR, '');
 
         queueMicrotask(() => {
-          reposition();
+          repositionNow();
         });
       };
 
-      const hide = () => {
+      const hideNow = () => {
         if (!isOpen) return;
         isOpen = false;
 
+        repositionScheduler.cancel();
         tooltipEl.removeAttribute(OPENED_ATTR);
         tooltipEl.removeAttribute(MEASURING_ATTR);
         tooltipEl.setAttribute('hidden', '');
+      };
+
+      const show = (immediate = false) => {
+        if (isOpen) return;
+        if (immediate || options.showDelay <= 0) {
+          clearTimers();
+          showNow();
+          return;
+        }
+
+        if (showTimer !== null) return;
+        if (hideTimer !== null) {
+          window.clearTimeout(hideTimer);
+          hideTimer = null;
+        }
+
+        showTimer = window.setTimeout(() => {
+          showTimer = null;
+          showNow();
+        }, options.showDelay);
+      };
+
+      const hide = (immediate = false) => {
+        if (!isOpen) {
+          if (showTimer !== null) {
+            window.clearTimeout(showTimer);
+            showTimer = null;
+          }
+          return;
+        }
+
+        if (immediate || options.hideDelay <= 0) {
+          clearTimers();
+          hideNow();
+          return;
+        }
+
+        if (hideTimer !== null) return;
+        if (showTimer !== null) {
+          window.clearTimeout(showTimer);
+          showTimer = null;
+        }
+
+        hideTimer = window.setTimeout(() => {
+          hideTimer = null;
+          hideNow();
+        }, options.hideDelay);
       };
 
       const toggle = () => {
@@ -149,37 +238,44 @@ export function tooltip(defaultOptions: TooltipOptions = {}): FoundationPlugin {
         else show();
       };
 
-      context.on(element, 'pointerenter', () => {
-        show();
-      });
-      context.on(element, 'pointerleave', () => {
-        hide();
-      });
+      const hoverSupported =
+        typeof window.matchMedia === 'function'
+          ? window.matchMedia('(any-hover: hover)').matches && window.matchMedia('(any-pointer: fine)').matches
+          : true;
+
+      if (hoverSupported) {
+        context.on(element, 'pointerenter', () => {
+          show(false);
+        });
+        context.on(element, 'pointerleave', () => {
+          hide(false);
+        });
+      }
       context.on(element, 'focusin', () => {
-        show();
+        show(true);
       });
       context.on(element, 'focusout', (event) => {
         const e = event as FocusEvent;
         const next = e.relatedTarget;
         if (next instanceof Node && element.contains(next)) return;
-        hide();
+        hide(true);
       });
 
       context.on(document, 'keydown', (event) => {
-        if (!isOpen) return;
+        if (!isOpen && showTimer === null) return;
         if (!options.closeOnEsc) return;
 
         const e = event as KeyboardEvent;
         if (e.key !== 'Escape') return;
         e.preventDefault();
-        hide();
+        hide(true);
       });
 
       context.on(window, 'resize', () => {
-        reposition();
+        repositionScheduler.schedule();
       });
       context.on(window, 'scroll', () => {
-        reposition();
+        repositionScheduler.schedule();
       }, { passive: true, capture: true });
 
       return {
@@ -188,7 +284,8 @@ export function tooltip(defaultOptions: TooltipOptions = {}): FoundationPlugin {
         toggle,
         reposition,
         destroy() {
-          hide();
+          clearTimers();
+          hideNow();
           tooltipEl.remove();
           removeDescribedBy(element, tooltipId);
           if (originalTitle !== null) element.setAttribute('title', originalTitle);

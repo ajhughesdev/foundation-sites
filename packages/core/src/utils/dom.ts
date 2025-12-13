@@ -33,6 +33,13 @@ export function isHtmlElement(value: unknown): value is HTMLElement {
   return value instanceof HTMLElement;
 }
 
+const FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+export function getFocusableElements(root: Element): HTMLElement[] {
+  return Array.from(root.querySelectorAll(FOCUSABLE_SELECTOR)).filter(isHtmlElement);
+}
+
 export function focusFirstMatch(root: Element, selector: string): boolean {
   const el = root.querySelector(selector);
   if (!isHtmlElement(el)) return false;
@@ -41,14 +48,40 @@ export function focusFirstMatch(root: Element, selector: string): boolean {
 }
 
 export function focusFirstFocusable(root: Element): void {
-  const selector =
-    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-  if (focusFirstMatch(root, selector)) return;
+  const focusables = getFocusableElements(root);
+  if (focusables.length > 0) {
+    focusables[0].focus();
+    return;
+  }
   if (root instanceof HTMLElement) root.focus();
+}
+
+export function focusLastFocusable(root: Element): void {
+  const focusables = getFocusableElements(root);
+  if (focusables.length > 0) {
+    focusables[focusables.length - 1].focus();
+    return;
+  }
+  if (root instanceof HTMLElement) root.focus();
+}
+
+export function isTextInputLike(element: Element | null): boolean {
+  if (!(element instanceof HTMLElement)) return false;
+  if (element.isContentEditable) return true;
+
+  if (element instanceof HTMLTextAreaElement) return true;
+  if (element instanceof HTMLSelectElement) return true;
+
+  if (element instanceof HTMLInputElement) {
+    const type = element.type.toLowerCase();
+    const nonText = new Set(['button', 'submit', 'reset', 'checkbox', 'radio', 'range', 'color', 'file']);
+    return !nonText.has(type);
+  }
+
+  return false;
 }
 
 export function getEventTargetElement(event: Event): Element | null {
   const target = event.target;
   return target instanceof Element ? target : null;
 }
-

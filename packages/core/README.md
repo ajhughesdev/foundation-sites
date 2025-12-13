@@ -56,10 +56,25 @@ Markup:
 </div>
 ```
 
+Notes:
+
+- ArrowDown/ArrowUp on the trigger opens and moves focus into the dropdown.
+- Keyboard navigation inside the dropdown: ArrowUp/ArrowDown/Home/End.
+- Defaults: close on outside click + close on focus leaving (blur) + close on Escape.
+
 ### Tooltip (draft)
 
 Markup:
 
 ```html
 <button data-tooltip title="Tooltip content">Hover or focus</button>
+```
+
+Rich content (draft):
+
+```html
+<button data-tooltip="#tip-template">Hover or focus</button>
+<template id="tip-template">
+  <strong>Rich</strong> tooltip content.
+</template>
 ```

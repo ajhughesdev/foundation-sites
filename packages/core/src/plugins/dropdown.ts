@@ -3,14 +3,18 @@ import type { FoundationPlugin, FoundationPluginInstance, PluginContext } from '
 import {
   ensureId,
   focusFirstFocusable,
+  focusLastFocusable,
+  getFocusableElements,
   getEventTargetElement,
   getStringAttribute,
   isHtmlElement,
+  isTextInputLike,
   parseBooleanAttribute,
   parseNumberAttribute,
 } from '../utils/dom.js';
 import { computeFloatingPosition } from '../utils/floating.js';
 import type { FloatingPlacement } from '../utils/floating.js';
+import { createRafScheduler } from '../utils/schedule.js';
 
 export type DropdownOptions = {
   placement?: FloatingPlacement;
@@ -18,9 +22,12 @@ export type DropdownOptions = {
   viewportPadding?: number;
   flip?: boolean;
   closeOnOutsideClick?: boolean;
+  closeOnFocusOutside?: boolean;
   closeOnEsc?: boolean;
   autoFocus?: boolean;
   matchTriggerWidth?: boolean;
+  keyboard?: boolean;
+  closeOnSelect?: boolean;
 };
 
 export type DropdownOpenedDetail = {
@@ -76,16 +83,23 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
       const dropdownEl = element;
       const id = ensureId(element, 'f7-dropdown');
 
+      const closeOnOutsideClick = parseBooleanAttribute(
+        element,
+        'data-dropdown-close-on-outside',
+        defaultOptions.closeOnOutsideClick ?? true
+      );
+
       const options: Required<DropdownOptions> = {
         placement: (getStringAttribute(element, 'data-dropdown-placement') as FloatingPlacement | undefined) ??
           (defaultOptions.placement ?? 'bottom-start'),
         offset: parseNumberAttribute(element, 'data-dropdown-offset', defaultOptions.offset ?? 8),
         viewportPadding: parseNumberAttribute(element, 'data-dropdown-viewport-padding', defaultOptions.viewportPadding ?? 8),
         flip: parseBooleanAttribute(element, 'data-dropdown-flip', defaultOptions.flip ?? true),
-        closeOnOutsideClick: parseBooleanAttribute(
+        closeOnOutsideClick,
+        closeOnFocusOutside: parseBooleanAttribute(
           element,
-          'data-dropdown-close-on-outside',
-          defaultOptions.closeOnOutsideClick ?? true
+          'data-dropdown-close-on-blur',
+          defaultOptions.closeOnFocusOutside ?? closeOnOutsideClick
         ),
         closeOnEsc: parseBooleanAttribute(element, 'data-dropdown-close-on-esc', defaultOptions.closeOnEsc ?? true),
         autoFocus: parseBooleanAttribute(element, 'data-dropdown-auto-focus', defaultOptions.autoFocus ?? false),
@@ -93,6 +107,12 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
           element,
           'data-dropdown-match-trigger-width',
           defaultOptions.matchTriggerWidth ?? false
+        ),
+        keyboard: parseBooleanAttribute(element, 'data-dropdown-keyboard', defaultOptions.keyboard ?? true),
+        closeOnSelect: parseBooleanAttribute(
+          element,
+          'data-dropdown-close-on-select',
+          defaultOptions.closeOnSelect ?? false
         ),
       };
 
@@ -119,7 +139,7 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
         context.emit(element, 'foundation:dropdown:closed', { id, opener, element } satisfies DropdownClosedDetail);
       };
 
-      const reposition = () => {
+      const repositionNow = () => {
         if (!isOpen) return;
         if (!opener?.isConnected) return;
 
@@ -146,6 +166,9 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
         element.removeAttribute(MEASURING_ATTR);
       };
 
+      const repositionScheduler = createRafScheduler(repositionNow);
+      const reposition = () => repositionNow();
+
       const open = (nextOpener: HTMLElement | null = null) => {
         if (isOpen) return;
 
@@ -161,7 +184,7 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
         if (opener && openerHasExpandedState) setExpanded(opener, true, id);
 
         queueMicrotask(() => {
-          reposition();
+          repositionNow();
           if (options.autoFocus) focusFirstFocusable(element);
         });
 
@@ -172,6 +195,7 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
         if (!isOpen) return;
         isOpen = false;
 
+        repositionScheduler.cancel();
         element.removeAttribute(OPENED_ATTR);
         element.removeAttribute(MEASURING_ATTR);
         element.setAttribute('hidden', '');
@@ -208,19 +232,97 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
       });
 
       context.on(window, 'resize', () => {
-        reposition();
+        repositionScheduler.schedule();
       });
       context.on(window, 'scroll', () => {
-        reposition();
+        repositionScheduler.schedule();
       }, { passive: true, capture: true });
 
       context.on(document, 'keydown', (event) => {
-        if (!isOpen) return;
-        if (!options.closeOnEsc) return;
-
         const e = event as KeyboardEvent;
-        if (e.key !== 'Escape') return;
-        e.preventDefault();
+        const target = getEventTargetElement(event);
+        if (!target) return;
+
+        if (!isOpen && options.keyboard) {
+          const trigger =
+            getTriggerForId(target, 'data-dropdown-toggle', id) ?? getTriggerForId(target, 'data-dropdown-open', id);
+          if (trigger && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+            e.preventDefault();
+            open(trigger);
+            queueMicrotask(() => {
+              if (!isOpen) return;
+              if (e.key === 'ArrowDown') focusFirstFocusable(element);
+              else focusLastFocusable(element);
+            });
+            return;
+          }
+        }
+
+        if (!isOpen) return;
+
+        if (options.closeOnEsc && e.key === 'Escape') {
+          e.preventDefault();
+          close();
+          return;
+        }
+
+        if (!options.keyboard) return;
+        if (isTextInputLike(target)) return;
+
+        const focusables = getFocusableElements(element);
+        if (focusables.length === 0) return;
+
+        const active = document.activeElement;
+        const activeEl = active instanceof HTMLElement ? active : null;
+
+        const withinDropdown = activeEl ? element.contains(activeEl) : false;
+        const onOpener = activeEl ? Boolean(opener && opener.contains(activeEl)) : false;
+
+        const currentIndex = withinDropdown && activeEl ? focusables.indexOf(activeEl) : -1;
+
+        if (e.key === 'Home') {
+          e.preventDefault();
+          focusables[0].focus();
+          return;
+        }
+
+        if (e.key === 'End') {
+          e.preventDefault();
+          focusables[focusables.length - 1].focus();
+          return;
+        }
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (withinDropdown) {
+            if (currentIndex >= 0) focusables[(currentIndex + 1) % focusables.length].focus();
+            else focusables[0].focus();
+          } else if (onOpener) {
+            focusables[0].focus();
+          }
+          return;
+        }
+
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (withinDropdown) {
+            if (currentIndex >= 0) focusables[(currentIndex - 1 + focusables.length) % focusables.length].focus();
+            else focusables[focusables.length - 1].focus();
+          } else if (onOpener) {
+            focusables[focusables.length - 1].focus();
+          }
+        }
+      });
+
+      context.on(document, 'focusin', (event) => {
+        if (!isOpen) return;
+        if (!options.closeOnFocusOutside) return;
+
+        const target = getEventTargetElement(event);
+        if (!target) return;
+        if (element.contains(target)) return;
+        if (opener && opener.contains(target)) return;
+
         close();
       });
 
@@ -254,6 +356,16 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
           }
         }
 
+        if (isOpen && options.closeOnSelect && element.contains(target)) {
+          const selected = target.closest(
+            'a[href], button, [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [data-dropdown-select]'
+          );
+          if (selected && element.contains(selected)) {
+            close();
+            return;
+          }
+        }
+
         if (!isOpen) return;
         if (!options.closeOnOutsideClick) return;
 
@@ -266,9 +378,13 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
 
       if (isOpen) {
         const initialTrigger = document.querySelector(`[data-dropdown-toggle="${id}"], [data-dropdown-open="${id}"]`);
-        if (isHtmlElement(initialTrigger)) opener = initialTrigger;
+        if (isHtmlElement(initialTrigger)) {
+          opener = initialTrigger;
+          openerHasExpandedState = true;
+          setExpanded(opener, true, id);
+        }
         queueMicrotask(() => {
-          reposition();
+          repositionNow();
         });
       }
 
