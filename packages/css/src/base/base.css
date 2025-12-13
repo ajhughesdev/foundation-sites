@@ -14,12 +14,100 @@
   line-height: var(--f-line-height-2);
 }
 
+:where(h1, h2, h3, h4, h5, h6) {
+  font-weight: 650;
+  line-height: var(--f-line-height-1);
+  margin: 0 0 var(--f-space-3);
+}
+
+:where(h1) {
+  font-size: clamp(1.75rem, 1.35rem + 1.4vw, 2.5rem);
+  letter-spacing: -0.02em;
+}
+
+:where(h2) {
+  font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.75rem);
+  letter-spacing: -0.01em;
+}
+
+:where(h3) {
+  font-size: 1.25rem;
+}
+
+:where(p) {
+  margin: 0 0 var(--f-space-3);
+}
+
+:where(ul, ol) {
+  margin: 0 0 var(--f-space-3);
+  padding-inline-start: 1.25rem;
+}
+
+:where(li) {
+  margin-block: 0.25rem;
+}
+
+:where(hr) {
+  border: 0;
+  border-top: 1px solid var(--f-color-border);
+  margin: var(--f-space-5) 0;
+}
+
 :where(a) {
   color: var(--f-color-primary);
 }
 
 :where(code, pre) {
   font-family: var(--f-font-mono);
+}
+
+:where(button) {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  padding: var(--f-button-padding);
+  border-radius: var(--f-button-radius);
+  border: 1px solid var(--f-button-border);
+  background: var(--f-button-bg);
+  color: var(--f-button-color);
+  box-shadow: var(--f-button-shadow);
+  cursor: pointer;
+}
+
+:where(button:hover) {
+  border-color: color-mix(in srgb, var(--f-color-primary), var(--f-button-border) 60%);
+}
+
+:where(button:disabled) {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+:where(select, textarea),
+:where(input[type='text']),
+:where(input[type='email']),
+:where(input[type='password']),
+:where(input[type='search']),
+:where(input[type='url']),
+:where(input[type='tel']),
+:where(input[type='number']),
+:where(input[type='date']),
+:where(input[type='datetime-local']),
+:where(input[type='month']),
+:where(input[type='time']),
+:where(input[type='week']) {
+  padding: var(--f-control-padding);
+  border-radius: var(--f-control-radius);
+  border: 1px solid var(--f-control-border);
+  background: var(--f-control-bg);
+  color: var(--f-color-text);
+}
+
+:where(textarea) {
+  resize: vertical;
 }
 
 :where(:focus-visible) {
@@ -37,4 +125,3 @@
     animation-iteration-count: 1 !important;
   }
 }
-

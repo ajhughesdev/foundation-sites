@@ -26,6 +26,10 @@
   --f-space-5: 1.5rem;
   --f-space-6: 2rem;
 
+  /* Layout */
+  --f-container-max: 72rem;
+  --f-container-padding: var(--f-space-4);
+
   /* Radii */
   --f-radius-1: 0.25rem;
   --f-radius-2: 0.5rem;
@@ -65,6 +69,20 @@
   /* Focus */
   --f-focus-ring-color: color-mix(in srgb, var(--f-color-primary), transparent 55%);
   --f-focus-ring-width: 3px;
+
+  /* Form controls */
+  --f-control-padding: var(--f-space-2) var(--f-space-3);
+  --f-control-radius: var(--f-radius-2);
+  --f-control-border: var(--f-color-border);
+  --f-control-bg: var(--f-color-surface);
+
+  /* Buttons */
+  --f-button-padding: var(--f-space-2) var(--f-space-3);
+  --f-button-radius: var(--f-radius-2);
+  --f-button-border: var(--f-color-border);
+  --f-button-bg: var(--f-color-surface-elevated);
+  --f-button-color: var(--f-color-text);
+  --f-button-shadow: var(--f-shadow-1);
 
   /* Reveal */
   --f-reveal-width: 32.5rem;

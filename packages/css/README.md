@@ -29,6 +29,7 @@ Or pick-and-choose:
 
 ```css
 @import "@foundation/css/tokens.css";
+@import "@foundation/css/base.css";
 @import "@foundation/css/components/accordion.css";
 @import "@foundation/css/components/dropdown.css";
 @import "@foundation/css/components/offcanvas.css";
@@ -36,6 +37,7 @@ Or pick-and-choose:
 @import "@foundation/css/components/toast.css";
 @import "@foundation/css/components/tooltip.css";
 @import "@foundation/css/components/tabs.css";
+@import "@foundation/css/utilities.css";
 
 ```
 ## Theming (draft)

@@ -7,7 +7,7 @@
 // DONE: OffCanvas component (draft + example + tests)
 // DONE: Dev workflow: `yarn f7:dev` runs tsc watch + Vite for hot reload.
 // DONE: Toast/Notification component (draft + example + tests)
-// TODO: CSS expansion: start core layout primitives (grid/flex helpers), buttons/forms, and a more complete reset/base layer.
+// DONE: CSS expansion: initial layout utilities + button/form defaults + richer base typography.
 // TODO: Add Playwright caching/parallel tweaks for faster CI.
 // TODO: Focus-trapping/inert for non-<dialog> modals (extract a small focusTrap util and apply it to the Reveal fallback + tighten Playwright coverage).
 // TODO: Start the CSS expansion: baseline button/input styles + a couple layout primitives (container/stack/grid) so the examples stop hand-rolling UI scaffolding.
