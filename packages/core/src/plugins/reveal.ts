@@ -9,6 +9,7 @@ import {
   isHtmlElement,
   parseBooleanAttribute,
 } from '../utils/dom.js';
+import { createFocusTrap } from '../utils/focusTrap.js';
 import { lockScroll, unlockScroll } from '../utils/scrollLock.js';
 
 export type RevealOptions = {
@@ -18,6 +19,7 @@ export type RevealOptions = {
   lockScroll?: boolean;
   returnFocus?: boolean;
   initialFocus?: string;
+  trapFocus?: boolean;
 };
 
 export type RevealOpenedDetail = {
@@ -60,6 +62,7 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
         lockScroll: parseBooleanAttribute(element, 'data-reveal-lock-scroll', defaultOptions.lockScroll ?? true),
         returnFocus: parseBooleanAttribute(element, 'data-reveal-return-focus', defaultOptions.returnFocus ?? true),
         initialFocus: getStringAttribute(element, 'data-reveal-initial-focus') ?? (defaultOptions.initialFocus ?? ''),
+        trapFocus: parseBooleanAttribute(element, 'data-reveal-trap-focus', defaultOptions.trapFocus ?? true),
       };
 
       const dialog = element instanceof HTMLDialogElement ? element : null;
@@ -67,6 +70,18 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
       let opener: HTMLElement | null = null;
       let isOpen = dialog ? dialog.open : element.hasAttribute(OPENED_ATTR);
       let backdrop: HTMLElement | null = null;
+
+      const focusInitial = () => {
+        if (options.initialFocus && focusFirstMatch(element, options.initialFocus)) return;
+        focusFirstFocusable(element);
+      };
+
+      const focusTrap = createFocusTrap({
+        root: element,
+        isActive: () => isOpen && !dialog && options.modal && options.trapFocus,
+        allowOutside: (target) => Boolean(backdrop && backdrop.contains(target)),
+        focusFallback: focusInitial,
+      });
 
       if (isOpen && options.lockScroll && options.modal) {
         lockScroll();
@@ -205,8 +220,7 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
         }
 
         queueMicrotask(() => {
-          if (options.initialFocus && focusFirstMatch(element, options.initialFocus)) return;
-          focusFirstFocusable(element);
+          focusInitial();
         });
 
         emitOpened();
@@ -284,14 +298,19 @@ export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
       });
 
       context.on(document, 'keydown', (event) => {
+        const e = event as KeyboardEvent;
+        focusTrap.handleKeydown(e);
+
         if (!isOpen) return;
         if (dialog) return;
         if (!options.closeOnEsc) return;
-
-        const e = event as KeyboardEvent;
         if (e.key !== 'Escape') return;
         e.preventDefault();
         close();
+      });
+
+      context.on(document, 'focusin', (event) => {
+        focusTrap.handleFocusin(event as FocusEvent);
       });
 
       if (dialog) {
