@@ -56,3 +56,7 @@ data.json
 npm-debug.log
 foundation-docs
 ./vendor
+
+# Foundation 7 packages
+packages/**/dist/
+packages/**/.tsbuildinfo

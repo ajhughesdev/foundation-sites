@@ -30,6 +30,7 @@ yarn.lock
 ./config
 ./customizer
 ./gulp
+./packages
 ./lib
 ./script
 ./spec
