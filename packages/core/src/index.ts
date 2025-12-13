@@ -3,6 +3,7 @@ export { definePlugin } from './types.js';
 export { reveal } from './plugins/reveal.js';
 export { dropdown } from './plugins/dropdown.js';
 export { tooltip } from './plugins/tooltip.js';
+export { tabs } from './plugins/tabs.js';
 export type {
   Cleanup,
   FoundationApp,
@@ -19,3 +20,11 @@ export type {
   DropdownOptions,
 } from './plugins/dropdown.js';
 export type { TooltipInstance, TooltipOptions } from './plugins/tooltip.js';
+export type {
+  TabsActivationMode,
+  TabsChangedDetail,
+  TabsInstance,
+  TabsOptions,
+  TabsOrientation,
+  TabsSelectDetail,
+} from './plugins/tabs.js';

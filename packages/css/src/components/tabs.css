@@ -1,0 +1,62 @@
+/*
+  Tabs (draft)
+
+  JS applies roles/ARIA and toggles [hidden] + [data-tabs-selected].
+*/
+
+:where(.f-tabs) {
+  --_f-tabs-border: var(--f-tabs-border, var(--f-color-border));
+  --_f-tabs-gap: var(--f-tabs-gap, var(--f-space-1));
+}
+
+:where(.f-tabs-list) {
+  display: flex;
+  gap: var(--_f-tabs-gap);
+  border-bottom: 1px solid var(--_f-tabs-border);
+}
+
+:where(.f-tabs-list[aria-orientation='vertical']) {
+  flex-direction: column;
+  border-bottom: 0;
+  border-inline-end: 1px solid var(--_f-tabs-border);
+}
+
+:where(.f-tabs-tab) {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--f-color-text-muted);
+  padding: var(--f-tabs-tab-padding, var(--f-space-2) var(--f-space-3));
+  cursor: pointer;
+  line-height: var(--f-line-height-1);
+}
+
+:where(.f-tabs-tab)[data-tabs-selected] {
+  color: var(--f-color-text);
+  background: var(--f-color-surface-elevated);
+  border-color: var(--_f-tabs-border);
+  border-bottom-color: transparent;
+  border-start-start-radius: var(--f-tabs-tab-radius, var(--f-radius-2));
+  border-start-end-radius: var(--f-tabs-tab-radius, var(--f-radius-2));
+}
+
+:where(.f-tabs-list[aria-orientation='vertical'] .f-tabs-tab)[data-tabs-selected] {
+  border-bottom-color: var(--_f-tabs-border);
+  border-inline-end-color: transparent;
+  border-start-end-radius: 0;
+  border-start-start-radius: var(--f-tabs-tab-radius, var(--f-radius-2));
+  border-end-start-radius: var(--f-tabs-tab-radius, var(--f-radius-2));
+}
+
+:where(.f-tabs-panel) {
+  padding: var(--f-tabs-panel-padding, var(--f-space-4));
+  border: 1px solid var(--_f-tabs-border);
+  border-top: 0;
+  background: var(--f-color-surface-elevated);
+  color: var(--f-color-text);
+}
+
+:where(.f-tabs-list[aria-orientation='vertical']) ~ :where(.f-tabs-panel) {
+  border-top: 1px solid var(--_f-tabs-border);
+}
+

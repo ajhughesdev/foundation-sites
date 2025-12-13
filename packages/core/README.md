@@ -78,3 +78,25 @@ Rich content (draft):
   <strong>Rich</strong> tooltip content.
 </template>
 ```
+
+### Tabs (draft)
+
+Markup:
+
+```html
+<div data-tabs>
+  <div data-tabs-list>
+    <button type="button" data-tabs-tab="panel-a">A</button>
+    <button type="button" data-tabs-tab="panel-b">B</button>
+  </div>
+
+  <div id="panel-a" data-tabs-panel>Panel A</div>
+  <div id="panel-b" data-tabs-panel>Panel B</div>
+</div>
+```
+
+Options (attributes):
+
+- `data-tabs-activation="auto|manual"`
+- `data-tabs-orientation="horizontal|vertical"`
+- `data-tabs-update-hash` (optional deep-linking)

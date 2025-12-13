@@ -6,5 +6,5 @@
 @import "./components/reveal.css" layer(components);
 @import "./components/dropdown.css" layer(components);
 @import "./components/tooltip.css" layer(components);
+@import "./components/tabs.css" layer(components);
 @import "./utilities/utilities.css" layer(utilities);
-

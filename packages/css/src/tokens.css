@@ -85,6 +85,13 @@
   --f-tooltip-bg: color-mix(in srgb, var(--f-color-surface-elevated), var(--f-color-text) 12%);
   --f-tooltip-color: var(--f-color-text);
   --f-tooltip-border: var(--f-color-border);
+
+  /* Tabs */
+  --f-tabs-border: var(--f-color-border);
+  --f-tabs-gap: var(--f-space-1);
+  --f-tabs-tab-padding: var(--f-space-2) var(--f-space-3);
+  --f-tabs-tab-radius: var(--f-radius-2);
+  --f-tabs-panel-padding: var(--f-space-4);
 }
 
 @media (prefers-color-scheme: dark) {

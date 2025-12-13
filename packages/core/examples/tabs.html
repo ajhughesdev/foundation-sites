@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Foundation 7 — Tabs (Draft)</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="../../css/src/foundation.css" />
+    <style>
+      body {
+        padding: 24px;
+      }
+
+      .demo-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-block: 12px 24px;
+      }
+
+      .demo-toolbar select {
+        padding: 6px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--f-color-border);
+        background: var(--f-color-surface-elevated);
+        color: var(--f-color-text);
+      }
+
+      .demo-stack {
+        display: grid;
+        gap: 24px;
+        max-inline-size: 56rem;
+      }
+
+      .demo-card {
+        padding: 18px;
+        border: 1px solid var(--f-color-border);
+        border-radius: 14px;
+        background: var(--f-color-surface-elevated);
+        box-shadow: var(--f-shadow-1);
+      }
+
+      .demo-card h2 {
+        margin-block-start: 0;
+      }
+
+      .demo-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-block: 12px 0;
+      }
+
+      .demo-actions button {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--f-color-border);
+        background: var(--f-color-surface);
+        color: var(--f-color-text);
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tabs (Draft)</h1>
+    <p>
+      Build first: <code>yarn f7:core:build</code>, then open this file in a browser.
+    </p>
+
+    <div class="demo-toolbar">
+      <label for="theme">Theme</label>
+      <select id="theme">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+
+    <div class="demo-stack">
+      <section class="demo-card">
+        <h2>Auto activation (default)</h2>
+        <p>Arrow keys move focus and selection. Home/End jump. Disabled tabs are skipped.</p>
+
+        <div data-tabs>
+          <div data-tabs-list>
+            <button type="button" data-tabs-tab="panel-account">Account</button>
+            <button type="button" data-tabs-tab="panel-billing">Billing</button>
+            <button type="button" data-tabs-tab="panel-disabled" aria-disabled="true" data-tabs-disabled>
+              Disabled
+            </button>
+          </div>
+
+          <div id="panel-account" data-tabs-panel>
+            <p><strong>Account</strong> panel content.</p>
+          </div>
+          <div id="panel-billing" data-tabs-panel hidden>
+            <p><strong>Billing</strong> panel content.</p>
+          </div>
+          <div id="panel-disabled" data-tabs-panel hidden>
+            <p>You should never see this panel selected.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2>Manual activation</h2>
+        <p>Arrow keys move focus. Press Enter/Space to select.</p>
+
+        <div data-tabs data-tabs-activation="manual">
+          <div data-tabs-list>
+            <button type="button" data-tabs-tab="panel-one">One</button>
+            <button type="button" data-tabs-tab="panel-two">Two</button>
+            <button type="button" data-tabs-tab="panel-three">Three</button>
+          </div>
+
+          <div id="panel-one" data-tabs-panel>
+            <p><strong>One</strong> panel content.</p>
+          </div>
+          <div id="panel-two" data-tabs-panel hidden>
+            <p><strong>Two</strong> panel content.</p>
+          </div>
+          <div id="panel-three" data-tabs-panel hidden>
+            <p><strong>Three</strong> panel content.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-card">
+        <h2>Deep linking (optional)</h2>
+        <p>
+          This instance updates the URL hash and will read it on load. Try clicking a tab, then refresh.
+        </p>
+
+        <div data-tabs data-tabs-update-hash>
+          <div data-tabs-list>
+            <a href="#panel-hash-a" data-tabs-tab>Hash A</a>
+            <a href="#panel-hash-b" data-tabs-tab>Hash B</a>
+          </div>
+
+          <div id="panel-hash-a" data-tabs-panel>
+            <p><strong>Hash A</strong> panel content.</p>
+          </div>
+          <div id="panel-hash-b" data-tabs-panel hidden>
+            <p><strong>Hash B</strong> panel content.</p>
+          </div>
+        </div>
+
+        <div class="demo-actions">
+          <button type="button" id="select-hash-b">Select Hash B programmatically</button>
+        </div>
+      </section>
+    </div>
+
+    <script type="module">
+      import { createFoundation, tabs } from "../dist/index.js";
+
+      const app = createFoundation({ plugins: [tabs()] });
+      app.init(document);
+
+      const storageKey = "foundation7-demo-theme";
+      const themeSelect = document.getElementById("theme");
+
+      const applyTheme = (value) => {
+        if (value === "system") {
+          document.documentElement.removeAttribute("data-theme");
+        } else {
+          document.documentElement.setAttribute("data-theme", value);
+        }
+      };
+
+      if (themeSelect instanceof HTMLSelectElement) {
+        const stored = localStorage.getItem(storageKey) || "system";
+        themeSelect.value = stored;
+        applyTheme(stored);
+
+        themeSelect.addEventListener("change", () => {
+          localStorage.setItem(storageKey, themeSelect.value);
+          applyTheme(themeSelect.value);
+        });
+      }
+
+      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener("click", (event) => event.preventDefault());
+      });
+
+      const selectHashB = document.getElementById("select-hash-b");
+      const hashTabs = document.querySelector('[data-tabs-update-hash]');
+      if (selectHashB instanceof HTMLButtonElement && hashTabs instanceof HTMLElement) {
+        selectHashB.addEventListener("click", () => {
+          hashTabs.dispatchEvent(
+            new CustomEvent("foundation:tabs:select", {
+              bubbles: true,
+              detail: { id: "panel-hash-b", focus: true },
+            }),
+          );
+        });
+      }
+    </script>
+  </body>
+</html>
