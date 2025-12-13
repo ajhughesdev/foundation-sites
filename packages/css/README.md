@@ -29,8 +29,9 @@ Or pick-and-choose:
 
 ```css
 @import "@foundation/css/tokens.css";
+@import "@foundation/css/components/dropdown.css";
 @import "@foundation/css/components/reveal.css";
-
+@import "@foundation/css/components/tooltip.css";
 
 ```
 ## Theming (draft)

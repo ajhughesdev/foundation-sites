@@ -1,0 +1,33 @@
+/*
+  Tooltip (draft)
+
+  JS positions the tooltip via CSS variables:
+  --f-tooltip-top, --f-tooltip-left
+*/
+
+.f-tooltip {
+  position: fixed;
+  top: var(--f-tooltip-top, -9999px);
+  left: var(--f-tooltip-left, -9999px);
+  z-index: var(--f-z-tooltip);
+
+  pointer-events: none;
+  padding: var(--f-tooltip-padding);
+  border: 1px solid var(--f-tooltip-border);
+  border-radius: var(--f-tooltip-radius);
+  background: var(--f-tooltip-bg);
+  color: var(--f-tooltip-color);
+  box-shadow: var(--f-tooltip-shadow);
+
+  font-size: var(--f-tooltip-font-size);
+  line-height: var(--f-line-height-1);
+  max-inline-size: min(var(--f-tooltip-max-width), calc(100vw - (2 * var(--f-space-2))));
+}
+
+.f-tooltip[data-tooltip-measuring] {
+  visibility: hidden;
+}
+
+.f-tooltip:not([data-tooltip-opened]) {
+  display: none;
+}

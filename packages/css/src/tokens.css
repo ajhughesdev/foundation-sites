@@ -38,6 +38,8 @@
   /* Z-index scale */
   --f-z-overlay: 1000;
   --f-z-dialog: 1010;
+  --f-z-popover: 1020;
+  --f-z-tooltip: 1030;
 
   /* Core palette (compat with existing Foundation defaults) */
   --f-color-primary: #1779ba;
@@ -67,6 +69,23 @@
   --f-reveal-padding: var(--f-space-5);
   --f-reveal-radius: var(--f-radius-3);
   --f-reveal-shadow: var(--f-shadow-2);
+
+  /* Dropdown */
+  --f-dropdown-min-width: 12rem;
+  --f-dropdown-padding: var(--f-space-2);
+  --f-dropdown-radius: var(--f-radius-2);
+  --f-dropdown-shadow: var(--f-shadow-2);
+
+  /* Tooltip */
+  --f-tooltip-padding: calc(var(--f-space-1) + 0.125rem) var(--f-space-2);
+  --f-tooltip-radius: var(--f-radius-2);
+  --f-tooltip-shadow: var(--f-shadow-1);
+  --f-tooltip-font-size: var(--f-font-size-1);
+  --f-tooltip-max-width: 22rem;
+  --f-tooltip-bg: color-mix(in srgb, var(--f-color-surface-elevated), var(--f-color-text) 12%);
+  --f-tooltip-color: var(--f-color-text);
+  --f-tooltip-border: var(--f-color-border);
+}
 
 @media (prefers-color-scheme: dark) {
   :root {

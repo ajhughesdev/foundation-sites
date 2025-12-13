@@ -11,7 +11,7 @@ This is the initial Foundation 7 core runtime scaffold.
 ## Usage (draft)
 
 ```js
-import { createFoundation, definePlugin, reveal } from '@foundation/core';
+import { createFoundation, definePlugin, dropdown, reveal, tooltip } from '@foundation/core';
 import '@foundation/css/foundation.css';
 
 const disclosure = definePlugin({
@@ -22,7 +22,7 @@ const disclosure = definePlugin({
   }
 });
 
-const app = createFoundation({ plugins: [disclosure, reveal()] });
+const app = createFoundation({ plugins: [disclosure, reveal(), dropdown(), tooltip()] });
 app.init(document);
 ```
 
@@ -42,4 +42,24 @@ Programmatic control:
 
 ```js
 document.getElementById('my-dialog')?.dispatchEvent(new CustomEvent('foundation:reveal:open', { bubbles: true }));
+```
+
+### Dropdown (draft)
+
+Markup:
+
+```html
+<button data-dropdown-toggle="my-dropdown">Toggle</button>
+<div id="my-dropdown" data-dropdown hidden>
+  <a href="#">Action</a>
+  <button type="button" data-dropdown-close>Close</button>
+</div>
+```
+
+### Tooltip (draft)
+
+Markup:
+
+```html
+<button data-tooltip title="Tooltip content">Hover or focus</button>
 ```

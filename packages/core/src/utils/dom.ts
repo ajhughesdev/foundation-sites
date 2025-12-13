@@ -17,6 +17,13 @@ export function parseBooleanAttribute(element: Element, attr: string, defaultVal
   return true;
 }
 
+export function parseNumberAttribute(element: Element, attr: string, defaultValue: number): number {
+  const raw = element.getAttribute(attr);
+  if (raw === null || raw.trim() === '') return defaultValue;
+  const value = Number(raw);
+  return Number.isFinite(value) ? value : defaultValue;
+}
+
 export function getStringAttribute(element: Element, attr: string): string | undefined {
   const value = element.getAttribute(attr);
   return value && value.trim().length ? value.trim() : undefined;
