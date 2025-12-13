@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Foundation 7 — OffCanvas (Draft)</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="../../css/src/foundation.css" />
+    <style>
+      body {
+        padding: 24px;
+      }
+
+      .demo-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-block: 12px 24px;
+      }
+
+      .demo-toolbar select {
+        padding: 6px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--f-color-border);
+        background: var(--f-color-surface-elevated);
+        color: var(--f-color-text);
+      }
+
+      .demo-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-block: 12px 24px;
+      }
+
+      .demo-actions button {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--f-color-border);
+        background: var(--f-color-surface-elevated);
+        color: var(--f-color-text);
+        box-shadow: var(--f-shadow-1);
+        cursor: pointer;
+      }
+
+      .demo-actions button:hover {
+        border-color: color-mix(in srgb, var(--f-color-primary), var(--f-color-border) 60%);
+      }
+
+      .demo-page {
+        max-inline-size: 56rem;
+        display: grid;
+        gap: 16px;
+      }
+
+      .demo-card {
+        border: 1px solid var(--f-color-border);
+        border-radius: 14px;
+        padding: 16px;
+        background: var(--f-color-surface-elevated);
+        box-shadow: var(--f-shadow-1);
+      }
+
+      .demo-offcanvas {
+        display: grid;
+        gap: 12px;
+      }
+
+      .demo-offcanvas header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .demo-offcanvas header h2 {
+        margin: 0;
+        font-size: var(--f-font-size-3);
+        line-height: var(--f-line-height-1);
+      }
+
+      .demo-offcanvas button {
+        padding: 8px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--f-color-border);
+        background: var(--f-color-surface-elevated);
+        color: var(--f-color-text);
+        box-shadow: var(--f-shadow-1);
+        cursor: pointer;
+      }
+
+      .demo-offcanvas label {
+        display: grid;
+        gap: 6px;
+      }
+
+      .demo-offcanvas input {
+        padding: 8px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--f-color-border);
+        background: var(--f-color-surface);
+        color: var(--f-color-text);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>OffCanvas (Draft)</h1>
+    <p>
+      Build first: <code>yarn f7:core:build</code>, then open this file in a browser.
+    </p>
+
+    <div class="demo-toolbar">
+      <label for="theme">Theme</label>
+      <select id="theme">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+
+    <div class="demo-actions">
+      <button type="button" id="open-left" data-offcanvas-open="demo-offcanvas-left">Open left OffCanvas</button>
+      <button type="button" id="toggle-right" data-offcanvas-toggle="demo-offcanvas-right">Toggle right OffCanvas</button>
+    </div>
+
+    <main class="demo-page">
+      <section class="demo-card">
+        <h2>Page content</h2>
+        <p>
+          When an OffCanvas is modal, it locks scroll, provides a backdrop, and keeps focus inside.
+        </p>
+        <p>
+          Use <code>Escape</code> or the close button to dismiss.
+        </p>
+        <p>
+          <a href="#" id="demo-link">Example link (prevents navigation)</a>
+        </p>
+      </section>
+
+      <section class="demo-card">
+        <h2>Notes</h2>
+        <ul>
+          <li>Position is driven by <code>data-offcanvas-position</code> (left/right/top/bottom).</li>
+          <li>This draft uses a non-<code>&lt;dialog&gt;</code> element with <code>inert</code> when supported.</li>
+        </ul>
+      </section>
+    </main>
+
+    <aside id="demo-offcanvas-left" data-offcanvas aria-labelledby="demo-offcanvas-left-title" hidden>
+      <div class="demo-offcanvas">
+        <header>
+          <h2 id="demo-offcanvas-left-title">Left OffCanvas</h2>
+          <button type="button" data-offcanvas-close id="demo-offcanvas-left-close">Close</button>
+        </header>
+
+        <p>
+          Focus should move into the panel on open and wrap on Tab/Shift+Tab.
+        </p>
+
+        <label>
+          Search
+          <input type="text" placeholder="Type here…" />
+        </label>
+
+        <a href="#" id="demo-offcanvas-left-link">Action link</a>
+        <button type="button">Secondary action</button>
+      </div>
+    </aside>
+
+    <aside
+      id="demo-offcanvas-right"
+      data-offcanvas
+      data-offcanvas-position="right"
+      aria-labelledby="demo-offcanvas-right-title"
+      hidden
+    >
+      <div class="demo-offcanvas">
+        <header>
+          <h2 id="demo-offcanvas-right-title">Right OffCanvas</h2>
+          <button type="button" data-offcanvas-close>Close</button>
+        </header>
+        <p>
+          This one is positioned on the right via <code>data-offcanvas-position="right"</code>.
+        </p>
+        <p>
+          <a href="#">Action link</a>
+        </p>
+      </div>
+    </aside>
+
+    <script type="module">
+      import { createFoundation, offcanvas } from "../dist/index.js";
+
+      const app = createFoundation({ plugins: [offcanvas()] });
+      app.init(document);
+
+      const storageKey = "foundation7-demo-theme";
+      const themeSelect = document.getElementById("theme");
+
+      const applyTheme = (value) => {
+        if (value === "system") {
+          document.documentElement.removeAttribute("data-theme");
+        } else {
+          document.documentElement.setAttribute("data-theme", value);
+        }
+      };
+
+      if (themeSelect instanceof HTMLSelectElement) {
+        const stored = localStorage.getItem(storageKey) || "system";
+        themeSelect.value = stored;
+        applyTheme(stored);
+
+        themeSelect.addEventListener("change", () => {
+          localStorage.setItem(storageKey, themeSelect.value);
+          applyTheme(themeSelect.value);
+        });
+      }
+
+      document.querySelectorAll('a[href="#"]').forEach((link) => {
+        link.addEventListener("click", (event) => event.preventDefault());
+      });
+    </script>
+  </body>
+</html>

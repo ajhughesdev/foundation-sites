@@ -40,6 +40,7 @@
   --f-z-dialog: 1010;
   --f-z-popover: 1020;
   --f-z-tooltip: 1030;
+  --f-z-offcanvas: 1010;
 
   /* Core palette (compat with existing Foundation defaults) */
   --f-color-primary: #1779ba;
@@ -104,6 +105,14 @@
   --f-accordion-summary-color: var(--f-color-text);
   --f-accordion-summary-color-active: var(--f-color-text);
   --f-accordion-icon-size: 0.75rem;
+
+  /* OffCanvas */
+  --f-offcanvas-width: 22rem;
+  --f-offcanvas-height: 18rem;
+  --f-offcanvas-padding: var(--f-space-5);
+  --f-offcanvas-bg: var(--f-color-surface-elevated);
+  --f-offcanvas-border: var(--f-color-border);
+  --f-offcanvas-shadow: var(--f-shadow-2);
 }
 
 @media (prefers-color-scheme: dark) {

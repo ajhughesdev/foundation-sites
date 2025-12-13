@@ -122,3 +122,34 @@ Options (attributes):
 
 - `data-accordion-multi` (allow multiple open)
 - `data-accordion-allow-all-closed="false"` (require one open)
+
+### OffCanvas (draft)
+
+Markup:
+
+```html
+<button type="button" data-offcanvas-open="my-offcanvas">Open</button>
+
+<aside id="my-offcanvas" data-offcanvas data-offcanvas-position="left" aria-labelledby="my-offcanvas-title" hidden>
+  <h2 id="my-offcanvas-title">Menu</h2>
+  <button type="button" data-offcanvas-close>Close</button>
+  <a href="#">Action</a>
+</aside>
+```
+
+Triggers:
+
+- `data-offcanvas-open="id"`
+- `data-offcanvas-toggle="id"`
+- `data-offcanvas-close` (or `data-offcanvas-close="id"`)
+
+Options (attributes):
+
+- `data-offcanvas-modal="true|false"`
+- `data-offcanvas-position="left|right|top|bottom"`
+- `data-offcanvas-close-on-backdrop="true|false"`
+- `data-offcanvas-close-on-esc="true|false"`
+- `data-offcanvas-lock-scroll="true|false"`
+- `data-offcanvas-return-focus="true|false"`
+- `data-offcanvas-initial-focus="selector"`
+- `data-offcanvas-trap-focus="true|false"`

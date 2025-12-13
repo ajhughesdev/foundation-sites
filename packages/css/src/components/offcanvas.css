@@ -1,0 +1,74 @@
+/*
+  OffCanvas (draft)
+
+  JS toggles [data-offcanvas-opened] and (for non-<dialog>) may apply inert/aria-hidden.
+*/
+
+.f-offcanvas-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--f-z-overlay);
+  background: var(--f-color-backdrop);
+}
+
+:where([data-offcanvas].f-offcanvas) {
+  position: fixed;
+  z-index: var(--f-z-offcanvas);
+
+  margin: 0;
+  border: 1px solid var(--f-offcanvas-border);
+  padding: var(--f-offcanvas-padding);
+  background: var(--f-offcanvas-bg);
+  color: var(--f-color-text);
+  box-shadow: var(--f-offcanvas-shadow);
+
+  max-block-size: 100vh;
+  overflow: auto;
+
+  transition: transform 220ms ease;
+  will-change: transform;
+}
+
+:where([data-offcanvas].f-offcanvas):not([data-offcanvas-opened]) {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+dialog[data-offcanvas].f-offcanvas::backdrop {
+  background: var(--f-color-backdrop);
+}
+
+:where([data-offcanvas].f-offcanvas):not([data-offcanvas-position]),
+:where([data-offcanvas].f-offcanvas[data-offcanvas-position='left']) {
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: min(var(--f-offcanvas-width), 100vw);
+  transform: translateX(-100%);
+}
+
+:where([data-offcanvas].f-offcanvas[data-offcanvas-position='right']) {
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: min(var(--f-offcanvas-width), 100vw);
+  transform: translateX(100%);
+}
+
+:where([data-offcanvas].f-offcanvas[data-offcanvas-position='top']) {
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: min(var(--f-offcanvas-height), 100vh);
+  transform: translateY(-100%);
+}
+
+:where([data-offcanvas].f-offcanvas[data-offcanvas-position='bottom']) {
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: min(var(--f-offcanvas-height), 100vh);
+  transform: translateY(100%);
+}
+
+:where([data-offcanvas].f-offcanvas)[data-offcanvas-opened] {
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(0);
+}

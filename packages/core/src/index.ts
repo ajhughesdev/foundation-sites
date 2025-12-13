@@ -5,6 +5,7 @@ export { dropdown } from './plugins/dropdown.js';
 export { tooltip } from './plugins/tooltip.js';
 export { tabs } from './plugins/tabs.js';
 export { accordion } from './plugins/accordion.js';
+export { offcanvas } from './plugins/offcanvas.js';
 export type {
   Cleanup,
   FoundationApp,
@@ -36,3 +37,9 @@ export type {
   AccordionOpenedDetail,
   AccordionOptions,
 } from './plugins/accordion.js';
+export type {
+  OffCanvasClosedDetail,
+  OffCanvasInstance,
+  OffCanvasOpenedDetail,
+  OffCanvasOptions,
+} from './plugins/offcanvas.js';

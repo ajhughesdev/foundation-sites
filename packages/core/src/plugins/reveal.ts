@@ -9,6 +9,7 @@ import {
   isHtmlElement,
   parseBooleanAttribute,
 } from '../utils/dom.js';
+import { lockScroll, unlockScroll } from '../utils/scrollLock.js';
 
 export type RevealOptions = {
   modal?: boolean;
@@ -40,38 +41,6 @@ export type RevealInstance = FoundationPluginInstance & {
 const OPENED_ATTR = 'data-reveal-opened';
 const REVEAL_CLASS = 'f-reveal';
 const BACKDROP_CLASS = 'f-reveal-backdrop';
-
-let scrollLockCount = 0;
-let previousRootOverflow: string | null = null;
-let previousRootPaddingRight: string | null = null;
-
-function lockScroll(): void {
-  scrollLockCount += 1;
-  if (scrollLockCount !== 1) return;
-
-  const root = document.documentElement;
-  previousRootOverflow = root.style.overflow;
-  previousRootPaddingRight = root.style.paddingRight;
-
-  const scrollbarWidth = window.innerWidth - root.clientWidth;
-  if (scrollbarWidth > 0) {
-    root.style.paddingRight = `${scrollbarWidth}px`;
-  }
-  root.style.overflow = 'hidden';
-}
-
-function unlockScroll(): void {
-  if (scrollLockCount === 0) return;
-  scrollLockCount -= 1;
-  if (scrollLockCount !== 0) return;
-
-  const root = document.documentElement;
-  if (previousRootOverflow !== null) root.style.overflow = previousRootOverflow;
-  if (previousRootPaddingRight !== null) root.style.paddingRight = previousRootPaddingRight;
-
-  previousRootOverflow = null;
-  previousRootPaddingRight = null;
-}
 
 export function reveal(defaultOptions: RevealOptions = {}): FoundationPlugin {
   return definePlugin({

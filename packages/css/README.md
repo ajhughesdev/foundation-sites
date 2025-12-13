@@ -31,6 +31,7 @@ Or pick-and-choose:
 @import "@foundation/css/tokens.css";
 @import "@foundation/css/components/accordion.css";
 @import "@foundation/css/components/dropdown.css";
+@import "@foundation/css/components/offcanvas.css";
 @import "@foundation/css/components/reveal.css";
 @import "@foundation/css/components/tooltip.css";
 @import "@foundation/css/components/tabs.css";
