@@ -1,6 +1,5 @@
 export { createFoundation } from './createFoundation.js';
 export { definePlugin } from './types.js';
-export { reveal } from './plugins/reveal.js';
 export { dropdown } from './plugins/dropdown.js';
 export { tooltip } from './plugins/tooltip.js';
 export { tabs } from './plugins/tabs.js';
@@ -15,7 +14,6 @@ export type {
   PluginContext,
   PluginSelector,
 } from './types.js';
-export type { RevealClosedDetail, RevealInstance, RevealOpenedDetail, RevealOptions } from './plugins/reveal.js';
 export type {
   DropdownClosedDetail,
   DropdownInstance,

@@ -44,7 +44,7 @@ See `packages/core/src/` for the initial implementation scaffold.
 
 ### First ported component (draft)
 
-- Reveal (modal/dialog) lives in `packages/core/src/plugins/reveal.ts` as the first end-to-end component port. Once the component API stabilizes, it should move to its own package (e.g. `packages/reveal/`).
+- Reveal (modal/dialog) lives in `packages/reveal/src/reveal.ts` as the first end-to-end component port (standalone package: `@foundation/reveal`).
 
 ## Breaking changes (high level)
 

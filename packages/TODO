@@ -1,4 +1,4 @@
-// TODO: Extract Reveal into its own package (packages/reveal) and keep @foundation/core runtime-only.
+// DONE: Extract Reveal into its own package (packages/reveal) and keep @foundation/core runtime-only.
 // DONE: Add Playwright + axe smoke tests for Reveal, Dropdown, Tooltip, Tabs, Accordion (a11y + keyboard regressions).
 // DONE: Wire `yarn f7:test` into CI as a separate job.
 // DONE: Add focus trap for non-<dialog> modals (Reveal fallback).
@@ -9,6 +9,5 @@
 // DONE: Toast/Notification component (draft + example + tests)
 // DONE: CSS expansion: initial layout utilities + button/form defaults + richer base typography.
 // DONE: Add Playwright caching/parallel tweaks for faster CI.
-// TODO: Focus-trapping/inert for non-<dialog> modals (extract a small focusTrap util and apply it to the Reveal fallback + tighten Playwright coverage).
-// TODO: Start the CSS expansion: baseline button/input styles + a couple layout primitives (container/stack/grid) so the examples stop hand-rolling UI scaffolding.
-// TODO: After the component APIs feel stable, extract Reveal (and later others) into their own packages (packages/reveal, etc.) to keep @foundation/core runtime-only.
+// DONE: Focus-trapping/inert for non-<dialog> modals (extract focusTrap/inert utils + apply to Reveal fallback + Playwright coverage).
+// DONE: Start the CSS expansion: baseline button/input styles + layout primitives (container/stack/grid) so the examples stop hand-rolling UI scaffolding.

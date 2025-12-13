@@ -28,11 +28,13 @@
     "test:visual": "gulp test --color",
     "deploy": "gulp deploy --color",
     "deploy:prep": "gulp deploy:prep --color",
-    "f7:core:build": "tsc -p packages/core/tsconfig.json",
+    "f7:core:build": "node scripts/f7-clean-dist.js packages/core/dist && tsc -p packages/core/tsconfig.json",
     "f7:core:watch": "tsc -w -p packages/core/tsconfig.json",
+    "f7:reveal:build": "node scripts/f7-clean-dist.js packages/reveal/dist && tsc -p packages/reveal/tsconfig.json",
+    "f7:reveal:watch": "tsc -w -p packages/reveal/tsconfig.json",
     "f7:dev": "node scripts/f7-dev.js",
     "f7:test:install-browsers": "playwright install chromium",
-    "f7:test": "yarn f7:core:build && playwright test",
+    "f7:test": "yarn f7:core:build && yarn f7:reveal:build && playwright test",
     "prepare": "husky install"
   },
   "peerDependencies": {

@@ -1,7 +1,7 @@
 {
-  "name": "@foundation/core",
+  "name": "@foundation/reveal",
   "version": "0.0.0",
-  "description": "Foundation 7 core runtime (DOM-first, ESM-first).",
+  "description": "Foundation 7 Reveal (modal/dialog).",
   "type": "module",
   "sideEffects": false,
   "exports": {
