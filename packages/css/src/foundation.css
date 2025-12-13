@@ -9,4 +9,5 @@
 @import "./components/tabs.css" layer(components);
 @import "./components/accordion.css" layer(components);
 @import "./components/offcanvas.css" layer(components);
+@import "./components/toast.css" layer(components);
 @import "./utilities/utilities.css" layer(utilities);

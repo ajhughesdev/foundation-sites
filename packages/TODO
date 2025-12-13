@@ -4,7 +4,7 @@
 // TODO: add focus-trapping/inert for modal dialogs 
 // DONE: Accordion component (simple + a11y)
 // DONE: OffCanvas component (draft + example + tests)
-// TODO: Dev workflow: add a tiny dev server (e.g. Vite) so examples run with hot reload (no manual `yarn f7:core:build` loop).
-// TODO: Toast/Notification component
+// DONE: Dev workflow: `yarn f7:dev` runs tsc watch + Vite for hot reload.
+// DONE: Toast/Notification component (draft + example + tests)
 // TODO: CSS expansion: start core layout primitives (grid/flex helpers), buttons/forms, and a more complete reset/base layer.
 // TODO: Add Playwright caching/parallel tweaks for faster CI.

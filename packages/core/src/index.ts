@@ -6,6 +6,7 @@ export { tooltip } from './plugins/tooltip.js';
 export { tabs } from './plugins/tabs.js';
 export { accordion } from './plugins/accordion.js';
 export { offcanvas } from './plugins/offcanvas.js';
+export { toast } from './plugins/toast.js';
 export type {
   Cleanup,
   FoundationApp,
@@ -43,3 +44,12 @@ export type {
   OffCanvasOpenedDetail,
   OffCanvasOptions,
 } from './plugins/offcanvas.js';
+export type {
+  ToastHiddenDetail,
+  ToastInstance,
+  ToastOptions,
+  ToastRole,
+  ToastShowDetail,
+  ToastShownDetail,
+  ToastVariant,
+} from './plugins/toast.js';

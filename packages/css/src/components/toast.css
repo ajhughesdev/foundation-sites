@@ -1,0 +1,97 @@
+/*
+  Toast / Notification (draft)
+
+  JS appends `.f-toast` items inside `[data-toast]`.
+*/
+
+:where([data-toast].f-toast-region) {
+  position: fixed;
+  z-index: var(--f-z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--f-toast-gap);
+
+  inset-block-end: var(--f-toast-offset);
+  inset-inline-end: var(--f-toast-offset);
+
+  max-inline-size: min(var(--f-toast-width), calc(100vw - (2 * var(--f-toast-offset))));
+
+  pointer-events: none;
+}
+
+:where([data-toast].f-toast-region[data-toast-position='bottom-start']) {
+  inset-inline-start: var(--f-toast-offset);
+  inset-inline-end: auto;
+}
+
+:where([data-toast].f-toast-region[data-toast-position='top-end']) {
+  inset-block-start: var(--f-toast-offset);
+  inset-block-end: auto;
+}
+
+:where([data-toast].f-toast-region[data-toast-position='top-start']) {
+  inset-block-start: var(--f-toast-offset);
+  inset-block-end: auto;
+  inset-inline-start: var(--f-toast-offset);
+  inset-inline-end: auto;
+}
+
+:where(.f-toast) {
+  pointer-events: auto;
+
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: var(--f-toast-gap);
+
+  inline-size: min(var(--f-toast-width), 100%);
+  padding: var(--f-toast-padding);
+  border: 1px solid var(--f-toast-border);
+  border-inline-start-width: 4px;
+  border-radius: var(--f-toast-radius);
+  background: var(--f-toast-bg);
+  color: var(--f-color-text);
+  box-shadow: var(--f-toast-shadow);
+
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+:where(.f-toast[data-toast-variant='info']) {
+  border-inline-start-color: var(--f-color-primary);
+}
+
+:where(.f-toast[data-toast-variant='success']) {
+  border-inline-start-color: var(--f-color-success);
+}
+
+:where(.f-toast[data-toast-variant='warning']) {
+  border-inline-start-color: var(--f-color-warning);
+}
+
+:where(.f-toast[data-toast-variant='danger']) {
+  border-inline-start-color: var(--f-color-danger);
+}
+
+:where(.f-toast[data-toast-leaving]) {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.f-toast__body {
+  line-height: var(--f-line-height-2);
+}
+
+.f-toast__dismiss {
+  appearance: none;
+  border: 1px solid var(--f-color-border);
+  border-radius: var(--f-radius-2);
+  background: transparent;
+  color: inherit;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.f-toast__dismiss:hover {
+  border-color: color-mix(in srgb, var(--f-color-primary), var(--f-color-border) 60%);
+}
+

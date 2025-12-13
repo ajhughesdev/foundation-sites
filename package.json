@@ -30,6 +30,7 @@
     "deploy:prep": "gulp deploy:prep --color",
     "f7:core:build": "tsc -p packages/core/tsconfig.json",
     "f7:core:watch": "tsc -w -p packages/core/tsconfig.json",
+    "f7:dev": "node scripts/f7-dev.js",
     "f7:test:install-browsers": "playwright install chromium",
     "f7:test": "yarn f7:core:build && playwright test",
     "prepare": "husky install"
@@ -107,6 +108,7 @@
     "undertaker-forward-reference": "^1.0.2",
     "vinyl": "^3.0.0",
     "vinyl-named": "^1.1.0",
+    "vite": "^5.4.0",
     "webpack": "^5.88.2",
     "webpack-stream": "^7.0.0",
     "what-input": ">=5.2.10"

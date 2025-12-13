@@ -41,6 +41,7 @@
   --f-z-popover: 1020;
   --f-z-tooltip: 1030;
   --f-z-offcanvas: 1010;
+  --f-z-toast: 1040;
 
   /* Core palette (compat with existing Foundation defaults) */
   --f-color-primary: #1779ba;
@@ -113,6 +114,16 @@
   --f-offcanvas-bg: var(--f-color-surface-elevated);
   --f-offcanvas-border: var(--f-color-border);
   --f-offcanvas-shadow: var(--f-shadow-2);
+
+  /* Toast */
+  --f-toast-width: 22rem;
+  --f-toast-padding: var(--f-space-3) var(--f-space-4);
+  --f-toast-radius: var(--f-radius-2);
+  --f-toast-shadow: var(--f-shadow-2);
+  --f-toast-border: var(--f-color-border);
+  --f-toast-bg: var(--f-color-surface-elevated);
+  --f-toast-gap: var(--f-space-2);
+  --f-toast-offset: var(--f-space-4);
 }
 
 @media (prefers-color-scheme: dark) {

@@ -26,6 +26,11 @@ const app = createFoundation({ plugins: [disclosure, reveal(), dropdown(), toolt
 app.init(document);
 ```
 
+## Dev workflow (draft)
+
+- Run `yarn f7:dev` (tsc watch + Vite dev server).
+- Open an example like `http://127.0.0.1:5173/packages/core/examples/reveal.html`.
+
 ### Reveal (draft)
 
 Markup:
@@ -153,3 +158,38 @@ Options (attributes):
 - `data-offcanvas-return-focus="true|false"`
 - `data-offcanvas-initial-focus="selector"`
 - `data-offcanvas-trap-focus="true|false"`
+
+### Toast / Notification (draft)
+
+Markup:
+
+```html
+<div id="demo-toasts" data-toast></div>
+
+<button
+  type="button"
+  data-toast-show="demo-toasts"
+  data-toast-variant="success"
+  data-toast-message="Saved!"
+>
+  Show toast
+</button>
+```
+
+Programmatic control:
+
+```js
+document.getElementById('demo-toasts')?.dispatchEvent(
+  new CustomEvent('foundation:toast:show', {
+    bubbles: true,
+    detail: { message: 'Saved!', variant: 'success' },
+  })
+);
+```
+
+Options (attributes on the toast region):
+
+- `data-toast-position="bottom-end|bottom-start|top-end|top-start"`
+- `data-toast-timeout` (ms)
+- `data-toast-max`
+- `data-toast-dismissible="true|false"`

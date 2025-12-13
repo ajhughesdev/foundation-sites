@@ -14,6 +14,7 @@
     "./components/dropdown.css": "./src/components/dropdown.css",
     "./components/offcanvas.css": "./src/components/offcanvas.css",
     "./components/reveal.css": "./src/components/reveal.css",
+    "./components/toast.css": "./src/components/toast.css",
     "./components/tooltip.css": "./src/components/tooltip.css",
     "./components/tabs.css": "./src/components/tabs.css",
     "./utilities.css": "./src/utilities/utilities.css"
