@@ -195,6 +195,10 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
         if (!isOpen) return;
         isOpen = false;
 
+        const active = document.activeElement;
+        const focusWasInside = active instanceof Node && element.contains(active);
+        const focusTarget = opener;
+
         repositionScheduler.cancel();
         element.removeAttribute(OPENED_ATTR);
         element.removeAttribute(MEASURING_ATTR);
@@ -206,6 +210,14 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
         }
         opener = null;
         openerHasExpandedState = false;
+
+        if (focusWasInside && focusTarget?.isConnected) {
+          try {
+            focusTarget.focus();
+          } catch {
+            // ignore
+          }
+        }
 
         emitClosed();
       };

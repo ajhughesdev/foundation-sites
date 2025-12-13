@@ -67,10 +67,11 @@ The first package (`packages/core`) uses `tsc` to emit `dist/` as a minimal base
 ## Development (current)
 
 - Build core: `yarn f7:core:build` (outputs `packages/core/dist/`, gitignored)
+- Run Foundation 7 smoke tests: `yarn f7:test` (Playwright + axe; first run may require `yarn f7:test:install-browsers`)
 
 ## Next milestones
 
 1. Ship a stable `@foundation/core` API surface (init/destroy/use + plugin contracts).
 2. Introduce one rewritten component (likely Reveal) to validate lifecycle/events/a11y.
 3. Establish CSS tokens + cascade layers and a minimal base stylesheet (initial work in `packages/css/`).
-4. Replace legacy tests with a modern browser/a11y harness (Playwright + axe).
+4. Replace legacy tests with a modern browser/a11y harness (Playwright + axe) (seeded via `yarn f7:test`).

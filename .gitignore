@@ -60,3 +60,8 @@ foundation-docs
 # Foundation 7 packages
 packages/**/dist/
 packages/**/.tsbuildinfo
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
