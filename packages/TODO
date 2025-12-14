@@ -1,4 +1,6 @@
 // DONE: Extract Reveal into its own package (packages/reveal) and keep @foundation/core runtime-only.
+// DONE: Extract Dropdown into its own package (packages/dropdown).
+// DONE: Extract Tooltip into its own package (packages/tooltip).
 // DONE: Add Playwright + axe smoke tests for Reveal, Dropdown, Tooltip, Tabs, Accordion (a11y + keyboard regressions).
 // DONE: Wire `yarn f7:test` into CI as a separate job.
 // DONE: Add focus trap for non-<dialog> modals (Reveal fallback).

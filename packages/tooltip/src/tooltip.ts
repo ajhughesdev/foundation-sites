@@ -1,14 +1,39 @@
-import { definePlugin } from '../types.js';
-import type { FoundationPlugin, FoundationPluginInstance, PluginContext } from '../types.js';
-import {
-  ensureId,
-  getStringAttribute,
-  parseBooleanAttribute,
-  parseNumberAttribute,
-} from '../utils/dom.js';
-import { computeFloatingPosition } from '../utils/floating.js';
-import type { FloatingPlacement } from '../utils/floating.js';
-import { createRafScheduler } from '../utils/schedule.js';
+import { ensureId, getStringAttribute, parseBooleanAttribute, parseNumberAttribute } from '../../core/dist/utils/dom.js';
+import { computeFloatingPosition } from '../../core/dist/utils/floating.js';
+import type { FloatingPlacement } from '../../core/dist/utils/floating.js';
+import { createRafScheduler } from '../../core/dist/utils/schedule.js';
+
+export type { FloatingPlacement };
+
+export type Cleanup = () => void;
+
+export interface FoundationPluginInstance {
+  destroy?(): void;
+}
+
+export type PluginSelector = string | readonly string[];
+
+export interface PluginContext {
+  readonly signal: AbortSignal;
+  addCleanup(cleanup: Cleanup): void;
+  on(
+    target: EventTarget,
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: AddEventListenerOptions | boolean
+  ): void;
+  emit(target: EventTarget, type: string, detail?: unknown, init?: Omit<CustomEventInit, 'detail'>): boolean;
+}
+
+export interface FoundationPlugin {
+  name: string;
+  selector: PluginSelector;
+  mount(element: Element, context: PluginContext): void | FoundationPluginInstance;
+}
+
+export function definePlugin<T extends FoundationPlugin>(plugin: T): T {
+  return plugin;
+}
 
 export type TooltipOptions = {
   placement?: FloatingPlacement;
@@ -65,7 +90,10 @@ function getTooltipContent(trigger: Element): TooltipContent | null {
 
 function addDescribedBy(el: Element, id: string): void {
   const raw = el.getAttribute('aria-describedby') ?? '';
-  const parts = raw.split(/\s+/).map((p) => p.trim()).filter(Boolean);
+  const parts = raw
+    .split(/\s+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
   if (parts.includes(id)) return;
   parts.push(id);
   el.setAttribute('aria-describedby', parts.join(' '));
@@ -74,7 +102,11 @@ function addDescribedBy(el: Element, id: string): void {
 function removeDescribedBy(el: Element, id: string): void {
   const raw = el.getAttribute('aria-describedby');
   if (!raw) return;
-  const parts = raw.split(/\s+/).map((p) => p.trim()).filter(Boolean).filter((p) => p !== id);
+  const parts = raw
+    .split(/\s+/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .filter((p) => p !== id);
   if (parts.length === 0) el.removeAttribute('aria-describedby');
   else el.setAttribute('aria-describedby', parts.join(' '));
 }
@@ -274,9 +306,14 @@ export function tooltip(defaultOptions: TooltipOptions = {}): FoundationPlugin {
       context.on(window, 'resize', () => {
         repositionScheduler.schedule();
       });
-      context.on(window, 'scroll', () => {
-        repositionScheduler.schedule();
-      }, { passive: true, capture: true });
+      context.on(
+        window,
+        'scroll',
+        () => {
+          repositionScheduler.schedule();
+        },
+        { passive: true, capture: true }
+      );
 
       return {
         show,

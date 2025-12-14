@@ -14,7 +14,7 @@
     >
       <h1>Dropdown + Tooltip (Draft)</h1>
       <p>
-        Build first: <code>yarn f7:core:build</code>, then open this file in a browser.
+        Build first: <code>yarn f7:core:build && yarn f7:dropdown:build && yarn f7:tooltip:build</code>, then open this file in a browser.
       </p>
 
       <div class="demo-toolbar f-cluster" style="--f-cluster-gap: var(--f-space-3)">
@@ -76,7 +76,9 @@
     </div>
 
     <script type="module">
-      import { createFoundation, dropdown, tooltip } from "../dist/index.js";
+      import { createFoundation } from "../dist/index.js";
+      import { dropdown } from "../../dropdown/dist/index.js";
+      import { tooltip } from "../../tooltip/dist/index.js";
 
       const app = createFoundation({ plugins: [dropdown(), tooltip()] });
       app.init(document);

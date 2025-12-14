@@ -15,15 +15,27 @@ if (buildReveal.status !== 0) {
   process.exit(buildReveal.status ?? 1);
 }
 
+const buildDropdown = spawnSync(yarn, ['f7:dropdown:build'], { stdio: 'inherit' });
+if (buildDropdown.status !== 0) {
+  process.exit(buildDropdown.status ?? 1);
+}
+
+const buildTooltip = spawnSync(yarn, ['f7:tooltip:build'], { stdio: 'inherit' });
+if (buildTooltip.status !== 0) {
+  process.exit(buildTooltip.status ?? 1);
+}
+
 const tsc = spawn(yarn, ['f7:core:watch'], { stdio: 'inherit' });
 const revealTsc = spawn(yarn, ['f7:reveal:watch'], { stdio: 'inherit' });
+const dropdownTsc = spawn(yarn, ['f7:dropdown:watch'], { stdio: 'inherit' });
+const tooltipTsc = spawn(yarn, ['f7:tooltip:watch'], { stdio: 'inherit' });
 const vite = spawn(
   yarn,
   ['vite', '--host', host, '--port', port, '--strictPort'],
   { stdio: 'inherit' }
 );
 
-const children = [tsc, revealTsc, vite];
+const children = [tsc, revealTsc, dropdownTsc, tooltipTsc, vite];
 let didExit = false;
 
 function shutdown(code = 0) {
@@ -44,6 +56,8 @@ function shutdown(code = 0) {
 
 tsc.on('exit', (code) => shutdown(code ?? 0));
 revealTsc.on('exit', (code) => shutdown(code ?? 0));
+dropdownTsc.on('exit', (code) => shutdown(code ?? 0));
+tooltipTsc.on('exit', (code) => shutdown(code ?? 0));
 vite.on('exit', (code) => shutdown(code ?? 0));
 
 process.on('SIGINT', () => shutdown(0));

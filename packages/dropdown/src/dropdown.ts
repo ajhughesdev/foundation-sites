@@ -1,5 +1,3 @@
-import { definePlugin } from '../types.js';
-import type { FoundationPlugin, FoundationPluginInstance, PluginContext } from '../types.js';
 import {
   ensureId,
   focusFirstFocusable,
@@ -11,10 +9,42 @@ import {
   isTextInputLike,
   parseBooleanAttribute,
   parseNumberAttribute,
-} from '../utils/dom.js';
-import { computeFloatingPosition } from '../utils/floating.js';
-import type { FloatingPlacement } from '../utils/floating.js';
-import { createRafScheduler } from '../utils/schedule.js';
+} from '../../core/dist/utils/dom.js';
+import { computeFloatingPosition } from '../../core/dist/utils/floating.js';
+import type { FloatingPlacement } from '../../core/dist/utils/floating.js';
+import { createRafScheduler } from '../../core/dist/utils/schedule.js';
+
+export type { FloatingPlacement };
+
+export type Cleanup = () => void;
+
+export interface FoundationPluginInstance {
+  destroy?(): void;
+}
+
+export type PluginSelector = string | readonly string[];
+
+export interface PluginContext {
+  readonly signal: AbortSignal;
+  addCleanup(cleanup: Cleanup): void;
+  on(
+    target: EventTarget,
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: AddEventListenerOptions | boolean
+  ): void;
+  emit(target: EventTarget, type: string, detail?: unknown, init?: Omit<CustomEventInit, 'detail'>): boolean;
+}
+
+export interface FoundationPlugin {
+  name: string;
+  selector: PluginSelector;
+  mount(element: Element, context: PluginContext): void | FoundationPluginInstance;
+}
+
+export function definePlugin<T extends FoundationPlugin>(plugin: T): T {
+  return plugin;
+}
 
 export type DropdownOptions = {
   placement?: FloatingPlacement;
@@ -246,9 +276,14 @@ export function dropdown(defaultOptions: DropdownOptions = {}): FoundationPlugin
       context.on(window, 'resize', () => {
         repositionScheduler.schedule();
       });
-      context.on(window, 'scroll', () => {
-        repositionScheduler.schedule();
-      }, { passive: true, capture: true });
+      context.on(
+        window,
+        'scroll',
+        () => {
+          repositionScheduler.schedule();
+        },
+        { passive: true, capture: true }
+      );
 
       context.on(document, 'keydown', (event) => {
         const e = event as KeyboardEvent;

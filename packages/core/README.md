@@ -11,8 +11,10 @@ This is the initial Foundation 7 core runtime scaffold.
 ## Usage (draft)
 
 ```js
-import { createFoundation, definePlugin, dropdown, tooltip } from '@foundation/core';
+import { createFoundation, definePlugin } from '@foundation/core';
+import { dropdown } from '@foundation/dropdown';
 import { reveal } from '@foundation/reveal';
+import { tooltip } from '@foundation/tooltip';
 import '@foundation/css/foundation.css';
 
 const disclosure = definePlugin({
