@@ -30,6 +30,12 @@ Foundation is the most advanced responsive front-end framework in the world. Qui
 
 Foundation 7 is a **breaking** modernization effort (DOM-first, ESM-first, modern CSS). Track design and implementation notes in `FOUNDATION7-RFC.md`.
 
+### Foundation 7 dev (WIP)
+
+- `yarn f7:dev` builds + watches Foundation 7 packages and serves the draft examples (Vite).
+- `yarn f7:test:install-browsers` installs Playwright Chromium (needed once per machine).
+- `yarn f7:test` builds Foundation 7 packages and runs Playwright smoke tests.
+
 ## Run locally
 
 ### Documentation

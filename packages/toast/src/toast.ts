@@ -1,40 +1,6 @@
-import {
-  ensureId,
-  getEventTargetElement,
-  getStringAttribute,
-  parseBooleanAttribute,
-  parseNumberAttribute,
-} from '../../core/dist/utils/dom.js';
-
-export type Cleanup = () => void;
-
-export interface FoundationPluginInstance {
-  destroy?(): void;
-}
-
-export type PluginSelector = string | readonly string[];
-
-export interface PluginContext {
-  readonly signal: AbortSignal;
-  addCleanup(cleanup: Cleanup): void;
-  on(
-    target: EventTarget,
-    type: string,
-    listener: EventListenerOrEventListenerObject,
-    options?: AddEventListenerOptions | boolean
-  ): void;
-  emit(target: EventTarget, type: string, detail?: unknown, init?: Omit<CustomEventInit, 'detail'>): boolean;
-}
-
-export interface FoundationPlugin {
-  name: string;
-  selector: PluginSelector;
-  mount(element: Element, context: PluginContext): void | FoundationPluginInstance;
-}
-
-export function definePlugin<T extends FoundationPlugin>(plugin: T): T {
-  return plugin;
-}
+import { definePlugin } from '@foundation/core';
+import type { FoundationPlugin, FoundationPluginInstance, PluginContext } from '@foundation/core';
+import { ensureId, getEventTargetElement, getStringAttribute, parseBooleanAttribute, parseNumberAttribute } from '@foundation/core/utils/dom.js';
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'danger';
 export type ToastRole = 'status' | 'alert';
@@ -317,4 +283,3 @@ export function toast(defaultOptions: ToastOptions = {}): FoundationPlugin {
     },
   });
 }
-

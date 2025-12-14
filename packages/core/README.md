@@ -33,6 +33,8 @@ app.init(document);
 
 - Run `yarn f7:dev` (tsc watch + Vite dev server).
 - Open an example like `http://127.0.0.1:5173/packages/core/examples/reveal.html`.
+- Examples use a native import map so you can import `@foundation/*` in the browser without bundling.
+- If TypeScript/editor tooling can't resolve `@foundation/*`, run `yarn f7:link` once to create local `node_modules/@foundation/*` symlinks.
 
 ### Reveal (draft)
 

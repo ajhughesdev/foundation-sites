@@ -1,34 +1,6 @@
-import { ensureId, getEventTargetElement, getStringAttribute, isHtmlElement, parseBooleanAttribute } from '../../core/dist/utils/dom.js';
-
-export type Cleanup = () => void;
-
-export interface FoundationPluginInstance {
-  destroy?(): void;
-}
-
-export type PluginSelector = string | readonly string[];
-
-export interface PluginContext {
-  readonly signal: AbortSignal;
-  addCleanup(cleanup: Cleanup): void;
-  on(
-    target: EventTarget,
-    type: string,
-    listener: EventListenerOrEventListenerObject,
-    options?: AddEventListenerOptions | boolean
-  ): void;
-  emit(target: EventTarget, type: string, detail?: unknown, init?: Omit<CustomEventInit, 'detail'>): boolean;
-}
-
-export interface FoundationPlugin {
-  name: string;
-  selector: PluginSelector;
-  mount(element: Element, context: PluginContext): void | FoundationPluginInstance;
-}
-
-export function definePlugin<T extends FoundationPlugin>(plugin: T): T {
-  return plugin;
-}
+import { definePlugin } from '@foundation/core';
+import type { FoundationPlugin, FoundationPluginInstance, PluginContext } from '@foundation/core';
+import { ensureId, getEventTargetElement, getStringAttribute, isHtmlElement, parseBooleanAttribute } from '@foundation/core/utils/dom.js';
 
 export type TabsActivationMode = 'auto' | 'manual';
 export type TabsOrientation = 'horizontal' | 'vertical';
@@ -452,4 +424,3 @@ export function tabs(defaultOptions: TabsOptions = {}): FoundationPlugin {
     },
   });
 }
-

@@ -8,6 +8,30 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./utils/dom.js": {
+      "types": "./dist/utils/dom.d.ts",
+      "import": "./dist/utils/dom.js"
+    },
+    "./utils/floating.js": {
+      "types": "./dist/utils/floating.d.ts",
+      "import": "./dist/utils/floating.js"
+    },
+    "./utils/focusTrap.js": {
+      "types": "./dist/utils/focusTrap.d.ts",
+      "import": "./dist/utils/focusTrap.js"
+    },
+    "./utils/inert.js": {
+      "types": "./dist/utils/inert.d.ts",
+      "import": "./dist/utils/inert.js"
+    },
+    "./utils/schedule.js": {
+      "types": "./dist/utils/schedule.d.ts",
+      "import": "./dist/utils/schedule.js"
+    },
+    "./utils/scrollLock.js": {
+      "types": "./dist/utils/scrollLock.d.ts",
+      "import": "./dist/utils/scrollLock.js"
     }
   },
   "files": [

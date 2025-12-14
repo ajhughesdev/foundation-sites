@@ -1,3 +1,5 @@
+import { definePlugin } from '@foundation/core';
+import type { FoundationPlugin, FoundationPluginInstance, PluginContext } from '@foundation/core';
 import {
   ensureId,
   focusFirstFocusable,
@@ -9,42 +11,12 @@ import {
   isTextInputLike,
   parseBooleanAttribute,
   parseNumberAttribute,
-} from '../../core/dist/utils/dom.js';
-import { computeFloatingPosition } from '../../core/dist/utils/floating.js';
-import type { FloatingPlacement } from '../../core/dist/utils/floating.js';
-import { createRafScheduler } from '../../core/dist/utils/schedule.js';
+} from '@foundation/core/utils/dom.js';
+import { computeFloatingPosition } from '@foundation/core/utils/floating.js';
+import type { FloatingPlacement } from '@foundation/core/utils/floating.js';
+import { createRafScheduler } from '@foundation/core/utils/schedule.js';
 
 export type { FloatingPlacement };
-
-export type Cleanup = () => void;
-
-export interface FoundationPluginInstance {
-  destroy?(): void;
-}
-
-export type PluginSelector = string | readonly string[];
-
-export interface PluginContext {
-  readonly signal: AbortSignal;
-  addCleanup(cleanup: Cleanup): void;
-  on(
-    target: EventTarget,
-    type: string,
-    listener: EventListenerOrEventListenerObject,
-    options?: AddEventListenerOptions | boolean
-  ): void;
-  emit(target: EventTarget, type: string, detail?: unknown, init?: Omit<CustomEventInit, 'detail'>): boolean;
-}
-
-export interface FoundationPlugin {
-  name: string;
-  selector: PluginSelector;
-  mount(element: Element, context: PluginContext): void | FoundationPluginInstance;
-}
-
-export function definePlugin<T extends FoundationPlugin>(plugin: T): T {
-  return plugin;
-}
 
 export type DropdownOptions = {
   placement?: FloatingPlacement;
