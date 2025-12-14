@@ -2,6 +2,12 @@
 
 OffCanvas is the Foundation 7 off-canvas drawer plugin.
 
+## Install (draft)
+
+```bash
+npm install @foundation/core @foundation/offcanvas @foundation/css
+```
+
 ## Usage (draft)
 
 ```js
@@ -17,4 +23,3 @@ app.init(document);
 
 - Full bundle: `@foundation/css/foundation.css`
 - Component-only: `@foundation/css/components/offcanvas.css`
-

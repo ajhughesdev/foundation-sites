@@ -29,6 +29,7 @@ Foundation is the most advanced responsive front-end framework in the world. Qui
 ## Foundation 7 (WIP)
 
 Foundation 7 is a **breaking** modernization effort (DOM-first, ESM-first, modern CSS). Track design and implementation notes in `FOUNDATION7-RFC.md`.
+Draft publishing notes live in `FOUNDATION7-PUBLISHING.md`.
 
 ### Foundation 7 dev (WIP)
 

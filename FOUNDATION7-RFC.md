@@ -64,6 +64,10 @@ Foundation 7 packages will:
 
 The first package (`packages/core`) uses `tsc` to emit `dist/` as a minimal baseline; we can consolidate to a single repo-wide build later.
 
+## Publishing (draft)
+
+Foundation 7 is published from the `packages/*` folders as scoped packages (`@foundation/*`). See `FOUNDATION7-PUBLISHING.md` for the current draft release workflow.
+
 ## Development (current)
 
 - Build core: `yarn f7:core:build` (outputs `packages/core/dist/`, gitignored)

@@ -1,9 +1,22 @@
 {
   "name": "@foundation/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Foundation 7 core runtime (DOM-first, ESM-first).",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foundation/foundation-sites.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/foundation/foundation-sites/issues"
+  },
+  "homepage": "https://get.foundation/sites",
   "type": "module",
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

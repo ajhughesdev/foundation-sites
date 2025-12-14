@@ -2,6 +2,12 @@
 
 Accordion is the Foundation 7 accordion plugin.
 
+## Install (draft)
+
+```bash
+npm install @foundation/core @foundation/accordion @foundation/css
+```
+
 ## Usage (draft)
 
 ```js
@@ -17,4 +23,3 @@ app.init(document);
 
 - Full bundle: `@foundation/css/foundation.css`
 - Component-only: `@foundation/css/components/accordion.css`
-

@@ -1,11 +1,23 @@
 {
   "name": "@foundation/css",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Foundation 7 CSS (tokens + cascade layers).",
-  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foundation/foundation-sites.git",
+    "directory": "packages/css"
+  },
+  "bugs": {
+    "url": "https://github.com/foundation/foundation-sites/issues"
+  },
+  "homepage": "https://get.foundation/sites",
   "sideEffects": [
     "**/*.css"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     "./foundation.css": "./src/foundation.css",
     "./tokens.css": "./src/tokens.css",

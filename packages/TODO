@@ -17,3 +17,8 @@
 // DONE: Add Playwright caching/parallel tweaks for faster CI.
 // DONE: Focus-trapping/inert for non-<dialog> modals (extract focusTrap/inert utils + apply to Reveal fallback + Playwright coverage).
 // DONE: Start the CSS expansion: baseline button/input styles + layout primitives (container/stack/grid) so the examples stop hand-rolling UI scaffolding.
+
+// NEXT (publishability + release hygiene):
+// TODO: Decide long-term package linking strategy (keep `yarn f7:link` vs. introduce workspaces in a future repo/branch).
+// TODO: Add a simple multi-package version/publish helper (optional; keep manual publish in `FOUNDATION7-PUBLISHING.md` until needed).
+// TODO: Tighten semver ranges + document API stability expectations per package once we cut the first public alpha.

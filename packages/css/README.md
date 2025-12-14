@@ -6,6 +6,12 @@ This package is the starting point for Foundation 7’s CSS architecture:
 - Predictable overrides via cascade layers
 - RTL friendliness via logical properties
 
+## Install (draft)
+
+```bash
+npm install @foundation/css
+```
+
 ## Layers
 
 The entrypoint `foundation.css` defines the canonical layer order:

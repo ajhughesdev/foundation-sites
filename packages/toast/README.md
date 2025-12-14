@@ -2,6 +2,12 @@
 
 Toast is the Foundation 7 notification plugin.
 
+## Install (draft)
+
+```bash
+npm install @foundation/core @foundation/toast @foundation/css
+```
+
 ## Usage (draft)
 
 ```js
@@ -17,4 +23,3 @@ app.init(document);
 
 - Full bundle: `@foundation/css/foundation.css`
 - Component-only: `@foundation/css/components/toast.css`
-

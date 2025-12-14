@@ -8,6 +8,12 @@ This is the initial Foundation 7 core runtime scaffold.
 - ESM-first (explicit exports, side-effect free by default)
 - predictable lifecycle (mount + teardown, cleanup guaranteed)
 
+## Install (draft)
+
+```bash
+npm install @foundation/core
+```
+
 ## Usage (draft)
 
 ```js
