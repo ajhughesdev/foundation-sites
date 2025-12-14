@@ -23,7 +23,7 @@
     >
       <h1>Accordion (Draft)</h1>
       <p>
-        Build first: <code>yarn f7:core:build</code>, then open this file in a browser.
+        Build first: <code>yarn f7:core:build && yarn f7:accordion:build</code>, then open this file in a browser.
       </p>
 
       <div class="demo-toolbar f-cluster" style="--f-cluster-gap: var(--f-space-3)">
@@ -117,7 +117,8 @@
     </div>
 
     <script type="module">
-      import { accordion, createFoundation } from "../dist/index.js";
+      import { createFoundation } from "../dist/index.js";
+      import { accordion } from "../../accordion/dist/index.js";
 
       const app = createFoundation({ plugins: [accordion()] });
       app.init(document);

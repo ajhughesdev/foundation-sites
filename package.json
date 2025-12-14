@@ -38,9 +38,11 @@
     "f7:tooltip:watch": "tsc -w -p packages/tooltip/tsconfig.json",
     "f7:tabs:build": "node scripts/f7-clean-dist.js packages/tabs/dist && tsc -p packages/tabs/tsconfig.json",
     "f7:tabs:watch": "tsc -w -p packages/tabs/tsconfig.json",
+    "f7:accordion:build": "node scripts/f7-clean-dist.js packages/accordion/dist && tsc -p packages/accordion/tsconfig.json",
+    "f7:accordion:watch": "tsc -w -p packages/accordion/tsconfig.json",
     "f7:dev": "node scripts/f7-dev.js",
     "f7:test:install-browsers": "playwright install chromium",
-    "f7:test": "yarn f7:core:build && yarn f7:reveal:build && yarn f7:dropdown:build && yarn f7:tooltip:build && yarn f7:tabs:build && playwright test",
+    "f7:test": "yarn f7:core:build && yarn f7:reveal:build && yarn f7:dropdown:build && yarn f7:tooltip:build && yarn f7:tabs:build && yarn f7:accordion:build && playwright test",
     "prepare": "husky install"
   },
   "peerDependencies": {

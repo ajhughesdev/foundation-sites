@@ -1,6 +1,34 @@
-import { definePlugin } from '../types.js';
-import type { FoundationPlugin, FoundationPluginInstance, PluginContext } from '../types.js';
-import { ensureId, getEventTargetElement, parseBooleanAttribute } from '../utils/dom.js';
+import { ensureId, getEventTargetElement, parseBooleanAttribute } from '../../core/dist/utils/dom.js';
+
+export type Cleanup = () => void;
+
+export interface FoundationPluginInstance {
+  destroy?(): void;
+}
+
+export type PluginSelector = string | readonly string[];
+
+export interface PluginContext {
+  readonly signal: AbortSignal;
+  addCleanup(cleanup: Cleanup): void;
+  on(
+    target: EventTarget,
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: AddEventListenerOptions | boolean
+  ): void;
+  emit(target: EventTarget, type: string, detail?: unknown, init?: Omit<CustomEventInit, 'detail'>): boolean;
+}
+
+export interface FoundationPlugin {
+  name: string;
+  selector: PluginSelector;
+  mount(element: Element, context: PluginContext): void | FoundationPluginInstance;
+}
+
+export function definePlugin<T extends FoundationPlugin>(plugin: T): T {
+  return plugin;
+}
 
 export type AccordionOptions = {
   multi?: boolean;
@@ -121,13 +149,11 @@ export function accordion(defaultOptions: AccordionOptions = {}): FoundationPlug
           panelEl.setAttribute('data-accordion-panel', '');
         }
 
-        // Ensure the panel is the only non-summary container by moving other nodes into it.
         const nodesToMove = Array.from(item.childNodes).filter((node) => node !== summary && node !== panelEl);
         for (const node of nodesToMove) {
           panelEl.append(node);
         }
 
-        // Ensure summary + panel are direct children in the correct order.
         if (summary.parentElement !== item) item.prepend(summary);
         if (panelEl.parentElement !== item) item.append(panelEl);
         if (item.firstElementChild !== summary) item.prepend(summary);
@@ -401,3 +427,4 @@ export function accordion(defaultOptions: AccordionOptions = {}): FoundationPlug
     },
   });
 }
+

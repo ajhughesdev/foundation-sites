@@ -1,6 +1,5 @@
 export { createFoundation } from './createFoundation.js';
 export { definePlugin } from './types.js';
-export { accordion } from './plugins/accordion.js';
 export { offcanvas } from './plugins/offcanvas.js';
 export { toast } from './plugins/toast.js';
 export type {
@@ -11,13 +10,6 @@ export type {
   PluginContext,
   PluginSelector,
 } from './types.js';
-export type {
-  AccordionClosedDetail,
-  AccordionCommandDetail,
-  AccordionInstance,
-  AccordionOpenedDetail,
-  AccordionOptions,
-} from './plugins/accordion.js';
 export type {
   OffCanvasClosedDetail,
   OffCanvasInstance,
