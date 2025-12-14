@@ -3,6 +3,8 @@
 // DONE: Extract Tooltip into its own package (packages/tooltip).
 // DONE: Extract Tabs into its own package (packages/tabs).
 // DONE: Extract Accordion into its own package (packages/accordion).
+// DONE: Extract OffCanvas into its own package (packages/offcanvas).
+// DONE: Extract Toast into its own package (packages/toast).
 // DONE: Add Playwright + axe smoke tests for Reveal, Dropdown, Tooltip, Tabs, Accordion (a11y + keyboard regressions).
 // DONE: Wire `yarn f7:test` into CI as a separate job.
 // DONE: Add focus trap for non-<dialog> modals (Reveal fallback).

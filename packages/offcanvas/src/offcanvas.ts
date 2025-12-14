@@ -1,5 +1,3 @@
-import { definePlugin } from '../types.js';
-import type { FoundationPlugin, FoundationPluginInstance, PluginContext } from '../types.js';
 import {
   ensureId,
   focusFirstFocusable,
@@ -8,10 +6,40 @@ import {
   getStringAttribute,
   isHtmlElement,
   parseBooleanAttribute,
-} from '../utils/dom.js';
-import { createFocusTrap } from '../utils/focusTrap.js';
-import { createInertOutside } from '../utils/inert.js';
-import { lockScroll, unlockScroll } from '../utils/scrollLock.js';
+} from '../../core/dist/utils/dom.js';
+import { createFocusTrap } from '../../core/dist/utils/focusTrap.js';
+import { createInertOutside } from '../../core/dist/utils/inert.js';
+import { lockScroll, unlockScroll } from '../../core/dist/utils/scrollLock.js';
+
+export type Cleanup = () => void;
+
+export interface FoundationPluginInstance {
+  destroy?(): void;
+}
+
+export type PluginSelector = string | readonly string[];
+
+export interface PluginContext {
+  readonly signal: AbortSignal;
+  addCleanup(cleanup: Cleanup): void;
+  on(
+    target: EventTarget,
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: AddEventListenerOptions | boolean
+  ): void;
+  emit(target: EventTarget, type: string, detail?: unknown, init?: Omit<CustomEventInit, 'detail'>): boolean;
+}
+
+export interface FoundationPlugin {
+  name: string;
+  selector: PluginSelector;
+  mount(element: Element, context: PluginContext): void | FoundationPluginInstance;
+}
+
+export function definePlugin<T extends FoundationPlugin>(plugin: T): T {
+  return plugin;
+}
 
 export type OffCanvasOptions = {
   modal?: boolean;
@@ -105,7 +133,6 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
         element.removeAttribute(OPENED_ATTR);
 
         if (dialog) {
-          // dialog visibility is controlled by .open + showModal/close
           return;
         }
 
@@ -403,3 +430,4 @@ export function offcanvas(defaultOptions: OffCanvasOptions = {}): FoundationPlug
     },
   });
 }
+

@@ -1,0 +1,20 @@
+{
+  "name": "@foundation/toast",
+  "version": "0.0.0",
+  "description": "Foundation 7 Toast / Notification.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node ../../scripts/f7-clean-dist.js dist && tsc -p tsconfig.json"
+  }
+}
+

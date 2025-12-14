@@ -37,7 +37,7 @@
     >
       <h1>OffCanvas (Draft)</h1>
       <p>
-        Build first: <code>yarn f7:core:build</code>, then open this file in a browser.
+        Build first: <code>yarn f7:core:build && yarn f7:offcanvas:build</code>, then open this file in a browser.
       </p>
 
       <div class="demo-toolbar f-cluster" style="--f-cluster-gap: var(--f-space-3)">
@@ -123,7 +123,8 @@
     </aside>
 
     <script type="module">
-      import { createFoundation, offcanvas } from "../dist/index.js";
+      import { createFoundation } from "../dist/index.js";
+      import { offcanvas } from "../../offcanvas/dist/index.js";
 
       const app = createFoundation({ plugins: [offcanvas()] });
       app.init(document);

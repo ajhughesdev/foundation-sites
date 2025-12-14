@@ -1,12 +1,40 @@
-import { definePlugin } from '../types.js';
-import type { FoundationPlugin, FoundationPluginInstance, PluginContext } from '../types.js';
 import {
   ensureId,
   getEventTargetElement,
   getStringAttribute,
   parseBooleanAttribute,
   parseNumberAttribute,
-} from '../utils/dom.js';
+} from '../../core/dist/utils/dom.js';
+
+export type Cleanup = () => void;
+
+export interface FoundationPluginInstance {
+  destroy?(): void;
+}
+
+export type PluginSelector = string | readonly string[];
+
+export interface PluginContext {
+  readonly signal: AbortSignal;
+  addCleanup(cleanup: Cleanup): void;
+  on(
+    target: EventTarget,
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: AddEventListenerOptions | boolean
+  ): void;
+  emit(target: EventTarget, type: string, detail?: unknown, init?: Omit<CustomEventInit, 'detail'>): boolean;
+}
+
+export interface FoundationPlugin {
+  name: string;
+  selector: PluginSelector;
+  mount(element: Element, context: PluginContext): void | FoundationPluginInstance;
+}
+
+export function definePlugin<T extends FoundationPlugin>(plugin: T): T {
+  return plugin;
+}
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'danger';
 export type ToastRole = 'status' | 'alert';
@@ -63,8 +91,15 @@ function normalizeRole(value: string | undefined, variant: ToastVariant): ToastR
 }
 
 function makeToastId(): string {
-  const fallback = () => `f7-toast-${Math.random().toString(36).slice(2, 10)}${Math.random().toString(36).slice(2, 10)}`;
-  return 'randomUUID' in crypto ? `f7-toast-${crypto.randomUUID()}` : fallback();
+  const fallback = () =>
+    `f7-toast-${Math.random().toString(36).slice(2, 10)}${Math.random().toString(36).slice(2, 10)}`;
+
+  const cryptoObj = globalThis.crypto;
+  if (cryptoObj && typeof cryptoObj.randomUUID === 'function') {
+    return `f7-toast-${cryptoObj.randomUUID()}`;
+  }
+
+  return fallback();
 }
 
 export function toast(defaultOptions: ToastOptions = {}): FoundationPlugin {
@@ -282,3 +317,4 @@ export function toast(defaultOptions: ToastOptions = {}): FoundationPlugin {
     },
   });
 }
+
