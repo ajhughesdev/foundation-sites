@@ -1,6 +1,5 @@
 export { createFoundation } from './createFoundation.js';
 export { definePlugin } from './types.js';
-export { tabs } from './plugins/tabs.js';
 export { accordion } from './plugins/accordion.js';
 export { offcanvas } from './plugins/offcanvas.js';
 export { toast } from './plugins/toast.js';
@@ -12,14 +11,6 @@ export type {
   PluginContext,
   PluginSelector,
 } from './types.js';
-export type {
-  TabsActivationMode,
-  TabsChangedDetail,
-  TabsInstance,
-  TabsOptions,
-  TabsOrientation,
-  TabsSelectDetail,
-} from './plugins/tabs.js';
 export type {
   AccordionClosedDetail,
   AccordionCommandDetail,
