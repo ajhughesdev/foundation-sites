@@ -6,6 +6,14 @@
     <title>Foundation 7 — Accordion (Draft)</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="../../css/src/foundation.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "@foundation/core": "../dist/index.js",
+          "@foundation/accordion": "../../accordion/dist/index.js"
+        }
+      }
+    </script>
     <style>
       .demo-card {
         padding: 18px;
@@ -117,8 +125,8 @@
     </div>
 
     <script type="module">
-      import { createFoundation } from "../dist/index.js";
-      import { accordion } from "../../accordion/dist/index.js";
+      import { createFoundation } from "@foundation/core";
+      import { accordion } from "@foundation/accordion";
 
       const app = createFoundation({ plugins: [accordion()] });
       app.init(document);

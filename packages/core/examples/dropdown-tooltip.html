@@ -6,6 +6,15 @@
     <title>Foundation 7 — Dropdown + Tooltip (Draft)</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="../../css/src/foundation.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "@foundation/core": "../dist/index.js",
+          "@foundation/dropdown": "../../dropdown/dist/index.js",
+          "@foundation/tooltip": "../../tooltip/dist/index.js"
+        }
+      }
+    </script>
   </head>
   <body>
     <div
@@ -76,9 +85,9 @@
     </div>
 
     <script type="module">
-      import { createFoundation } from "../dist/index.js";
-      import { dropdown } from "../../dropdown/dist/index.js";
-      import { tooltip } from "../../tooltip/dist/index.js";
+      import { createFoundation } from "@foundation/core";
+      import { dropdown } from "@foundation/dropdown";
+      import { tooltip } from "@foundation/tooltip";
 
       const app = createFoundation({ plugins: [dropdown(), tooltip()] });
       app.init(document);
